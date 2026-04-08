@@ -75,7 +75,7 @@ export default function TrekDetails({ trek }: TrekProps) {
 
                 {/* Sidebar */}
                 <aside className="w-full xl:w-[480px] bg-slate-50">
-                    <div className="sticky top-[88px]">
+                    <div className="xl:sticky xl:top-[88px]">
                         {/* Safety Protocols */}
                         <div className="p-8 md:p-12 border-b border-zinc-border">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Safety Protocols</h3>

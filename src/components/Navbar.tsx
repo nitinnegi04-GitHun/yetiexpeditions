@@ -14,11 +14,17 @@ const sanity = createClient({
     useCdn: true,
 });
 
-export default function Navbar() {
+interface NavbarProps {
+    logoUrl?: string | null;
+    logoAlt?: string;
+    siteName?: string;
+}
+
+export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteName }: NavbarProps = {}) {
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [logoUrl, setLogoUrl] = useState<string | null>(null);
-    const [siteName, setSiteName] = useState('Yeti Expeditions');
+    const [logoUrl, setLogoUrl] = useState<string | null>(initialLogoUrl ?? null);
+    const [siteName, setSiteName] = useState(initialSiteName ?? 'Yeti Expeditions');
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -106,21 +112,22 @@ export default function Navbar() {
             </header>
 
             {/* Bottom Mobile Navigation Bar */}
-            <div 
+            <div
                 className="md:hidden"
-                style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '65px', zIndex: 99999 }}
+                style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '65px', zIndex: 99999, pointerEvents: 'none' }}
             >
-                {/* 1. The Main Rectangular White Bar */}
-                <div 
-                    style={{ 
-                        position: 'absolute', bottom: 0, left: 0, width: '100%', height: '100%', 
-                        backgroundColor: '#ffffff', boxShadow: '0px -2px 10px rgba(0,0,0,0.1)', 
-                        borderTopLeftRadius: '16px', borderTopRightRadius: '16px' 
+                {/* 1. The Main Rectangular White Bar - non-interactive, let touches fall through */}
+                <div
+                    style={{
+                        position: 'absolute', bottom: 0, left: 0, width: '100%', height: '100%',
+                        backgroundColor: '#ffffff', boxShadow: '0px -2px 10px rgba(0,0,0,0.1)',
+                        borderTopLeftRadius: '16px', borderTopRightRadius: '16px',
+                        pointerEvents: 'none'
                     }}
                 />
 
                 {/* 2. The Interactive Buttons Overlay */}
-                <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', pointerEvents: 'auto' }}>
                     <div style={{ width: '100%', maxWidth: '340px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '100%', paddingLeft: '8px', paddingRight: '8px', paddingBottom: '6px' }}>
                         
                         {/* Menu */}

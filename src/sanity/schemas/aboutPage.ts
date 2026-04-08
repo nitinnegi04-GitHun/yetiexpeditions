@@ -7,6 +7,7 @@ export const aboutPage = defineType({
   type: 'document',
 
   // Singleton — only one document should ever exist
+  // @ts-expect-error __experimental_actions is valid at runtime but missing from Sanity v5 types
   __experimental_actions: ['update', 'publish'],
 
   groups: [

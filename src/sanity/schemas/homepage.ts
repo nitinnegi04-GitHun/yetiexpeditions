@@ -7,6 +7,7 @@ export const homepage = defineType({
   type: 'document',
 
   // Singleton — only one homepage document should ever exist
+  // @ts-expect-error __experimental_actions is valid at runtime but missing from Sanity v5 types
   __experimental_actions: ['update', 'publish'],
 
   groups: [

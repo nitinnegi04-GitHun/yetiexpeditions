@@ -243,7 +243,7 @@ export default async function TrekPage({ params }: PageProps) {
   const schemas = buildTrekSchemas(trek, slug)
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen pb-20 md:pb-0">
       {schemas.map((schema, i) => (
         <script
           key={i}
