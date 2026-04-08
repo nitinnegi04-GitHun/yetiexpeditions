@@ -3,9 +3,12 @@ import { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import TrekDetails from '@/components/TrekDetails'
+import TrekHeroBanner from '@/components/TrekHeroBanner'
+import TrekSubNav from '@/components/TrekSubNav'
 import { client } from '@/sanity/client'
 import { urlFor } from '@/sanity/image'
 import { TREK_BY_SLUG_QUERY, TREK_SLUGS_QUERY } from '@/sanity/queries/trek'
+import { SITE_SETTINGS_QUERY } from '@/sanity/queries/siteSettings'
 
 const BASE_URL = 'https://www.yetiexpeditions.com'
 
@@ -66,8 +69,13 @@ function transformSanityTrek(raw: any) {
     ? urlFor(raw.bannerImage).width(1920).quality(80).url()
     : ''
 
+  // Banner video → direct Sanity CDN URL (autoplay, takes priority over image)
+  const bannerVideo: string = raw.bannerVideoUrl ?? ''
+
   return {
     name: raw.name ?? '',
+    region: raw.region ?? '',
+    country: raw.country ?? '',
     difficulty: raw.difficulty ?? '',
     duration: raw.duration ?? '',
     investment: raw.investment ?? '',
@@ -76,6 +84,7 @@ function transformSanityTrek(raw: any) {
     accommodation: raw.accommodation ?? '',
     groupSize: raw.groupSize ?? '',
     bannerImage,
+    bannerVideo,
     itinerary: raw.itinerary ?? [],
     batches,
     included: raw.included ?? [],
@@ -191,38 +200,38 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
 
   const faqSchema = trek.faqs.length
     ? {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: trek.faqs.map((faq: any) => ({
-          '@type': 'Question',
-          name: faq.question,
-          acceptedAnswer: { '@type': 'Answer', text: faq.answer },
-        })),
-      }
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: trek.faqs.map((faq: any) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    }
     : null
 
   const reviewSchema = trek.testimonials.length
     ? {
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: `${trek.name} Trek`,
-        description: `Guided ${trek.name} trek by Yeti Expeditions`,
-        url,
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: '5',
-          bestRating: '5',
-          worstRating: '1',
-          ratingCount: trek.testimonials.length,
-        },
-        review: trek.testimonials.map((t: any) => ({
-          '@type': 'Review',
-          reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
-          author: { '@type': 'Person', name: t.name },
-          reviewBody: t.text,
-          datePublished: t.batch,
-        })),
-      }
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: `${trek.name} Trek`,
+      description: `Guided ${trek.name} trek by Yeti Expeditions`,
+      url,
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '5',
+        bestRating: '5',
+        worstRating: '1',
+        ratingCount: trek.testimonials.length,
+      },
+      review: trek.testimonials.map((t: any) => ({
+        '@type': 'Review',
+        reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
+        author: { '@type': 'Person', name: t.name },
+        reviewBody: t.text,
+        datePublished: t.batch,
+      })),
+    }
     : null
 
   return [touristTripSchema, breadcrumbSchema, faqSchema, reviewSchema].filter(Boolean)
@@ -235,12 +244,17 @@ export const revalidate = 86400
 
 export default async function TrekPage({ params }: PageProps) {
   const { slug } = await params
-  const raw = await client.fetch(TREK_BY_SLUG_QUERY, { slug })
+  const [raw, settings] = await Promise.all([
+    client.fetch(TREK_BY_SLUG_QUERY, { slug }),
+    client.fetch(SITE_SETTINGS_QUERY),
+  ])
 
   if (!raw) notFound()
 
   const trek = transformSanityTrek(raw)
   const schemas = buildTrekSchemas(trek, slug)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const logoUrl: string = settings?.logo ? urlFor((settings as any).logo).height(80).quality(90).url() : ''
 
   return (
     <main className="min-h-screen pb-20 md:pb-0">
@@ -253,21 +267,63 @@ export default async function TrekPage({ params }: PageProps) {
       ))}
 
       <Navbar />
+      <TrekSubNav />
 
-      {/* Trek Hero */}
-      <section className="relative h-[70vh] w-full -mt-[88px]">
-        <div
-          className="absolute inset-0 bg-cover bg-center grayscale brightness-75 transition-all duration-700 hover:grayscale-0"
-          style={{ backgroundImage: `url(${trek.bannerImage})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 max-w-[1440px] mx-auto p-8 md:p-16 flex flex-col items-start gap-4">
-          <span className="bg-primary text-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]">
-            Expedition Dispatch
-          </span>
-          <h1 className="text-white text-5xl md:text-7xl font-black uppercase tracking-tighter">
-            {trek.name}
-          </h1>
+      {/* Trek Hero — split layout matching home page */}
+      <section className="w-full border-b border-zinc-border">
+        {/* Mobile: banner stacked above text */}
+        <div className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: '160vw', minHeight: '350px' }}>
+          <TrekHeroBanner src={trek.bannerImage} videoSrc={trek.bannerVideo} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '40px', left: '24px' }}>
+            <p className="text-white text-xs font-bold uppercase tracking-widest">{trek.region}</p>
+            <p className="text-white/80 text-[10px] uppercase">{trek.country}</p>
+          </div>
+          {logoUrl && (
+            <div className="absolute z-10" style={{ top: '40px', right: '24px' }}>
+              <img src={logoUrl} alt="Yeti Expeditions" style={{ height: '28px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+            </div>
+          )}
+        </div>
+
+        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row md:min-h-[80vh]">
+          {/* Left: Text */}
+          <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 pt-12 pb-8 md:pt-12 md:px-24 md:pb-24 border-b md:border-b-0 md:border-r border-zinc-border">
+            <div className="space-y-5 md:space-y-8">
+              <span className="inline-block bg-primary text-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] w-fit">
+                Expedition Dispatch
+              </span>
+              <h1 className="text-[15vw] md:text-8xl font-black md:leading-[.88] leading-[1.1] tracking-tighter text-slate-900 uppercase">
+                {trek.name}
+                <span className="block mt-3 md:mt-4 text-slate-300">{trek.country}</span>
+              </h1>
+              <p className="text-[20px] italic md:text-lg text-slate-600 leading-relaxed">
+                {trek.difficulty} &middot; {trek.duration} &middot; {trek.altitude}
+              </p>
+              <a
+                href="#enquire"
+                className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors"
+              >
+                Book This Trek
+              </a>
+            </div>
+            <div />
+          </div>
+
+          {/* Right: Image / Video — desktop only */}
+          <div className="hidden md:block md:w-1/2 bg-slate-100 relative overflow-hidden group">
+            <TrekHeroBanner src={trek.bannerImage} videoSrc={trek.bannerVideo} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '64px', left: '40px' }}>
+              <p className="text-white text-xs font-bold uppercase tracking-widest">{trek.region}</p>
+              <p className="text-white/80 text-[10px] uppercase">{trek.country}</p>
+            </div>
+            {logoUrl && (
+              <div className="absolute z-10" style={{ top: '64px', right: '40px' }}>
+                <img src={logoUrl} alt="Yeti Expeditions" style={{ height: '40px', width: 'auto', objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

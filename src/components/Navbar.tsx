@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Mountain, Menu, X, Users, Brain, MessageCircle } from "lucide-react";
+import { Mountain, Menu, X, Users, Brain, MessageCircle, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@sanity/client";
@@ -25,15 +25,6 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [logoUrl, setLogoUrl] = useState<string | null>(initialLogoUrl ?? null);
     const [siteName, setSiteName] = useState(initialSiteName ?? 'Yeti Expeditions');
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth < 768);
-        check();
-        window.addEventListener('resize', check);
-        return () => window.removeEventListener('resize', check);
-    }, []);
-
     useEffect(() => {
         sanity
             .fetch(`*[_type == "siteSettings"][0]{ logo, siteName }`)
@@ -55,6 +46,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     }, [isMenuOpen]);
 
     // Helpers for active states
+    const isHomeActive = pathname === '/';
     const isOurStoryActive = pathname === '/Our_story' || pathname === '/about';
     const isJournalActive = pathname === '/journal';
     const isChatActive = pathname === '/contact';
@@ -67,7 +59,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
         <>
             {/* Top Header - Desktop only, hidden on mobile */}
             <header
-                className="w-full border-b border-zinc-100"
+                className="hidden md:block w-full border-b border-zinc-100"
                 style={{
                     zIndex: 9000,
                     background: 'white',
@@ -75,7 +67,6 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                     top: 0,
                     left: 0,
                     right: 0,
-                    display: isMobile ? 'none' : 'block',
                 }}
             >
                 <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 md:px-12 relative">
@@ -128,7 +119,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
 
                 {/* 2. The Interactive Buttons Overlay */}
                 <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', pointerEvents: 'auto' }}>
-                    <div style={{ width: '100%', maxWidth: '340px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '100%', paddingLeft: '8px', paddingRight: '8px', paddingBottom: '6px' }}>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '100%', paddingLeft: '16px', paddingRight: '16px', paddingBottom: '6px' }}>
                         
                         {/* Menu */}
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', background: 'none', border: 'none' }}>
@@ -136,6 +127,12 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                             <span style={{ color: isMenuOpen ? ACTIVE_COLOR : INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{isMenuOpen ? 'Close' : 'Menu'}</span>
                         </button>
                         
+                        {/* Home */}
+                        <Link href="/" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
+                            <Home size={22} color={isHomeActive ? ACTIVE_COLOR : INACTIVE_COLOR} />
+                            <span style={{ color: isHomeActive ? ACTIVE_COLOR : INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Home</span>
+                        </Link>
+
                         {/* Our Story */}
                         <Link href="/Our_story" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
                             <Users size={22} color={isOurStoryActive ? ACTIVE_COLOR : INACTIVE_COLOR} />
@@ -144,8 +141,8 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
 
                         {/* Treks */}
                         <Link href="/#treks" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
-                            <Mountain size={22} color={pathname === '/' ? ACTIVE_COLOR : INACTIVE_COLOR} />
-                            <span style={{ color: pathname === '/' ? ACTIVE_COLOR : INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Treks</span>
+                            <Mountain size={22} color={INACTIVE_COLOR} />
+                            <span style={{ color: INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Treks</span>
                         </Link>
 
                         {/* Journal */}

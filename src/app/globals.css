@@ -37,3 +37,15 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Trek hero — mobile only: auto-transition from B&W to colour after 800ms */
+@keyframes trek-hero-reveal {
+  from { filter: grayscale(100%) brightness(0.75) contrast(1.25); }
+  to   { filter: grayscale(0%)   brightness(0.75) contrast(1.25); }
+}
+
+@media (max-width: 767px) {
+  .trek-hero-mobile-reveal {
+    animation: trek-hero-reveal 2000ms ease 800ms forwards;
+  }
+}

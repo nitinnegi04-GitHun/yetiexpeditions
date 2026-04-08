@@ -38,7 +38,7 @@ interface HeroProps {
 
 export default function Hero({ data, heroImageUrl }: HeroProps) {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const [mobileGrayscale, setMobileGrayscale] = useState(70);
+  const [mobileGrayscale, setMobileGrayscale] = useState(100);
   const mobileVideoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
       const rect = mobileVideoRef.current.getBoundingClientRect();
       const scrolledOut = Math.max(0, -rect.top);
       const progress = Math.min(1, scrolledOut / rect.height);
-      setMobileGrayscale(Math.round(70 * (1 - progress)));
+      setMobileGrayscale(Math.round(100 * (1 - progress)));
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -87,7 +87,7 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
             loop
             playsInline
             className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
-            style={{ filter: `grayscale(${mobileGrayscale}%)` }}
+            style={{ filter: `grayscale(${mobileGrayscale}%) contrast(1.25)` }}
           />
         ) : (
           <div
@@ -96,7 +96,10 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
           />
         )}
 
-        {/* Subtle dark gradient to ensure text readability */}
+        {/* Gradient overlay — matches desktop on page load */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+
+        {/* Caption */}
         <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '40px', left: '24px' }}>
           <p className="text-white text-xs font-bold uppercase tracking-widest">{imageCaption}</p>
           <p className="text-white/80 text-[10px] uppercase">{imageCoords}</p>
@@ -111,7 +114,7 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
       </div>
 
       <section className="w-full border-b border-zinc-border">
-        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row min-h-[80vh]">
+        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row md:min-h-[80vh]">
           {/* Left Content */}
           <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center md:min-h-0 px-6 pt-12 pb-8 md:pt-12 md:px-24 md:pb-24 border-b md:border-b-0 md:border-r border-zinc-border" style={{ minHeight: 0 }}>
             <div className="space-y-5 md:space-y-8">

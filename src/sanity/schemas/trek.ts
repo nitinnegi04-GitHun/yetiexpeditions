@@ -37,7 +37,8 @@ export const trek = defineType({
     defineField({ name: 'accommodation', title: 'Accommodation Type', type: 'string',  group: 'overview', description: 'e.g. TEAHOUSE', validation: Rule => Rule.required() }),
     defineField({ name: 'groupSize',     title: 'Group Size',         type: 'string',  group: 'overview', description: 'e.g. MAX 08',  validation: Rule => Rule.required() }),
     defineField({ name: 'investment',    title: 'Price Display',      type: 'string',  group: 'overview', description: 'Display string e.g. $3,400', validation: Rule => Rule.required() }),
-    defineField({ name: 'bannerImage',   title: 'Banner Image',       type: 'image',   group: 'overview', options: { hotspot: true }, validation: Rule => Rule.required() }),
+    defineField({ name: 'bannerImage',   title: 'Banner Image',       type: 'image',   group: 'overview', options: { hotspot: true }, description: 'Used when no video is uploaded. Provide either an image or a video (or both — video takes priority).' }),
+    defineField({ name: 'bannerVideo',   title: 'Banner Video',       type: 'file',    group: 'overview', options: { accept: 'video/*' }, description: 'Upload an MP4/WebM to autoplay as the banner. If provided, this replaces the banner image.' }),
 
     // ── Batches / Calendar ─────────────────────────────────────
     defineField({

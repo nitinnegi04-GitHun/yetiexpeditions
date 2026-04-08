@@ -1,5 +1,25 @@
+'use client';
+
 import { ArrowRight } from "lucide-react";
 import { urlFor } from "@/sanity/image";
+import { useScrollGrayscale } from "@/hooks/useScrollGrayscale";
+
+function ProjectImage({ src, alt }: { src: string; alt: string }) {
+  const { ref, filter } = useScrollGrayscale();
+  return (
+    <div className="relative overflow-hidden h-52 border-b border-zinc-border">
+      <div ref={ref} className="w-full h-full">
+        <img
+          src={src}
+          alt={alt}
+          className="w-full h-full object-cover transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+          style={{ filter, transition: 'filter 300ms ease, transform 700ms ease' }}
+        />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+    </div>
+  );
+}
 
 interface Project {
   _key: string
@@ -109,14 +129,9 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
             return (
               <div key={project._key} className="flex flex-col group hover:bg-slate-50 transition-colors">
                 {/* Image */}
-                <div className="relative overflow-hidden h-52 border-b border-zinc-border">
-                  <img
-                    src={imageUrl}
-                    alt={project.name}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  <span className="absolute bottom-4 left-4 text-[9px] font-black uppercase tracking-[0.3em] text-white/70">
+                <div className="relative">
+                  <ProjectImage src={imageUrl} alt={project.name} />
+                  <span className="absolute bottom-4 left-4 text-[9px] font-black uppercase tracking-[0.3em] text-white/70 pointer-events-none">
                     {project.category}
                   </span>
                 </div>

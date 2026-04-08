@@ -3,52 +3,94 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { useScrollGrayscale } from "@/hooks/useScrollGrayscale";
 
-const TREKS = [
+function TrekCardBg({ src }: { src: string }) {
+    const { ref, filter } = useScrollGrayscale();
+    return (
+        <div
+            ref={ref}
+            className="absolute inset-0 bg-cover bg-center brightness-75"
+            style={{ backgroundImage: `url(${src})`, filter, transition: 'filter 300ms ease' }}
+        />
+    );
+}
+
+interface Trek {
+    id: string;
+    name: string;
+    slug: string;
+    region: string;
+    country: string;
+    difficulty: string;
+    price: string;
+    duration?: string;
+    altitude?: string;
+    bannerImageUrl?: string;
+    nextBatchRange?: string | null;
+    seatsBooked?: number | null;
+    totalSeats?: number | null;
+}
+
+const FALLBACK_TREKS: Trek[] = [
     { id: "01", name: "Everest Base Camp", slug: "everest-base-camp", region: "Khumbu Region", country: "Nepal", difficulty: "Difficult", price: "$4,250" },
     { id: "02", name: "Annapurna Circuit", slug: "annapurna-circuit", region: "Gandaki Province", country: "Nepal", difficulty: "Moderate", price: "$3,100" },
     { id: "03", name: "Markha Valley", slug: "markha-valley", region: "Ladakh", country: "India", difficulty: "Moderate", price: "$2,850" },
 ];
 
-const REGIONS = ["All", ...Array.from(new Set(TREKS.map(t => t.country)))];
-const DIFFICULTIES = ["All", ...Array.from(new Set(TREKS.map(t => t.difficulty)))];
+export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
+    const allTreks = treksProp?.length ? treksProp : FALLBACK_TREKS;
 
-export default function TrekIndex() {
+    const REGIONS = ["All", ...Array.from(new Set(allTreks.map(t => t.country)))];
+    const DIFFICULTIES = ["All", ...Array.from(new Set(allTreks.map(t => t.difficulty)))];
+
     const [activeRegion, setActiveRegion] = useState("All");
     const [activeDifficulty, setActiveDifficulty] = useState("All");
 
-    const filtered = TREKS.filter(t => {
+    const filtered = allTreks.filter(t => {
         const regionMatch = activeRegion === "All" || t.country === activeRegion;
         const difficultyMatch = activeDifficulty === "All" || t.difficulty === activeDifficulty;
         return regionMatch && difficultyMatch;
     });
 
+    const difficultyDesktopClass = (d: string) =>
+        d === "Difficult"
+            ? "text-primary border-primary/30 bg-primary/5"
+            : d === "Moderate"
+                ? "text-amber-600 border-amber-200 bg-amber-50"
+                : "border-zinc-border text-slate-500";
+
+    const filterBtnActiveClass = (type: "region" | "difficulty", value: string) => {
+        if (type === "region") return "bg-primary text-white border-primary";
+        if (value === "Difficult") return "bg-primary text-white border-primary";
+        if (value === "Moderate") return "bg-amber-600 text-white border-amber-600";
+        return "bg-slate-900 text-white border-slate-900";
+    };
+
     return (
-        <section id="treks" className="w-full py-12 px-6 md:px-12 bg-white">
+        <section id="treks" className="w-full py-6 md:py-12 px-6 md:px-12 bg-white">
             <div className="max-w-[1440px] mx-auto">
-                <div className="flex justify-between items-start mb-8 flex-wrap gap-8">
+                <div className="flex justify-between items-start mb-4 md:mb-8 flex-wrap gap-4 md:gap-8">
                     <div>
-                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-3">
+                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-1 md:mb-3">
                             Explore Routes
                         </span>
-                        <h3 className="text-5xl font-black uppercase tracking-tighter">Trek Index</h3>
-                        <p className="text-slate-500 uppercase text-xs tracking-[0.3em] mt-2">Current Seasonal Expeditions</p>
+                        <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Trek Index</h3>
+                        <p className="text-slate-500 uppercase text-xs tracking-[0.3em] mt-1 md:mt-2">Current Seasonal Expeditions</p>
                     </div>
 
                     {/* Filter controls */}
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2 md:gap-4">
                         {/* Region filter */}
                         <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28">
-                                By Region:
-                            </span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28">By Region:</span>
                             {REGIONS.map((region) => (
                                 <button
                                     key={region}
                                     onClick={() => setActiveRegion(region)}
-                                    className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 border transition-colors
+                                    className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors
                                         ${activeRegion === region
-                                            ? "bg-primary text-white border-primary"
+                                            ? filterBtnActiveClass("region", region)
                                             : "border-zinc-border text-slate-500 hover:border-slate-900 hover:text-slate-900"
                                         }`}
                                 >
@@ -59,20 +101,14 @@ export default function TrekIndex() {
 
                         {/* Difficulty filter */}
                         <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28">
-                                By Difficulty:
-                            </span>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28">By Difficulty:</span>
                             {DIFFICULTIES.map((difficulty) => (
                                 <button
                                     key={difficulty}
                                     onClick={() => setActiveDifficulty(difficulty)}
-                                    className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 border transition-colors
+                                    className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors
                                         ${activeDifficulty === difficulty
-                                            ? difficulty === "Difficult"
-                                                ? "bg-primary text-white border-primary"
-                                                : difficulty === "Moderate"
-                                                    ? "bg-amber-600 text-white border-amber-600"
-                                                    : "bg-slate-900 text-white border-slate-900"
+                                            ? filterBtnActiveClass("difficulty", difficulty)
                                             : "border-zinc-border text-slate-500 hover:border-slate-900 hover:text-slate-900"
                                         }`}
                                 >
@@ -83,7 +119,71 @@ export default function TrekIndex() {
                     </div>
                 </div>
 
-                <div className="border-t border-zinc-border">
+                {/* ── Mobile card grid ── */}
+                <div className="md:hidden flex flex-col gap-0 border-t border-zinc-border">
+                    {filtered.length === 0 ? (
+                        <div className="py-16 text-center border-b border-zinc-border">
+                            <p className="text-sm text-slate-400 uppercase tracking-widest font-bold">No expeditions found.</p>
+                        </div>
+                    ) : (
+                        filtered.map((trek) => (
+                            <Link
+                                key={trek.id}
+                                href={`/treks/${trek.slug}`}
+                                className="block border-b border-zinc-border"
+                            >
+                                {/* Top — banner image */}
+                                <div
+                                    className="relative w-full overflow-hidden bg-slate-800"
+                                    style={{ height: '56vw', minHeight: '200px' }}
+                                >
+                                    {trek.bannerImageUrl && (
+                                        <TrekCardBg src={trek.bannerImageUrl} />
+                                    )}
+                                    {/* Trek name + location — solid bar sized to text */}
+                                    <div className="absolute z-10 inline-flex border-l-4 border-primary px-3 py-2" style={{ top: '20px', left: '20px', backgroundColor: 'rgba(24, 24, 26, 0.80)' }}>
+                                        <div>
+                                            <p className="text-white text-xs font-bold uppercase tracking-widest whitespace-nowrap">{trek.name}</p>
+                                            <p className="text-white/80 text-[10px] uppercase whitespace-nowrap">{trek.region}{trek.altitude ? ` | ${trek.altitude}` : ''}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Bottom — single info row */}
+                                <div className="bg-white border-t border-zinc-border px-4 py-3 flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-4">
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Days</p>
+                                            <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.duration || '—'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Next Batch</p>
+                                            <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.nextBatchRange || 'TBA'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Booked</p>
+                                            <p className="text-xs font-black uppercase tracking-tight text-slate-900">
+                                                {trek.seatsBooked != null && trek.totalSeats != null ? `${trek.seatsBooked} / ${trek.totalSeats}` : '—'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <span className={`px-2 py-1 border text-[9px] font-black uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`}>
+                                            {trek.difficulty}
+                                        </span>
+                                        <span className="text-xs font-bold tracking-tight text-slate-900">
+                                            {trek.price} <span className="text-[9px] text-slate-400 uppercase">USD</span>
+                                        </span>
+                                        <ArrowRight className="text-primary w-4 h-4" />
+                                    </div>
+                                </div>
+                            </Link>
+                        ))
+                    )}
+                </div>
+
+                {/* ── Desktop list ── */}
+                <div className="hidden md:block border-t border-zinc-border">
                     {filtered.length === 0 ? (
                         <div className="py-16 text-center border-b border-zinc-border">
                             <p className="text-sm text-slate-400 uppercase tracking-widest font-bold">No expeditions found for this region.</p>
@@ -93,9 +193,9 @@ export default function TrekIndex() {
                             <Link
                                 key={trek.id}
                                 href={`/treks/${trek.slug}`}
-                                className="flex flex-col md:flex-row items-start md:items-center justify-between py-6 px-4 border-b border-zinc-border hover:bg-slate-50 transition-colors cursor-pointer group"
+                                className="flex items-center justify-between py-6 px-4 border-b border-zinc-border hover:bg-slate-50 transition-colors cursor-pointer group"
                             >
-                                <div className="flex items-center gap-8 w-full md:w-1/2">
+                                <div className="flex items-center gap-8 w-1/2">
                                     <span className="text-primary/40 font-bold">{trek.id}</span>
                                     <div>
                                         <h4 className="text-2xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">
@@ -106,14 +206,8 @@ export default function TrekIndex() {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-12 mt-6 md:mt-0">
-                                    <span className={`px-4 py-1 border text-[10px] font-bold uppercase tracking-widest
-                                        ${trek.difficulty === "Difficult"
-                                            ? "text-primary border-primary/30 bg-primary/5"
-                                            : trek.difficulty === "Moderate"
-                                                ? "text-amber-600 border-amber-200 bg-amber-50"
-                                                : "border-zinc-border text-slate-500"
-                                        }`}>
+                                <div className="flex items-center gap-12">
+                                    <span className={`px-4 py-1 border text-[10px] font-bold uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`}>
                                         {trek.difficulty}
                                     </span>
                                     <span className="text-xl font-bold tracking-tight">

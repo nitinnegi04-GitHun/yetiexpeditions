@@ -6,6 +6,7 @@ import FAQAccordion from "./FAQAccordion";
 import EnquiryForm from "./EnquiryForm";
 import AltitudeChart from "./AltitudeChart";
 import ItineraryAccordion from "./ItineraryAccordion";
+import TrekGallery from "./TrekGallery";
 import Link from "next/link";
 
 interface TrekProps {
@@ -41,31 +42,33 @@ export default function TrekDetails({ trek }: TrekProps) {
         <div className="bg-white">
 
             {/* ── Quick Stats ── */}
-            <section className="border-b border-zinc-border bg-slate-50">
-                <div className="max-w-[1440px] mx-auto grid grid-cols-2 lg:grid-cols-4">
-                    <div className="p-8 border-r border-zinc-border border-b lg:border-b-0 space-y-1">
-                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Difficulty</p>
-                        <p className="text-xl font-bold uppercase tracking-tight">{trek.difficulty}</p>
-                    </div>
-                    <div className="p-8 lg:border-r border-zinc-border border-b lg:border-b-0 space-y-1">
-                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Duration</p>
-                        <p className="text-xl font-bold uppercase tracking-tight">{trek.duration}</p>
-                    </div>
-                    <div className="p-8 border-r border-zinc-border space-y-1">
-                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Investment</p>
-                        <p className="text-xl font-bold uppercase tracking-tight">{trek.investment}</p>
-                    </div>
-                    <div className="p-8 space-y-1">
-                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Altitude</p>
-                        <p className="text-xl font-bold uppercase tracking-tight">{trek.altitude}</p>
-                    </div>
+            <section className="w-full border-b border-zinc-border bg-slate-50">
+                <div className="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4">
+                    {[
+                        { label: 'Difficulty', value: trek.difficulty },
+                        { label: 'Duration',   value: trek.duration   },
+                        { label: 'Investment', value: trek.investment  },
+                        { label: 'Altitude',   value: trek.altitude   },
+                    ].map((stat, index) => (
+                        <div
+                            key={stat.label}
+                            className={`p-6 md:p-12 flex flex-col gap-3 group hover:bg-white transition-colors border-zinc-border ${
+                                index === 0 ? 'border-r border-b md:border-b-0' :
+                                index === 1 ? 'border-b md:border-b-0 md:border-r' :
+                                index === 2 ? 'border-r' : ''
+                            }`}
+                        >
+                            <span className="text-primary font-bold uppercase text-[10px] md:text-xs tracking-widest">{stat.label}</span>
+                            <span className="text-4xl md:text-6xl font-black tracking-tighter uppercase">{stat.value}</span>
+                        </div>
+                    ))}
                 </div>
             </section>
 
             {/* ── Itinerary + Sidebar ── */}
             <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row">
                 {/* Itinerary */}
-                <section className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
+                <section id="itinerary" className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
                     <div className="max-w-2xl">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Timeline</span>
                         <h2 className="text-5xl font-black uppercase tracking-tighter mb-12">The Vertical Itinerary</h2>
@@ -75,7 +78,7 @@ export default function TrekDetails({ trek }: TrekProps) {
 
                 {/* Sidebar */}
                 <aside className="w-full xl:w-[480px] bg-slate-50">
-                    <div className="xl:sticky xl:top-[88px]">
+                    <div className="xl:sticky xl:top-[112px] z-[0]">
                         {/* Safety Protocols */}
                         <div className="p-8 md:p-12 border-b border-zinc-border">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Safety Protocols</h3>
@@ -137,7 +140,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             </div>
 
             {/* ── What's Included / Excluded ── */}
-            <section className="border-t border-zinc-border">
+            <section id="included" className="border-t border-zinc-border">
                 <div className="max-w-[1440px] mx-auto">
                     <div className="p-8 md:p-16 border-b border-zinc-border">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Investment Breakdown</span>
@@ -173,7 +176,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             </section>
 
             {/* ── Altitude Profile ── */}
-            <section className="border-t border-zinc-border bg-slate-50">
+            <section id="altitude" className="border-t border-zinc-border bg-slate-50" style={{ position: 'relative', zIndex: 0, transform: 'translateZ(0)' }}>
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <div className="mb-12 flex items-end justify-between flex-wrap gap-4">
                         <div>
@@ -192,30 +195,16 @@ export default function TrekDetails({ trek }: TrekProps) {
             </section>
 
             {/* ── Photo Gallery ── */}
-            <section className="border-t border-zinc-border">
+            <section id="gallery" className="border-t border-zinc-border" style={{ position: 'relative', zIndex: 0, transform: 'translateZ(0)' }}>
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">On the Ground</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trek Gallery</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {trek.gallery.map((img, i) => (
-                            <div
-                                key={i}
-                                className={`overflow-hidden bg-slate-100 ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
-                                style={{ aspectRatio: i === 0 ? '16/9' : '4/3' }}
-                            >
-                                <img
-                                    src={img}
-                                    alt={`${trek.name} trek photo ${i + 1}`}
-                                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    <TrekGallery images={trek.gallery} trekName={trek.name} />
                 </div>
             </section>
 
             {/* ── Testimonials ── */}
-            <section className="border-t border-zinc-border bg-slate-50">
+            <section id="reviews" className="border-t border-zinc-border bg-slate-50">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Field Reports</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trekker Testimonials</h2>
@@ -242,7 +231,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             </section>
 
             {/* ── Getting There ── */}
-            <section className="border-t border-zinc-border">
+            <section id="logistics" className="border-t border-zinc-border">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Logistics</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Getting There</h2>
@@ -376,7 +365,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             </section>
 
             {/* ── FAQ ── */}
-            <section className="border-t border-zinc-border bg-slate-50">
+            <section id="faqs" className="border-t border-zinc-border bg-slate-50">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <div className="flex items-end gap-4 mb-12">
                         <div>
@@ -414,7 +403,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             )}
 
             {/* ── Enquiry Form ── */}
-            <section className="border-t border-zinc-border">
+            <section id="enquire" className="border-t border-zinc-border">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Custom Dates & Private Groups</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Make an Enquiry</h2>

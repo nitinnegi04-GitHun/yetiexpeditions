@@ -29,6 +29,7 @@ export const TREK_BY_SLUG_QUERY = groq`
     name,
     slug,
     bannerImage,
+    "bannerVideoUrl": bannerVideo.asset->url,
     gallery,
     difficulty,
     duration,
