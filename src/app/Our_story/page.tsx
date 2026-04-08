@@ -241,51 +241,51 @@ export default async function AboutPage() {
                             {guidesHeading}
                         </h2>
                     </div>
-                    <div className="border-t border-zinc-border">
+                    <div className="border-t border-zinc-border grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px bg-zinc-border">
                         {guides.map((g: {
                             _key?: string; guideId: string; name: string; title: string;
                             cert: string; summits: string; stats: string[]; image?: unknown;
                             instagramHandle?: string; whatsappNumber?: string
                         }, i: number) => {
                             const guideImageUrl = g.image
-                                ? urlFor(g.image).width(400).url()
+                                ? urlFor(g.image).width(600).url()
                                 : FALLBACK_GUIDE_IMAGE
                             return (
                                 <div
                                     key={g._key ?? i}
-                                    className="border-b border-zinc-border hover:bg-white transition-colors flex gap-0"
+                                    className="bg-slate-50 hover:bg-white transition-colors flex flex-col"
                                 >
-                                    <div className="w-40 md:w-56 shrink-0 relative overflow-hidden">
+                                    {/* Image — full width, tall aspect ratio */}
+                                    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '3/4' }}>
                                         <img
                                             src={guideImageUrl}
                                             alt={g.name}
-                                            className="w-full h-full object-cover grayscale object-top"
+                                            className="w-full h-full object-cover object-top grayscale"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-slate-50/60" />
-                                    </div>
-                                    <div className="flex-1 px-6 md:px-8 py-8 flex flex-col gap-4">
-                                        <div className="flex items-start justify-between gap-4 flex-wrap">
-                                            <div>
-                                                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-1">{g.guideId}</p>
-                                                <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-slate-900">{g.name}</h3>
-                                                <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mt-1">{g.title}</p>
-                                            </div>
-                                            <div className="text-right shrink-0">
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">{g.cert}</p>
-                                                <p className="text-xs font-bold text-primary">{g.summits}</p>
-                                            </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                        <div className="absolute bottom-4 left-4">
+                                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-1">{g.guideId}</p>
                                         </div>
-                                        <div className="flex gap-4 flex-wrap">
+                                    </div>
+
+                                    {/* Info */}
+                                    <div className="flex-1 p-6 flex flex-col gap-4">
+                                        <div>
+                                            <h3 className="text-base font-black uppercase tracking-tight text-slate-900">{g.name}</h3>
+                                            <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mt-1">{g.title}</p>
+                                        </div>
+                                        <div className="flex flex-col gap-1">
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">{g.cert}</p>
+                                            <p className="text-xs font-bold text-primary">{g.summits}</p>
+                                        </div>
+                                        <div className="flex flex-col gap-1">
                                             {(g.stats ?? []).map((stat: string, j: number) => (
                                                 <p key={j} className="text-[9px] font-mono text-slate-400 uppercase tracking-wider">{stat}</p>
                                             ))}
                                         </div>
                                         {(g.whatsappNumber || g.instagramHandle) && (
-                                            <div className="flex flex-col gap-2 pt-2 border-t border-zinc-border mt-2">
-                                                <p className="text-[9px] font-black uppercase tracking-[0.25em] pt-4 text-slate-400">
-                                                    Plan your trek directly
-                                                </p>
-                                                <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-col gap-2 pt-3 border-t border-zinc-border mt-auto">
+                                                <div className="flex flex-col gap-2">
                                                     {g.whatsappNumber && (
                                                         <a
                                                             href={`https://wa.me/${g.whatsappNumber}`}
