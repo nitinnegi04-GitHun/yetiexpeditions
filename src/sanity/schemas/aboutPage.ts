@@ -11,14 +11,14 @@ export const aboutPage = defineType({
   __experimental_actions: ['update', 'publish'],
 
   groups: [
-    { name: 'leftPanel',  title: '📷  Left Panel'     },
-    { name: 'hero',       title: '🏔  Hero'            },
-    { name: 'founding',   title: '📖  The Founding'    },
-    { name: 'stats',      title: '📊  By The Numbers'  },
-    { name: 'philosophy', title: '⚙️  Sherpa Code'     },
-    { name: 'guides',     title: '🧗  Our Guides'      },
-    { name: 'whyYeti',    title: '✓  Why Yeti'        },
-    { name: 'cta',        title: '🎯  CTA'             },
+    { name: 'leftPanel', title: '📷  Left Panel' },
+    { name: 'hero', title: '🏔  Hero' },
+    { name: 'founding', title: '📖  The Founding' },
+    { name: 'stats', title: '📊  By The Numbers' },
+    { name: 'philosophy', title: '⚙️  How We Climb' },
+    { name: 'guides', title: '🧗  Our Guides' },
+    { name: 'whyYeti', title: '✓  Why Yeti' },
+    { name: 'cta', title: '🎯  CTA' },
   ],
 
   fields: [
@@ -97,12 +97,12 @@ export const aboutPage = defineType({
     // ── SECTION 4: THE SHERPA CODE ────────────────────────────────────────────
     defineField({
       name: 'philosophy',
-      title: 'The Sherpa Code',
+      title: 'How We Climb',
       type: 'object',
       group: 'philosophy',
       fields: [
         defineField({ name: 'tagline', title: 'Tagline', type: 'string', initialValue: 'Operating Principles' }),
-        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'The Sherpa Code' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'The How We Climb' }),
         defineField({
           name: 'principles',
           title: 'Principles',

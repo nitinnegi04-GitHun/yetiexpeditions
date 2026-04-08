@@ -56,7 +56,7 @@ export default async function AboutPage() {
 
     // ── Philosophy ───────────────────────────────────────────────────────────────
     const philTagline = d?.philosophy?.tagline ?? 'Operating Principles'
-    const philHeading = d?.philosophy?.heading ?? 'The Sherpa Code'
+    const philHeading = d?.philosophy?.heading ?? 'How We Climb'
     const principles = d?.philosophy?.principles?.length ? d.philosophy.principles : [
         { code: '01', title: 'The Mountain Decides', body: 'No summit is worth a life. We turn back when the mountain demands it — and we train our clients to trust that call. Ego is the most dangerous piece of kit you can carry above 5,000m.' },
         { code: '02', title: 'Oxygen Is Non-Negotiable', body: "Twice-daily SpO2 monitoring isn't a nice-to-have. It's protocol. Every guide carries supplemental oxygen. Every itinerary has built-in acclimatisation. There are no shortcuts above the clouds." },
@@ -205,7 +205,7 @@ export default async function AboutPage() {
                 </div>
             </section>
 
-            {/* ── The Sherpa Code ── */}
+            {/* ── How We Climb ── */}
             <section className="border-b border-zinc-border">
                 <div className="max-w-[1440px] mx-auto px-8 md:px-16 py-16 md:py-24">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-6">
