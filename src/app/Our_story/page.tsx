@@ -168,7 +168,7 @@ export default async function AboutPage() {
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-10 text-slate-900">
                         {foundingHeading}
                     </h2>
-                    <div className="space-y-6 text-sm text-slate-600 leading-relaxed max-w-2xl">
+                    <div className="space-y-6 text-sm text-slate-600 leading-relaxed">
                         {paragraphs.map((para: string, i: number) => (
                             <p key={i}>{para}</p>
                         ))}
