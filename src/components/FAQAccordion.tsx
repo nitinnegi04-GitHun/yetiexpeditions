@@ -15,8 +15,10 @@ export default function FAQAccordion({ faqs }: { faqs: FAQ[] }) {
             {faqs.map((faq, i) => (
                 <div key={i} className="border-b border-zinc-border">
                     <button
+                        type="button"
                         onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                        className="w-full flex justify-between items-center p-6 md:p-8 text-left hover:bg-white transition-colors"
+                        className="w-full flex justify-between items-center p-6 md:p-8 text-left hover:bg-white transition-colors cursor-pointer"
+                        style={{ touchAction: 'manipulation' }}
                     >
                         <span className="font-black uppercase text-sm tracking-tight pr-6">{faq.question}</span>
                         <ChevronDown

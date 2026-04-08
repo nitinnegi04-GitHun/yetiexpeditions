@@ -1,0 +1,1497 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Unique identifier e.g. KED-DEC-2025-01",
+        "name": "batchId",
+        "type": "string",
+        "title": "Batch ID"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "startDate",
+        "type": "date"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "endDate",
+        "type": "date"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "price",
+        "type": "number",
+        "title": "Price (INR)"
+      },
+      {
+        "description": "Leave empty if no discount",
+        "name": "discountedPrice",
+        "type": "number",
+        "title": "Discounted Price (INR)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "totalSeats",
+        "type": "number"
+      },
+      {
+        "initialValue": 0,
+        "name": "seatsBooked",
+        "type": "number"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Open",
+              "value": "open"
+            },
+            {
+              "title": "Full",
+              "value": "full"
+            },
+            {
+              "title": "Cancelled",
+              "value": "cancelled"
+            },
+            {
+              "title": "Completed",
+              "value": "completed"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "open",
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "open",
+                  "full",
+                  "cancelled",
+                  "completed"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "description": "e.g. Dehradun Railway Station",
+        "name": "meetingPoint",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "description": "Any special notes for this batch",
+        "name": "notes",
+        "type": "text",
+        "title": "Batch Notes"
+      }
+    ],
+    "name": "calendarBatch",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "fields": [
+          {
+            "initialValue": "High Altitude Logistics",
+            "description": "Small label above the headline. e.g. \"High Altitude Logistics\"",
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Text"
+          },
+          {
+            "initialValue": "Safety.",
+            "name": "headlineLine1",
+            "type": "string",
+            "title": "Headline — Line 1"
+          },
+          {
+            "initialValue": "Comfort.",
+            "name": "headlineLine2",
+            "type": "string",
+            "title": "Headline — Line 2"
+          },
+          {
+            "initialValue": "The Himalayas.",
+            "name": "headlineLine3",
+            "type": "string",
+            "title": "Headline — Line 3"
+          },
+          {
+            "rows": 2,
+            "initialValue": "Experience the world's highest peaks with highly qualified guides and unmatched safety standards.",
+            "name": "subheading",
+            "type": "text"
+          },
+          {
+            "initialValue": "View Expeditions",
+            "name": "ctaText",
+            "type": "string",
+            "title": "Button Text"
+          },
+          {
+            "initialValue": "/treks",
+            "name": "ctaUrl",
+            "type": "string",
+            "title": "Button URL"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "name": "heroImage",
+            "type": "image"
+          },
+          {
+            "initialValue": "Mount Everest Base Camp",
+            "name": "imageCaption",
+            "type": "string"
+          },
+          {
+            "initialValue": "28.0026° N, 86.8528° E",
+            "name": "imageCoordinates",
+            "type": "string"
+          }
+        ],
+        "name": "hero",
+        "type": "object",
+        "title": "Hero Section"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "length",
+                "constraint": 4
+              }
+            ],
+            "level": "error",
+            "message": "Must have exactly 4 trust stats"
+          }
+        ],
+        "description": "The 4 stat blocks below the hero. Keep exactly 4.",
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. Guide Ratio",
+                "name": "label",
+                "type": "string"
+              },
+              {
+                "description": "e.g. 1:4",
+                "name": "value",
+                "type": "string"
+              },
+              {
+                "name": "description",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "trustMatrix",
+        "type": "array",
+        "title": "Trust Matrix Stats"
+      },
+      {
+        "fields": [
+          {
+            "initialValue": "Beyond The Trek",
+            "name": "sectionTagline",
+            "type": "string"
+          },
+          {
+            "initialValue": "Our Special Projects",
+            "name": "sectionHeading",
+            "type": "string"
+          },
+          {
+            "rows": 2,
+            "initialValue": "We believe the mountains demand more than technical skill. They demand responsibility — to the land, the communities, and the people who live among them.",
+            "name": "sectionDescription",
+            "type": "text"
+          },
+          {
+            "initialValue": "1% of every expedition fee is directed to our special projects fund.",
+            "name": "footerNote",
+            "type": "string"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "max",
+                    "constraint": 3
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "of": [
+              {
+                "fields": [
+                  {
+                    "description": "e.g. Education, Environment, Community",
+                    "name": "category",
+                    "type": "string"
+                  },
+                  {
+                    "name": "name",
+                    "type": "string",
+                    "title": "Project Name"
+                  },
+                  {
+                    "name": "tagline",
+                    "type": "string"
+                  },
+                  {
+                    "rows": 3,
+                    "name": "description",
+                    "type": "text"
+                  },
+                  {
+                    "description": "e.g. 14 Schools Built",
+                    "name": "stat",
+                    "type": "string"
+                  },
+                  {
+                    "description": "e.g. across the Khumbu & Annapurna regions",
+                    "name": "statSub",
+                    "type": "string",
+                    "title": "Stat Subtitle"
+                  },
+                  {
+                    "options": {
+                      "hotspot": true
+                    },
+                    "name": "image",
+                    "type": "image",
+                    "title": "Project Image"
+                  },
+                  {
+                    "initialValue": "Learn More",
+                    "name": "ctaText",
+                    "type": "string",
+                    "title": "CTA Button Text"
+                  },
+                  {
+                    "name": "ctaUrl",
+                    "type": "string",
+                    "title": "CTA URL"
+                  }
+                ],
+                "type": "object"
+              }
+            ],
+            "name": "projects",
+            "type": "array"
+          }
+        ],
+        "name": "specialProjects",
+        "type": "object",
+        "title": "Special Projects Section"
+      },
+      {
+        "fields": [
+          {
+            "rows": 3,
+            "initialValue": "The mountains are not a place to conquer, but a place to rediscover what it means to be human under the strict guidance of nature.",
+            "name": "quote",
+            "type": "text"
+          },
+          {
+            "initialValue": "Reinhold Messner",
+            "name": "author",
+            "type": "string",
+            "title": "Author Name"
+          },
+          {
+            "initialValue": "Alpine Legend",
+            "name": "authorTitle",
+            "type": "string"
+          }
+        ],
+        "name": "quoteSection",
+        "type": "object"
+      }
+    ],
+    "name": "homepage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Trek Name"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. Nepal, India",
+        "name": "region",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Nepal",
+              "value": "Nepal"
+            },
+            {
+              "title": "India",
+              "value": "India"
+            },
+            {
+              "title": "Bhutan",
+              "value": "Bhutan"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Nepal",
+                  "India",
+                  "Bhutan"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "country",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Easy",
+              "value": "Easy"
+            },
+            {
+              "title": "Moderate",
+              "value": "Moderate"
+            },
+            {
+              "title": "Difficult",
+              "value": "Difficult"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Easy",
+                  "Moderate",
+                  "Difficult"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "difficulty",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. 14 Days",
+        "name": "duration",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. 5,364m",
+        "name": "altitude",
+        "type": "string",
+        "title": "Max Altitude"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. MAR-MAY",
+        "name": "season",
+        "type": "string",
+        "title": "Best Season"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. TEAHOUSE",
+        "name": "accommodation",
+        "type": "string",
+        "title": "Accommodation Type"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "e.g. MAX 08",
+        "name": "groupSize",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Display string shown on trek card e.g. $3,400",
+        "name": "investment",
+        "type": "string",
+        "title": "Price Display"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "bannerImage",
+        "type": "image"
+      },
+      {
+        "of": [
+          {
+            "type": "calendarBatch"
+          }
+        ],
+        "name": "batches",
+        "type": "array",
+        "title": "Departure Batches"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. 01",
+                "name": "day",
+                "type": "string"
+              },
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "rows": 3,
+                "name": "content",
+                "type": "text",
+                "title": "Description"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "itinerary",
+        "type": "array"
+      },
+      {
+        "description": "Data points for the altitude chart",
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "day",
+                "type": "number"
+              },
+              {
+                "description": "e.g. Namche",
+                "name": "label",
+                "type": "string",
+                "title": "Location Label"
+              },
+              {
+                "name": "altitude",
+                "type": "number",
+                "title": "Altitude (m)"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "altitudeProfile",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "included",
+        "type": "array",
+        "title": "What's Included"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "excluded",
+        "type": "array",
+        "title": "What's Excluded"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. Clothing, Footwear",
+                "name": "category",
+                "type": "string"
+              },
+              {
+                "of": [
+                  {
+                    "type": "string"
+                  }
+                ],
+                "name": "items",
+                "type": "array"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "packingList",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. 16+ Weeks Out",
+                "name": "weeks",
+                "type": "string",
+                "title": "Timeframe"
+              },
+              {
+                "name": "focus",
+                "type": "string",
+                "title": "Focus Area"
+              },
+              {
+                "rows": 2,
+                "name": "description",
+                "type": "text"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "physicalPrep",
+        "type": "array",
+        "title": "Physical Preparation"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "description": "e.g. London, UK",
+                "name": "location",
+                "type": "string"
+              },
+              {
+                "initialValue": 5,
+                "name": "rating",
+                "type": "number",
+                "title": "Rating (1-5)"
+              },
+              {
+                "rows": 3,
+                "name": "text",
+                "type": "text",
+                "title": "Review Text"
+              },
+              {
+                "description": "e.g. EBC — March 2024",
+                "name": "batch",
+                "type": "string",
+                "title": "Batch Reference"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "testimonials",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "gallery",
+        "type": "array",
+        "title": "Gallery Images"
+      },
+      {
+        "fields": [
+          {
+            "rows": 2,
+            "name": "arrival",
+            "type": "text",
+            "title": "Arrival Info"
+          },
+          {
+            "rows": 2,
+            "name": "visa",
+            "type": "text",
+            "title": "Visa Info"
+          },
+          {
+            "rows": 2,
+            "name": "domesticFlight",
+            "type": "text",
+            "title": "Domestic Flight Info"
+          }
+        ],
+        "name": "gettingThere",
+        "type": "object"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "location",
+                "type": "string"
+              },
+              {
+                "description": "e.g. Teahouse, 3-Star Hotel",
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "name": "nights",
+                "type": "number"
+              },
+              {
+                "name": "notes",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "accommodationDetails",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "name",
+                "type": "string",
+                "title": "Permit Name"
+              },
+              {
+                "description": "e.g. $30 USD",
+                "name": "cost",
+                "type": "string"
+              },
+              {
+                "initialValue": "Yeti Expeditions",
+                "name": "handledBy",
+                "type": "string"
+              },
+              {
+                "name": "notes",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "permits",
+        "type": "array",
+        "title": "Permits Required"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "name": "question",
+                "type": "string"
+              },
+              {
+                "rows": 3,
+                "name": "answer",
+                "type": "text"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "faqs",
+        "type": "array",
+        "title": "FAQs"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "max",
+                "constraint": 3
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "to": [
+              {
+                "type": "trek"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to trek"
+          }
+        ],
+        "name": "relatedTreks",
+        "type": "array"
+      }
+    ],
+    "name": "trek",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 2,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "max",
+                "constraint": 300
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "initialValue": false,
+        "description": "Pinned to the top of the journal page",
+        "name": "featured",
+        "type": "boolean",
+        "title": "Featured Article"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Cover Image"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Expedition Reports",
+              "value": "Expedition Reports"
+            },
+            {
+              "title": "Gear & Kit",
+              "value": "Gear & Kit"
+            },
+            {
+              "title": "Training",
+              "value": "Training"
+            },
+            {
+              "title": "Altitude Science",
+              "value": "Altitude Science"
+            },
+            {
+              "title": "Community",
+              "value": "Community"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Expedition Reports",
+                  "Gear & Kit",
+                  "Training",
+                  "Altitude Science",
+                  "Community"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "author",
+        "type": "string",
+        "title": "Author Name"
+      },
+      {
+        "description": "e.g. Lead Expedition Guide · IFMGA Certified",
+        "name": "authorTitle",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "date",
+        "type": "date",
+        "title": "Publish Date"
+      },
+      {
+        "description": "e.g. 8 min read",
+        "name": "readTime",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "of": [
+          {
+            "fields": [
+              {
+                "initialValue": "p",
+                "hidden": true,
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "rows": 4,
+                "name": "text",
+                "type": "text"
+              }
+            ],
+            "type": "object",
+            "name": "paragraph"
+          },
+          {
+            "fields": [
+              {
+                "initialValue": "h2",
+                "hidden": true,
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "name": "text",
+                "type": "string",
+                "title": "Heading Text"
+              }
+            ],
+            "type": "object",
+            "name": "heading",
+            "title": "Heading (H2)"
+          },
+          {
+            "fields": [
+              {
+                "initialValue": "quote",
+                "hidden": true,
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "rows": 2,
+                "name": "text",
+                "type": "text",
+                "title": "Quote Text"
+              },
+              {
+                "description": "Optional source name",
+                "name": "attribution",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "quote",
+            "title": "Pull Quote"
+          },
+          {
+            "fields": [
+              {
+                "initialValue": "image",
+                "hidden": true,
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "options": {
+                  "hotspot": true
+                },
+                "name": "src",
+                "type": "image",
+                "title": "Image"
+              },
+              {
+                "name": "caption",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "articleImage",
+            "title": "Image"
+          },
+          {
+            "fields": [
+              {
+                "initialValue": "divider",
+                "hidden": true,
+                "name": "type",
+                "type": "string"
+              }
+            ],
+            "type": "object",
+            "name": "divider"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Article Body"
+      }
+    ],
+    "name": "article",
+    "type": "document",
+    "title": "Journal Article"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "length",
+                "constraint": 4
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "The 4 headline numbers on the About page",
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. 847",
+                "name": "value",
+                "type": "string"
+              },
+              {
+                "description": "e.g. Expeditions Led",
+                "name": "label",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "stats",
+        "type": "array",
+        "title": "About Page Stats"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "length",
+                "constraint": 4
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "4 trust indicators shown across the site",
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. Guide Ratio",
+                "name": "label",
+                "type": "string"
+              },
+              {
+                "description": "e.g. 1:4",
+                "name": "value",
+                "type": "string"
+              },
+              {
+                "name": "description",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "trustMatrix",
+        "type": "array"
+      },
+      {
+        "description": "4 philosophy items on the About page",
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. 01",
+                "name": "code",
+                "type": "string",
+                "title": "Code Number"
+              },
+              {
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "rows": 2,
+                "name": "body",
+                "type": "text"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "philosophy",
+        "type": "array",
+        "title": "The Sherpa Code (Philosophy)"
+      },
+      {
+        "description": "4 differentiators shown on the About page grid",
+        "of": [
+          {
+            "fields": [
+              {
+                "description": "e.g. Group Cap: 8",
+                "name": "title",
+                "type": "string"
+              },
+              {
+                "rows": 2,
+                "name": "body",
+                "type": "text"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "whyYeti",
+        "type": "array",
+        "title": "\"Why Yeti\" Grid"
+      },
+      {
+        "initialValue": "High Altitude Logistics",
+        "name": "heroBadge",
+        "type": "string",
+        "title": "Hero Badge Text"
+      },
+      {
+        "initialValue": "Safety. Comfort. The Himalayas.",
+        "name": "heroHeadline",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "heroSubheading",
+        "type": "text"
+      },
+      {
+        "initialValue": "everest-base-camp",
+        "description": "Slug of the trek the \"View Expeditions\" button links to",
+        "name": "heroCtaTrekSlug",
+        "type": "string",
+        "title": "Hero CTA — Trek Slug"
+      },
+      {
+        "rows": 2,
+        "name": "quoteText",
+        "type": "text",
+        "title": "Homepage Quote"
+      },
+      {
+        "description": "e.g. Reinhold Messner",
+        "name": "quoteAttribution",
+        "type": "string"
+      },
+      {
+        "description": "e.g. Alpine Legend",
+        "name": "quoteAttributionTitle",
+        "type": "string",
+        "title": "Attribution Title"
+      }
+    ],
+    "name": "siteSettings",
+    "type": "document"
+  }
+]

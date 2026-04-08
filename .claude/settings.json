@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -i \"SANITY_TOKEN\\\\|SANITY_API\" /Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/.env*)",
+      "Bash(curl -s \"http://localhost:3000/treks/everest-base-camp\")",
+      "Bash(grep -rn '`/trek/' /Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src --include=\"*.ts\" --include=\"*.tsx\")",
+      "Bash(sed -i '' 's|href={`/trek/${rt.slug}`}|href={`/treks/${rt.slug}`}|g' /Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/components/TrekDetails.tsx)",
+      "Bash(sed -i '' 's|href={`/trek/${trek.slug}`}|href={`/treks/${trek.slug}`}|g' /Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/components/TrekIndex.tsx /Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/components/TrekCalendar.tsx)",
+      "Bash(grep -rn '\"/trek/\\\\|`/trek/' /Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src --include=\"*.tsx\" --include=\"*.ts\")",
+      "Bash(npx sanity:*)",
+      "Bash(node -e ':*)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(node scripts/seed-about.mjs)",
+      "Bash(npx --yes dotenv-cli node scripts/seed-about.mjs)",
+      "Bash(node -e \" const { createClient } = require\\('@sanity/client'\\); \")",
+      "Bash(curl -s http://localhost:3000/about)"
+    ],
+    "additionalDirectories": [
+      "/Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/app/(site)/treks"
+    ]
+  }
+}

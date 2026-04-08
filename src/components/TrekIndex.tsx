@@ -24,7 +24,7 @@ export default function TrekIndex() {
     });
 
     return (
-        <section className="w-full py-12 px-6 md:px-12 bg-white">
+        <section id="treks" className="w-full py-12 px-6 md:px-12 bg-white">
             <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-start mb-8 flex-wrap gap-8">
                     <div>
@@ -92,7 +92,7 @@ export default function TrekIndex() {
                         filtered.map((trek) => (
                             <Link
                                 key={trek.id}
-                                href={`/trek/${trek.slug}`}
+                                href={`/treks/${trek.slug}`}
                                 className="flex flex-col md:flex-row items-start md:items-center justify-between py-6 px-4 border-b border-zinc-border hover:bg-slate-50 transition-colors cursor-pointer group"
                             >
                                 <div className="flex items-center gap-8 w-full md:w-1/2">

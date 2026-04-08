@@ -19,8 +19,10 @@ export default function ItineraryAccordion({ steps }: { steps: Step[] }) {
                 return (
                     <div key={index} className="border-b border-zinc-100 group">
                         <button
+                            type="button"
                             onClick={() => setOpenIndex(isOpen ? null : index)}
-                            className="w-full flex items-center gap-6 md:gap-8 py-6 text-left hover:bg-slate-50/60 transition-colors px-0"
+                            className="w-full flex items-center gap-6 md:gap-8 py-6 text-left hover:bg-slate-50/60 transition-colors px-0 cursor-pointer"
+                            style={{ touchAction: 'manipulation' }}
                         >
                             {/* Day number */}
                             <span className={`text-3xl font-black tracking-tighter shrink-0 transition-colors w-12 ${isOpen ? 'text-primary' : 'text-slate-200 group-hover:text-slate-300'}`}>

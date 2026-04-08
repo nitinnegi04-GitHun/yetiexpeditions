@@ -211,7 +211,7 @@ export default function TrekCalendar() {
                                                     <span className="text-[10px] text-slate-400 font-bold uppercase ml-1">USD</span>
                                                 </p>
                                                 <Link
-                                                    href={`/trek/${trek.slug}`}
+                                                    href={`/treks/${trek.slug}`}
                                                     className="inline-flex items-center justify-center p-3 md:px-5 md:py-3 bg-zinc-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-colors group/link shrink-0"
                                                 >
                                                     <span className="hidden md:inline">View</span>

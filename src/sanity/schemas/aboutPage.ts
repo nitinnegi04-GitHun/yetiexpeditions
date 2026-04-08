@@ -1,0 +1,243 @@
+import { defineType, defineField } from 'sanity'
+import { VisibilityToggle } from '../components/VisibilityToggle'
+
+export const aboutPage = defineType({
+  name: 'aboutPage',
+  title: 'Our Story',
+  type: 'document',
+
+  // Singleton — only one document should ever exist
+  __experimental_actions: ['update', 'publish'],
+
+  groups: [
+    { name: 'leftPanel',  title: '📷  Left Panel'     },
+    { name: 'hero',       title: '🏔  Hero'            },
+    { name: 'founding',   title: '📖  The Founding'    },
+    { name: 'stats',      title: '📊  By The Numbers'  },
+    { name: 'philosophy', title: '⚙️  Sherpa Code'     },
+    { name: 'guides',     title: '🧗  Our Guides'      },
+    { name: 'whyYeti',    title: '✓  Why Yeti'        },
+    { name: 'cta',        title: '🎯  CTA'             },
+  ],
+
+  fields: [
+
+    // ── LEFT PANEL (sticky image) ──────────────────────────────────────────────
+    defineField({
+      name: 'leftPanel',
+      title: 'Left Image Panel',
+      type: 'object',
+      group: 'leftPanel',
+      fields: [
+        defineField({ name: 'image', title: 'Panel Image', type: 'image', options: { hotspot: true } }),
+        defineField({ name: 'expeditionCity', title: 'City', type: 'string', initialValue: 'Kathmandu' }),
+        defineField({ name: 'expeditionCountry', title: 'Country', type: 'string', initialValue: 'Nepal' }),
+        defineField({ name: 'expeditionYear', title: 'Founded Year', type: 'string', initialValue: '2008' }),
+      ],
+    }),
+
+    // ── SECTION 1: HERO ───────────────────────────────────────────────────────
+    defineField({
+      name: 'hero',
+      title: 'Hero — Born From The Mountain',
+      type: 'object',
+      group: 'hero',
+      fields: [
+        defineField({ name: 'badge', title: 'Badge Text', type: 'string', initialValue: 'IFMGA Certified Expedition Company' }),
+        defineField({ name: 'headlineLine1', title: 'Headline — Line 1', type: 'string', initialValue: 'Born' }),
+        defineField({ name: 'headlineLine2', title: 'Headline — Line 2', type: 'string', initialValue: 'From The' }),
+        defineField({ name: 'headlineLine3', title: 'Headline — Line 3', type: 'string', initialValue: 'Mountain' }),
+        defineField({ name: 'openingQuote', title: 'Opening Quote', type: 'text', rows: 3, initialValue: 'We don\'t sell adventures. We guide lives. The mountain was here before us and it will outlast us — our job is to help you meet it honestly.' }),
+      ],
+    }),
+
+    // ── SECTION 2: THE FOUNDING ───────────────────────────────────────────────
+    defineField({
+      name: 'founding',
+      title: 'The Founding',
+      type: 'object',
+      group: 'founding',
+      fields: [
+        defineField({ name: 'tagline', title: 'Tagline', type: 'string', initialValue: 'The Beginning' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'How It Started' }),
+        defineField({
+          name: 'paragraphs',
+          title: 'Story Paragraphs',
+          description: 'Each entry is one paragraph of the founding story.',
+          type: 'array',
+          of: [{ type: 'text' }],
+        }),
+      ],
+    }),
+
+    // ── SECTION 3: BY THE NUMBERS ─────────────────────────────────────────────
+    defineField({
+      name: 'stats',
+      title: 'By The Numbers — Stats',
+      group: 'stats',
+      description: 'Keep exactly 4 stats.',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'value', title: 'Value', type: 'string', description: 'e.g. 847 or 6,200+' }),
+            defineField({ name: 'label', title: 'Label', type: 'string', description: 'e.g. Expeditions Led' }),
+          ],
+          preview: {
+            select: { value: 'value', label: 'label' },
+            prepare: ({ value, label }) => ({ title: value, subtitle: label }),
+          },
+        },
+      ],
+      validation: Rule => Rule.length(4).error('Must have exactly 4 stats'),
+    }),
+
+    // ── SECTION 4: THE SHERPA CODE ────────────────────────────────────────────
+    defineField({
+      name: 'philosophy',
+      title: 'The Sherpa Code',
+      type: 'object',
+      group: 'philosophy',
+      fields: [
+        defineField({ name: 'tagline', title: 'Tagline', type: 'string', initialValue: 'Operating Principles' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'The Sherpa Code' }),
+        defineField({
+          name: 'principles',
+          title: 'Principles',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({ name: 'code', title: 'Number', type: 'string', description: 'e.g. 01, 02' }),
+                defineField({ name: 'title', title: 'Principle Title', type: 'string' }),
+                defineField({ name: 'body', title: 'Body Text', type: 'text', rows: 3 }),
+              ],
+              preview: {
+                select: { code: 'code', title: 'title' },
+                prepare: ({ code, title }) => ({ title: `${code} — ${title}` }),
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+    // ── SECTION 5: OUR GUIDES ─────────────────────────────────────────────────
+    defineField({
+      name: 'guides',
+      title: 'Our Guides',
+      type: 'object',
+      group: 'guides',
+      fields: [
+        defineField({ name: 'tagline', title: 'Tagline', type: 'string', initialValue: 'The Team' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'Our Guides' }),
+        defineField({
+          name: 'guidesList',
+          title: 'Guides',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({ name: 'visible', title: 'Visibility', type: 'boolean', initialValue: true, components: { input: VisibilityToggle } }),
+                defineField({ name: 'guideId', title: 'Guide ID', type: 'string', description: 'e.g. GUIDE-001' }),
+                defineField({ name: 'name', title: 'Full Name', type: 'string' }),
+                defineField({ name: 'title', title: 'Title / Role', type: 'string', description: 'e.g. Lead Expedition Guide' }),
+                defineField({ name: 'cert', title: 'Certification', type: 'string', description: 'e.g. IFMGA Certified' }),
+                defineField({ name: 'summits', title: 'Summit Record', type: 'string', description: 'e.g. Everest ×14' }),
+                defineField({
+                  name: 'stats',
+                  title: 'Field Stats',
+                  description: 'e.g. VO2 MAX: 58 ml/kg/min',
+                  type: 'array',
+                  of: [{ type: 'string' }],
+                }),
+                defineField({ name: 'image', title: 'Photo', type: 'image', options: { hotspot: true } }),
+                defineField({ name: 'instagramHandle', title: 'Instagram Handle', type: 'string', description: 'Without the @ symbol. e.g. lakparita.sherpa' }),
+                defineField({ name: 'whatsappNumber', title: 'WhatsApp Number', type: 'string', description: 'International format without + or spaces. e.g. 9779812345678' }),
+              ],
+              preview: {
+                select: { name: 'name', title: 'title', media: 'image', visible: 'visible' },
+                prepare: ({ name, title, media, visible }) => ({
+                  title: `${visible === false ? '○ ' : '● '}${name}`,
+                  subtitle: title,
+                  media,
+                }),
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+    // ── SECTION 6: WHY YETI ───────────────────────────────────────────────────
+    defineField({
+      name: 'whyYeti',
+      title: 'Why Yeti',
+      type: 'object',
+      group: 'whyYeti',
+      fields: [
+        defineField({ name: 'tagline', title: 'Tagline', type: 'string', initialValue: 'The Difference' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'Why Yeti' }),
+        defineField({
+          name: 'differentiators',
+          title: 'Differentiators',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({ name: 'title', title: 'Title', type: 'string', description: 'e.g. Group Cap: 8' }),
+                defineField({ name: 'body', title: 'Body', type: 'text', rows: 2 }),
+              ],
+              preview: {
+                select: { title: 'title' },
+                prepare: ({ title }) => ({ title }),
+              },
+            },
+          ],
+          validation: Rule => Rule.length(4).error('Must have exactly 4 differentiators'),
+        }),
+      ],
+    }),
+
+    // ── SECTION 7: CTA ────────────────────────────────────────────────────────
+    defineField({
+      name: 'cta',
+      title: 'CTA — The Mountain Is Waiting',
+      type: 'object',
+      group: 'cta',
+      fields: [
+        defineField({ name: 'badge', title: 'Badge Text', type: 'string', initialValue: 'Join The Next Expedition' }),
+        defineField({ name: 'headlineLine1', title: 'Headline — Line 1', type: 'string', initialValue: 'The Mountain' }),
+        defineField({ name: 'headlineLine2', title: 'Headline — Line 2', type: 'string', initialValue: 'Is Waiting' }),
+        defineField({ name: 'headlineLine3', title: 'Headline — Line 3', type: 'string', initialValue: 'For You' }),
+        defineField({
+          name: 'buttons',
+          title: 'CTA Buttons',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({ name: 'text', title: 'Button Text', type: 'string' }),
+                defineField({ name: 'url', title: 'Button URL', type: 'string' }),
+              ],
+              preview: {
+                select: { text: 'text', url: 'url' },
+                prepare: ({ text, url }) => ({ title: text, subtitle: url }),
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+  ],
+
+  preview: {
+    prepare: () => ({ title: 'Our Story' }),
+  },
+})
