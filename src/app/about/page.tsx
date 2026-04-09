@@ -23,7 +23,7 @@ const PHILOSOPHY = [
     },
     {
         code: "03",
-        title: "The Sherpa Is Not A Porter",
+        title: "The Guide Is Not A Porter",
         body: "Our guides are IFMGA-certified mountaineers with decades of high-altitude experience. They read weather, manage altitude, and carry the knowledge of generations. Treat them accordingly."
     },
     {
@@ -159,6 +159,96 @@ export default function AboutPage() {
                         </div>
                     </section>
 
+                    {/* ── Section 2b: Co-Founder ── */}
+                    <section className="border-b border-zinc-border bg-white">
+                        <div className="flex flex-col md:flex-row min-h-[520px]">
+
+                            {/* Left: Text */}
+                            <div className="flex-1 px-8 md:px-12 py-16 flex flex-col justify-center">
+                                <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-6">
+                                    ▪ Co-Founder & Expedition Director
+                                </span>
+                                <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-2 text-slate-900 leading-none">
+                                    Pradhuman
+                                </h2>
+                                <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-8 text-slate-300 leading-none">
+                                    Singh Negi
+                                </h2>
+                                <p className="text-sm text-slate-500 leading-relaxed mb-10 max-w-sm">
+                                    Ex-Army. War battle casualty. Trained at the edges of the world — Siachen, Gulmarg, Manali — and returned to build something that passes that knowledge on.
+                                </p>
+                                <ul className="space-y-4">
+                                    {[
+                                        { code: "HAWS", label: "Instructor · High Altitude Warfare School, Gulmarg", sub: "\"The White Devil\"" },
+                                        { code: "SBS", label: "Instructor · Siachen Battle School", sub: "Highest Battlefield on Earth" },
+                                        { code: "ABVIMAS", label: "Instructor Mountaineering & Skiing · Manali", sub: "8 Years" },
+                                        { code: "2022", label: "Felicitated by Defence Minister Rajnath Singh", sub: "Govt. of India" },
+                                    ].map((item) => (
+                                        <li key={item.code} className="flex gap-5 items-start">
+                                            <span className="text-[9px] font-black font-mono text-primary tracking-widest pt-0.5 w-14 shrink-0">{item.code}</span>
+                                            <div>
+                                                <p className="text-xs font-bold uppercase tracking-tight text-slate-800">{item.label}</p>
+                                                <p className="text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">{item.sub}</p>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* Right: Photo with overlays */}
+                            <div className="w-full md:w-[45%] shrink-0 relative min-h-[400px] md:min-h-0 overflow-hidden">
+                                <img
+                                    src="/pradhuman-singh-negi.jpg"
+                                    alt="Pradhuman Singh Negi — Co-Founder, Yeti Expeditions"
+                                    className="w-full h-full object-cover object-center grayscale"
+                                />
+                                {/* Gradient layers */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-black/30" />
+                                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-black/40" />
+
+                                {/* Top-left: Name badge */}
+                                <div className="absolute top-0 left-0 p-6">
+                                    <p className="text-[8px] font-black uppercase tracking-[0.35em] text-primary mb-1">Personnel File</p>
+                                    <p className="text-xs font-black uppercase tracking-widest text-white/80">PSN · CO-FOUNDER</p>
+                                </div>
+
+                                {/* Vertical text — right edge */}
+                                <div className="absolute right-5 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3">
+                                    <div className="w-px h-12 bg-white/20" />
+                                    <span
+                                        className="text-[8px] font-black uppercase tracking-[0.35em] text-white/25"
+                                        style={{ writingMode: "vertical-rl" }}
+                                    >
+                                        Indian Army · High Altitude
+                                    </span>
+                                    <div className="w-px h-12 bg-white/20" />
+                                </div>
+
+                                {/* Centre callsign */}
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <p className="text-[9px] font-black uppercase tracking-[0.5em] text-white/10 text-center leading-loose">
+                                        &ldquo; WHITE DEVIL &rdquo;<br />CALLSIGN
+                                    </p>
+                                </div>
+
+                                {/* Bottom: Identifier */}
+                                <div className="absolute bottom-0 left-0 p-6">
+                                    <p className="text-[8px] font-black uppercase tracking-[0.35em] text-primary mb-2">Service Identifier</p>
+                                    <p className="text-2xl font-black uppercase tracking-tighter leading-none text-white">Siachen</p>
+                                    <p className="text-2xl font-black uppercase tracking-tighter leading-none text-white/30">Battle School · SBS</p>
+                                </div>
+
+                                {/* Bottom-right: stat readout */}
+                                <div className="absolute bottom-0 right-0 p-6 text-right space-y-1">
+                                    <p className="text-[8px] font-mono text-white/35 uppercase tracking-wider">HAWS: GULMARG</p>
+                                    <p className="text-[8px] font-mono text-white/35 uppercase tracking-wider">ABVIMAS: 8 YRS</p>
+                                    <p className="text-[8px] font-mono text-white/35 uppercase tracking-wider">MOD AWARD: 2022</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
                     {/* ── Section 3: By The Numbers ── */}
                     <section className="border-b border-zinc-border bg-slate-50">
                         <div className="px-8 md:px-12 pt-12 pb-6">
@@ -185,13 +275,13 @@ export default function AboutPage() {
                         </div>
                     </section>
 
-                    {/* ── Section 4: The Sherpa Code ── */}
+                    {/* ── Section 4: How We Climb ── */}
                     <section className="px-8 md:px-12 py-16 border-b border-zinc-border bg-white">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-6">
                             Operating Principles
                         </span>
                         <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter mb-12 text-slate-900">
-                            The Sherpa Code
+                            How We Climb
                         </h2>
                         <div className="border-t border-zinc-border">
                             {PHILOSOPHY.map((p) => (

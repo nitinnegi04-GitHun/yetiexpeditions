@@ -1,21 +1,15 @@
 'use client';
 
-import { ArrowRight } from "lucide-react";
 import { urlFor } from "@/sanity/image";
-import { useScrollGrayscale } from "@/hooks/useScrollGrayscale";
 
 function ProjectImage({ src, alt }: { src: string; alt: string }) {
-  const { ref, filter } = useScrollGrayscale();
   return (
-    <div className="relative overflow-hidden h-52 border-b border-zinc-border">
-      <div ref={ref} className="w-full h-full">
-        <img
-          src={src}
-          alt={alt}
-          className="w-full h-full object-cover transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
-          style={{ filter, transition: 'filter 300ms ease, transform 700ms ease' }}
-        />
-      </div>
+    <div className="relative overflow-hidden border-b border-zinc-border" style={{ height: '280px' }}>
+      <img
+        src={src}
+        alt={alt}
+        className="absolute inset-0 w-full h-full object-cover grayscale brightness-75 contrast-125 group-hover:grayscale-0 transition-all duration-700"
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
     </div>
   );
@@ -50,7 +44,7 @@ const FALLBACK_PROJECTS: Project[] = [
     category: 'Education',
     name: 'Schools Above The Clouds',
     tagline: 'Learning at altitude.',
-    description: 'Partnering with local Sherpa communities to fund and construct classrooms in villages above 3,500m — places where children walk four hours each way just to learn. Every expedition booking contributes directly to this fund.',
+    description: 'Partnering with local mountain communities to fund and construct classrooms in villages above 3,500m — places where children walk four hours each way just to learn. Every expedition booking contributes directly to this fund.',
     stat: '14 Schools Built',
     statSub: 'across the Khumbu & Annapurna regions',
     ctaText: 'Learn More',
@@ -70,7 +64,7 @@ const FALLBACK_PROJECTS: Project[] = [
   {
     _key: 'sp03',
     category: 'Community',
-    name: 'Sherpa Legacy Fund',
+    name: 'Guide Legacy Fund',
     tagline: 'Honouring those who carry us up.',
     description: 'High-altitude guiding is one of the most dangerous professions on earth. Our legacy fund provides long-term healthcare, accident insurance, and higher-education scholarships for the families of every guide and porter we work with.',
     stat: '320+ Families',
@@ -87,12 +81,12 @@ const FALLBACK_IMAGES = [
 ]
 
 export default function SpecialProjects({ data }: { data?: SpecialProjectsData }) {
-  const tagline     = data?.sectionTagline     ?? 'Beyond The Trek'
-  const heading     = data?.sectionHeading     ?? 'Our Special Projects'
+  const tagline = data?.sectionTagline ?? 'Beyond The Trek'
+  const heading = data?.sectionHeading ?? 'Our Special Projects'
   const description = data?.sectionDescription ?? 'We believe the mountains demand more than technical skill. They demand responsibility — to the land, the communities, and the people who live among them.'
-  const footerNote  = data?.footerNote         ?? '1% of every expedition fee is directed to our special projects fund.'
-  const allProjects = data?.projects?.length   ? data.projects : FALLBACK_PROJECTS
-  const projects    = allProjects.filter(p => p.visible !== false)
+  const footerNote = data?.footerNote ?? '1% of every expedition fee is directed to our special projects fund.'
+  const allProjects = data?.projects?.length ? data.projects : FALLBACK_PROJECTS
+  const projects = allProjects.filter(p => p.visible !== false)
 
   return (
     <section className="w-full border-t border-zinc-border bg-white">
@@ -137,29 +131,22 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-col flex-1 p-8 md:p-10">
-                  <div className="flex items-center justify-between mb-10">
-                    <span className="text-slate-200 text-5xl font-black tracking-tighter transition-colors group-hover:text-primary/20">
+                <div className="flex flex-col flex-1 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-slate-200 text-4xl font-black tracking-tighter transition-colors group-hover:text-primary/20">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary border border-primary/30 px-3 py-1">
                       {project.category}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter leading-tight mb-2">{project.name}</h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">{project.tagline}</p>
-                  <p className="text-sm text-slate-600 leading-relaxed flex-1 mb-10">{project.description}</p>
-                  <div className="border-t border-zinc-border pt-6 mb-8">
-                    <p className="text-2xl font-black tracking-tighter text-slate-900">{project.stat}</p>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">{project.statSub}</p>
+                  <h3 className="text-xl font-black uppercase tracking-tighter leading-tight mb-1">{project.name}</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{project.tagline}</p>
+                  <p className="text-sm text-slate-600 leading-relaxed flex-1 mb-4">{project.description}</p>
+                  <div className="border-t border-zinc-border pt-4">
+                    <p className="text-xl font-black tracking-tighter" style={{ color: '#f4632eff' }}>{project.stat}</p>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">{project.statSub}</p>
                   </div>
-                  <a
-                    href={project.ctaUrl ?? '#'}
-                    className="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 hover:text-primary transition-colors group/cta"
-                  >
-                    {project.ctaText}
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/cta:translate-x-1" />
-                  </a>
                 </div>
               </div>
             )
@@ -167,14 +154,8 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-zinc-border px-6 md:px-12 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="border-t border-zinc-border px-6 md:px-12 py-6">
           <p className="text-[10px] text-slate-400 uppercase tracking-widest">{footerNote}</p>
-          <a
-            href="#"
-            className="text-[10px] font-black uppercase tracking-[0.2em] border-b border-primary text-primary pb-0.5 hover:text-slate-900 hover:border-slate-900 transition-colors"
-          >
-            View Annual Impact Report
-          </a>
         </div>
 
       </div>

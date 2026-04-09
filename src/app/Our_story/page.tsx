@@ -2,6 +2,7 @@ import { ArrowRight, MessageCircle, Instagram } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CoFounderModal from "@/components/CoFounderModal";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { ABOUT_PAGE_QUERY } from "@/sanity/queries/aboutPage";
@@ -28,7 +29,20 @@ export default async function AboutPage() {
         : FALLBACK_LEFT_IMAGE
     const city = d?.leftPanel?.expeditionCity ?? 'Kathmandu'
     const country = d?.leftPanel?.expeditionCountry ?? 'Nepal'
-    const year = d?.leftPanel?.expeditionYear ?? '2008'
+
+    // ── Co-Founder ───────────────────────────────────────────────────────────────
+    const coFounder = {
+        name: d?.coFounder?.name ?? 'Pradhuman Singh Negi',
+        role: d?.coFounder?.role ?? 'Co-Founder & Expedition Director',
+        bio: d?.coFounder?.bio ?? null,
+        quoteAttribution: d?.coFounder?.quoteAttribution ?? 'Pradhuman Singh Negi, Co-Founder',
+        credentials: d?.coFounder?.credentials?.length ? d.coFounder.credentials : [
+            { code: 'HAWS', label: 'Instructor · High Altitude Warfare School, Gulmarg', sub: '"The White Devil"' },
+            { code: 'SBS', label: 'Instructor · Siachen Battle School', sub: 'Highest Battlefield on Earth' },
+            { code: 'ABVIMAS', label: 'Instructor Mountaineering & Skiing · Manali', sub: '8 Years' },
+            { code: '2022', label: 'Felicitated by Defence Minister Rajnath Singh', sub: 'Govt. of India' },
+        ],
+    }
 
     // ── Hero ─────────────────────────────────────────────────────────────────────
     const heroBadge = d?.hero?.badge ?? 'IFMGA Certified Expedition Company'
@@ -60,7 +74,7 @@ export default async function AboutPage() {
     const principles = d?.philosophy?.principles?.length ? d.philosophy.principles : [
         { code: '01', title: 'The Mountain Decides', body: 'No summit is worth a life. We turn back when the mountain demands it — and we train our clients to trust that call. Ego is the most dangerous piece of kit you can carry above 5,000m.' },
         { code: '02', title: 'Oxygen Is Non-Negotiable', body: "Twice-daily SpO2 monitoring isn't a nice-to-have. It's protocol. Every guide carries supplemental oxygen. Every itinerary has built-in acclimatisation. There are no shortcuts above the clouds." },
-        { code: '03', title: 'The Sherpa Is Not A Porter', body: 'Our guides are IFMGA-certified mountaineers with decades of high-altitude experience. They read weather, manage altitude, and carry the knowledge of generations. Treat them accordingly.' },
+        { code: '03', title: 'The Guide Is Not A Porter', body: 'Our guides are IFMGA-certified mountaineers with decades of high-altitude experience. They read weather, manage altitude, and carry the knowledge of generations. Treat them accordingly.' },
         { code: '04', title: 'Leave Less Than You Found', body: 'Every permit fee funds trail restoration. Every camp is left cleaner than we arrived. We operate at a deficit with the mountain — it has given us everything, we owe it our best effort.' },
     ]
 
@@ -109,7 +123,7 @@ export default async function AboutPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                     <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '40px', left: '24px' }}>
                         <p className="text-white text-xs font-bold uppercase tracking-widest">{city}</p>
-                        <p className="text-white/80 text-[10px] uppercase">{country} · {year}</p>
+                        <p className="text-white/80 text-[10px] uppercase">{country}</p>
                     </div>
                     {logoUrl && (
                         <div className="absolute z-10" style={{ top: '40px', right: '24px' }}>
@@ -134,6 +148,13 @@ export default async function AboutPage() {
                                 <p className="text-[20px] italic md:text-lg text-slate-600 leading-relaxed">
                                     &ldquo;{heroQuote}&rdquo;
                                 </p>
+                                <CoFounderModal
+                                    name={coFounder.name}
+                                    role={coFounder.role}
+                                    bio={coFounder.bio}
+                                    quoteAttribution={coFounder.quoteAttribution}
+                                    credentials={coFounder.credentials}
+                                />
                             </blockquote>
                         </div>
                         <div />
@@ -148,7 +169,7 @@ export default async function AboutPage() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                         <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '64px', left: '40px' }}>
                             <p className="text-white text-xs font-bold uppercase tracking-widest">{city}</p>
-                            <p className="text-white/80 text-[10px] uppercase">{country} · {year}</p>
+                            <p className="text-white/80 text-[10px] uppercase">{country}</p>
                         </div>
                         {logoUrl && (
                             <div className="absolute z-10" style={{ top: '64px', right: '40px' }}>
@@ -253,14 +274,14 @@ export default async function AboutPage() {
                             return (
                                 <div
                                     key={g._key ?? i}
-                                    className="bg-slate-50 hover:bg-white transition-colors flex flex-col"
+                                    className="bg-slate-50 hover:bg-white transition-colors flex flex-col group"
                                 >
                                     {/* Image — full width, tall aspect ratio */}
                                     <div className="relative w-full overflow-hidden" style={{ aspectRatio: '3/4' }}>
                                         <img
                                             src={guideImageUrl}
                                             alt={g.name}
-                                            className="w-full h-full object-cover object-top grayscale"
+                                            className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                                         <div className="absolute bottom-4 left-4">

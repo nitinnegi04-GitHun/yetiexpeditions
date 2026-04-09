@@ -12,6 +12,7 @@ export const aboutPage = defineType({
 
   groups: [
     { name: 'leftPanel', title: '📷  Left Panel' },
+    { name: 'coFounder', title: '🎖  Co-Founder' },
     { name: 'hero', title: '🏔  Hero' },
     { name: 'founding', title: '📖  The Founding' },
     { name: 'stats', title: '📊  By The Numbers' },
@@ -31,9 +32,81 @@ export const aboutPage = defineType({
       group: 'leftPanel',
       fields: [
         defineField({ name: 'image', title: 'Panel Image', type: 'image', options: { hotspot: true } }),
-        defineField({ name: 'expeditionCity', title: 'City', type: 'string', initialValue: 'Kathmandu' }),
-        defineField({ name: 'expeditionCountry', title: 'Country', type: 'string', initialValue: 'Nepal' }),
-        defineField({ name: 'expeditionYear', title: 'Founded Year', type: 'string', initialValue: '2008' }),
+        defineField({ name: 'expeditionCity', title: 'Designation', type: 'string', initialValue: 'Kathmandu' }),
+        defineField({ name: 'expeditionCountry', title: 'Tag', type: 'string', initialValue: 'Nepal' }),
+      ],
+    }),
+
+    // ── CO-FOUNDER ────────────────────────────────────────────────────────────
+    defineField({
+      name: 'coFounder',
+      title: 'Co-Founder',
+      type: 'object',
+      group: 'coFounder',
+      fields: [
+        defineField({ name: 'name', title: 'Full Name', type: 'string', initialValue: 'Pradhuman Singh Negi' }),
+        defineField({ name: 'role', title: 'Role', type: 'string', initialValue: 'Co-Founder & Expedition Director' }),
+        defineField({
+          name: 'bio',
+          title: 'Bio',
+          type: 'array',
+          description: 'Supports bold, italic, and highlight colour.',
+          of: [
+            {
+              type: 'block',
+              styles: [{ title: 'Normal', value: 'normal' }],
+              lists: [],
+              marks: {
+                decorators: [
+                  { title: 'Bold', value: 'strong' },
+                  { title: 'Italic', value: 'em' },
+                ],
+                annotations: [
+                  {
+                    name: 'highlight',
+                    type: 'object',
+                    title: 'Highlight Colour',
+                    fields: [
+                      {
+                        name: 'color',
+                        title: 'Colour',
+                        type: 'string',
+                        options: {
+                          list: [
+                            { title: 'Red (Brand)', value: 'text-primary' },
+                            { title: 'Dark', value: 'text-slate-900' },
+                            { title: 'Muted', value: 'text-slate-400' },
+                          ],
+                          layout: 'radio',
+                        },
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+        defineField({ name: 'quoteAttribution', title: 'Quote Attribution Line', type: 'string', initialValue: 'Pradhuman Singh Negi, Co-Founder', description: 'Shown below the hero quote, e.g. "Pradhuman Singh Negi, Co-Founder"' }),
+        defineField({
+          name: 'credentials',
+          title: 'Credentials',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({ name: 'code', title: 'Code / Year', type: 'string', description: 'e.g. HAWS, SBS, 2022' }),
+                defineField({ name: 'label', title: 'Label', type: 'string' }),
+                defineField({ name: 'sub', title: 'Sub-text', type: 'string' }),
+              ],
+              preview: {
+                select: { code: 'code', label: 'label' },
+                prepare: ({ code, label }) => ({ title: `${code} — ${label}` }),
+              },
+            },
+          ],
+        }),
       ],
     }),
 
