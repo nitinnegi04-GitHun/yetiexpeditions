@@ -49,3 +49,50 @@ body {
     animation: trek-hero-reveal 2000ms ease 800ms forwards;
   }
 }
+
+/* Trek Calendar — editorial strip animations */
+@keyframes icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  20%       { transform: translateY(-5px); }
+  40%       { transform: translateY(0); }
+  60%       { transform: translateY(-3px); }
+  80%       { transform: translateY(0); }
+}
+
+@keyframes highlight-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.nudge-icon {
+  animation: icon-bounce 1s ease 400ms 1 forwards;
+}
+
+.nudge-highlight {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 69, 0, 0.25) 45%,
+    rgba(255, 200, 100, 0.4) 50%,
+    rgba(255, 69, 0, 0.25) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: highlight-sweep 1.2s ease 200ms 1 forwards;
+}
+
+/* Trek Calendar card — 3-column grid on desktop */
+.trek-card-row {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .trek-card-row {
+    grid-template-columns: 300px max-content 1fr;
+  }
+}

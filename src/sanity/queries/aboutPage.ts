@@ -15,7 +15,13 @@ export const ABOUT_PAGE_QUERY = groq`
     guides {
       tagline,
       heading,
-      guidesList[] { _key, visible, guideId, name, title, cert, summits, stats, image, instagramHandle, whatsappNumber }
+      guidesList[]-> { _id, guideId, name, title, cert, summits, stats, image, instagramHandle, whatsappNumber }
+    },
+    crew {
+      tagline,
+      heading,
+      description,
+      crewList[] { _key, visible, memberId, name, role, domain, note, image }
     },
     whyYeti {
       tagline,

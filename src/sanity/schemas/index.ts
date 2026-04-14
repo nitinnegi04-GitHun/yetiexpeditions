@@ -6,6 +6,7 @@ import { article } from './article'
 import { siteSettings } from './siteSettings'
 import { homepage } from './homepage'
 import { aboutPage } from './aboutPage'
+import { guide } from './guide'
 
 export const schemaTypes = [
   // Object types (embedded)
@@ -17,4 +18,5 @@ export const schemaTypes = [
   trek,
   article,
   siteSettings,
+  guide,
 ]

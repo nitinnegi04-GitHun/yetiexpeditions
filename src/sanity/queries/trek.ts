@@ -16,8 +16,18 @@ export const ALL_TREKS_QUERY = groq`
     country,
     groupSize,
     accommodation,
-    "upcomingBatches": batches[status == "open" && startDate > now()] | order(startDate asc)[0..2] {
+    "upcomingBatches": batches[status == "open" && startDate > now()] | order(startDate asc)[0..11] {
       batchId, startDate, endDate, price, discountedPrice, seatsBooked, totalSeats, status
+    },
+    "trekLead": trekLead-> {
+      name,
+      title,
+      cert,
+      summits,
+      stats,
+      image,
+      whatsappNumber,
+      instagramHandle
     }
   }
 `

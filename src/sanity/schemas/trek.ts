@@ -39,6 +39,14 @@ export const trek = defineType({
     defineField({ name: 'investment',    title: 'Price Display',      type: 'string',  group: 'overview', description: 'Display string e.g. $3,400', validation: Rule => Rule.required() }),
     defineField({ name: 'bannerImage',   title: 'Banner Image',       type: 'image',   group: 'overview', options: { hotspot: true }, description: 'Used when no video is uploaded. Provide either an image or a video (or both — video takes priority).' }),
     defineField({ name: 'bannerVideo',   title: 'Banner Video',       type: 'file',    group: 'overview', options: { accept: 'video/*' }, description: 'Upload an MP4/WebM to autoplay as the banner. If provided, this replaces the banner image.' }),
+    defineField({
+      name: 'trekLead',
+      title: 'Trek Lead',
+      type: 'reference',
+      to: [{ type: 'guide' }],
+      group: 'overview',
+      description: 'The primary guide leading this trek. Shown on the homepage calendar and trek page.',
+    }),
 
     // ── Batches / Calendar ─────────────────────────────────────
     defineField({

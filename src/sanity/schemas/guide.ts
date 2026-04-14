@@ -54,6 +54,18 @@ export const guide = defineType({
       validation: Rule => Rule.required(),
     }),
     defineField({
+      name: 'whatsappNumber',
+      title: 'WhatsApp Number',
+      type: 'string',
+      description: 'International format without + or spaces. e.g. 9779812345678',
+    }),
+    defineField({
+      name: 'instagramHandle',
+      title: 'Instagram Handle',
+      type: 'string',
+      description: 'Without the @ symbol. e.g. lakparita.sherpa',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',

@@ -81,12 +81,22 @@ export default async function AboutPage() {
     // ── Guides ───────────────────────────────────────────────────────────────────
     const guidesTagline = d?.guides?.tagline ?? 'The Team'
     const guidesHeading = d?.guides?.heading ?? 'Our Guides'
-    const allGuides = d?.guides?.guidesList?.length ? d.guides.guidesList : [
-        { guideId: 'GUIDE-001', name: 'Lakpa Rita Sherpa', title: 'Lead Expedition Guide', cert: 'IFMGA Certified', summits: 'Everest ×14', stats: ['VO2 MAX: 58 ml/kg/min', 'SpO2 @ 8000m: 88%', 'Active Since: 1998'] },
-        { guideId: 'GUIDE-002', name: 'Dawa Gyalje Sherpa', title: 'High Altitude Specialist', cert: 'WFR Certified', summits: 'Everest ×9 / Lhotse ×6', stats: ['VO2 MAX: 61 ml/kg/min', 'SpO2 @ 8000m: 91%', 'Active Since: 2004'] },
-        { guideId: 'GUIDE-003', name: 'Mingma Tshering', title: 'Route & Safety Director', cert: 'IFMGA / WFR', summits: 'Annapurna ×12 / Manaslu ×8', stats: ['VO2 MAX: 59 ml/kg/min', 'SpO2 @ 8000m: 89%', 'Active Since: 2001'] },
+    const guides = d?.guides?.guidesList?.length ? d.guides.guidesList : [
+        { _id: 'GUIDE-001', guideId: 'GUIDE-001', name: 'Lakpa Rita Sherpa', title: 'Lead Expedition Guide', cert: 'IFMGA Certified', summits: 'Everest ×14', stats: ['VO2 MAX: 58 ml/kg/min', 'SpO2 @ 8000m: 88%', 'Active Since: 1998'] },
+        { _id: 'GUIDE-002', guideId: 'GUIDE-002', name: 'Dawa Gyalje Sherpa', title: 'High Altitude Specialist', cert: 'WFR Certified', summits: 'Everest ×9 / Lhotse ×6', stats: ['VO2 MAX: 61 ml/kg/min', 'SpO2 @ 8000m: 91%', 'Active Since: 2004'] },
+        { _id: 'GUIDE-003', guideId: 'GUIDE-003', name: 'Mingma Tshering', title: 'Route & Safety Director', cert: 'IFMGA / WFR', summits: 'Annapurna ×12 / Manaslu ×8', stats: ['VO2 MAX: 59 ml/kg/min', 'SpO2 @ 8000m: 89%', 'Active Since: 2001'] },
     ]
-    const guides = allGuides.filter((g: { visible?: boolean }) => g.visible !== false)
+
+    // ── The Crew ─────────────────────────────────────────────────────────────
+    const crewTagline = d?.crew?.tagline ?? 'Operations'
+    const crewHeading = d?.crew?.heading ?? 'The Crew'
+    const crewDescription = d?.crew?.description ?? 'Every summit starts at base camp. These are the people who make each expedition operationally flawless — permits, logistics, client care, and everything in between.'
+    const allCrew = d?.crew?.crewList?.length ? d.crew.crewList : [
+        { memberId: 'OPS-001', name: 'Pemba Dorje Sherpa', role: 'Permits & Logistics Director', domain: 'Govt. Liaison · Route Clearance', note: '18 years navigating Nepal & India expedition permits. Every trekker arrives with paperwork that holds.', image: null },
+        { memberId: 'OPS-002', name: 'Sita Rai', role: 'Client Experience Manager', domain: 'Pre-Trek Prep · On-Trip Support', note: 'First voice you hear, last to sign off. Manages every client touchpoint from enquiry to post-trek debrief.', image: null },
+        { memberId: 'OPS-003', name: 'Tenzin Wangchuk', role: 'Base Camp & Supply Manager', domain: 'Camp Operations · Equipment', note: 'Runs the field supply chain — tents, rations, medical kit, porter welfare. Nothing moves without Tenzin.', image: null },
+    ]
+    const crew = allCrew.filter((m: { visible?: boolean }) => m.visible !== false)
 
     // ── Why Yeti ─────────────────────────────────────────────────────────────────
     const whyTagline = d?.whyYeti?.tagline ?? 'The Difference'
@@ -264,7 +274,7 @@ export default async function AboutPage() {
                     </div>
                     <div className="border-t border-zinc-border grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px bg-zinc-border">
                         {guides.map((g: {
-                            _key?: string; guideId: string; name: string; title: string;
+                            _id?: string; guideId: string; name: string; title: string;
                             cert: string; summits: string; stats: string[]; image?: unknown;
                             instagramHandle?: string; whatsappNumber?: string
                         }, i: number) => {
@@ -273,7 +283,7 @@ export default async function AboutPage() {
                                 : FALLBACK_GUIDE_IMAGE
                             return (
                                 <div
-                                    key={g._key ?? i}
+                                    key={g._id ?? i}
                                     className="bg-slate-50 hover:bg-white transition-colors flex flex-col group"
                                 >
                                     {/* Image — full width, tall aspect ratio */}
@@ -334,6 +344,59 @@ export default async function AboutPage() {
                                         )}
                                     </div>
                                 </div>
+                            )
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* ── The Crew ── */}
+            <section className="border-b border-zinc-border bg-white">
+                <div className="max-w-[1440px] mx-auto">
+                    <div className="px-8 md:px-16 pt-16 pb-8">
+                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-6">
+                            {crewTagline}
+                        </span>
+                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-slate-900">
+                            {crewHeading}
+                        </h2>
+                        <p className="text-sm text-slate-500 mt-4 max-w-xl leading-relaxed">
+                            {crewDescription}
+                        </p>
+                    </div>
+                    <div className="border-t border-zinc-border grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-zinc-border">
+                        {crew.map((member: {
+                            _key?: string; memberId: string; name: string; role: string;
+                            domain: string; note: string; image?: unknown
+                        }, i: number) => {
+                            const memberImageUrl = member.image
+                                ? urlFor(member.image).width(600).url()
+                                : FALLBACK_GUIDE_IMAGE
+                            return (
+                            <div key={member._key ?? i} className="bg-white hover:bg-slate-50 transition-colors flex flex-col group">
+                                {/* Image — square aspect ratio, distinct from guides */}
+                                <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1/1' }}>
+                                    <img
+                                        src={memberImageUrl}
+                                        alt={member.name}
+                                        className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                    <div className="absolute bottom-4 left-4">
+                                        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">{member.memberId}</p>
+                                    </div>
+                                </div>
+
+                                {/* Info */}
+                                <div className="p-6 flex flex-col gap-3">
+                                    <div>
+                                        <h3 className="text-base font-black uppercase tracking-tight text-slate-900">{member.name}</h3>
+                                        <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mt-1">{member.role}</p>
+                                    </div>
+                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">{member.domain}</p>
+                                    <p className="text-xs text-slate-500 leading-relaxed border-l-2 border-primary/30 pl-3">{member.note}</p>
+                                </div>
+                            </div>
                             )
                         })}
                     </div>

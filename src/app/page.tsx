@@ -29,6 +29,18 @@ export default async function Home() {
     return d.toLocaleString('en-US', { day: '2-digit', month: 'short' }).toUpperCase()
   }
 
+  function getMonthAbbr(iso: string) {
+    const d = new Date(iso + 'T00:00:00')
+    return d.toLocaleString('en-US', { month: 'short' })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function mapBatchStatus(sanityStatus: string, booked: number, total: number): 'Open' | 'Limited' | 'Full' {
+    if (sanityStatus === 'full') return 'Full'
+    if ((total - booked) <= 2) return 'Limited'
+    return 'Open'
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const treks = (treksRaw ?? []).map((t: any, i: number) => {
     const nextBatch = t.upcomingBatches?.[0] ?? null
@@ -53,13 +65,42 @@ export default async function Home() {
     }
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const calendarTreks = (treksRaw ?? []).map((t: any) => ({
+    slug: t.slug?.current ?? '',
+    name: t.name ?? '',
+    region: t.region ?? '',
+    difficulty: t.difficulty ?? '',
+    duration: t.duration ?? '',
+    altitude: t.altitude ?? '',
+    price: t.investment ?? '',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    batches: (t.upcomingBatches ?? []).map((b: any) => ({
+      month: getMonthAbbr(b.startDate),
+      dates: `${fmtBatchDate(b.startDate)} – ${fmtBatchDate(b.endDate)}`,
+      status: mapBatchStatus(b.status, b.seatsBooked ?? 0, b.totalSeats ?? 8),
+      booked: b.seatsBooked ?? 0,
+      capacity: b.totalSeats ?? 8,
+    })),
+    trekLead: t.trekLead ? {
+      name: t.trekLead.name ?? '',
+      title: t.trekLead.title ?? '',
+      cert: t.trekLead.cert ?? '',
+      summits: t.trekLead.summits ?? '',
+      stats: t.trekLead.stats ?? [],
+      imageUrl: t.trekLead.image ? urlFor(t.trekLead.image).width(200).quality(80).url() : '',
+      whatsappNumber: t.trekLead.whatsappNumber ?? '',
+      instagramHandle: t.trekLead.instagramHandle ?? '',
+    } : null,
+  }))
+
   return (
     <main className="min-h-screen bg-white">
       <Navbar />
       <Hero data={data?.hero} heroImageUrl={heroImageUrl} />
       <TrustMatrix data={data?.trustMatrix} />
       <TrekIndex treks={treks} />
-      <TrekCalendar />
+      <TrekCalendar treks={calendarTreks} />
       <SpecialProjects data={data?.specialProjects} />
       <QuoteSection data={data?.quoteSection} />
       <Footer />

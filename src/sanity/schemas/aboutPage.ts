@@ -18,6 +18,7 @@ export const aboutPage = defineType({
     { name: 'stats', title: '📊  By The Numbers' },
     { name: 'philosophy', title: '⚙️  How We Climb' },
     { name: 'guides', title: '🧗  Our Guides' },
+    { name: 'crew', title: '⚙️  The Crew' },
     { name: 'whyYeti', title: '✓  Why Yeti' },
     { name: 'cta', title: '🎯  CTA' },
   ],
@@ -210,33 +211,44 @@ export const aboutPage = defineType({
         defineField({
           name: 'guidesList',
           title: 'Guides',
+          description: 'Pick guides from the Guide documents. Order here controls display order. Remove a guide from this list to hide them.',
+          type: 'array',
+          of: [{ type: 'reference', to: [{ type: 'guide' }] }],
+        }),
+      ],
+    }),
+
+    // ── SECTION 5b: THE CREW ──────────────────────────────────────────────────
+    defineField({
+      name: 'crew',
+      title: 'The Crew',
+      type: 'object',
+      group: 'crew',
+      fields: [
+        defineField({ name: 'tagline', title: 'Tagline', type: 'string', initialValue: 'Operations' }),
+        defineField({ name: 'heading', title: 'Heading', type: 'string', initialValue: 'The Crew' }),
+        defineField({ name: 'description', title: 'Description', type: 'text', rows: 2, initialValue: 'Every summit starts at base camp. These are the people who make each expedition operationally flawless — permits, logistics, client care, and everything in between.' }),
+        defineField({
+          name: 'crewList',
+          title: 'Crew Members',
           type: 'array',
           of: [
             {
               type: 'object',
               fields: [
                 defineField({ name: 'visible', title: 'Visibility', type: 'boolean', initialValue: true, components: { input: VisibilityToggle } }),
-                defineField({ name: 'guideId', title: 'Guide ID', type: 'string', description: 'e.g. GUIDE-001' }),
+                defineField({ name: 'memberId', title: 'Member ID', type: 'string', description: 'e.g. OPS-001' }),
                 defineField({ name: 'name', title: 'Full Name', type: 'string' }),
-                defineField({ name: 'title', title: 'Title / Role', type: 'string', description: 'e.g. Lead Expedition Guide' }),
-                defineField({ name: 'cert', title: 'Certification', type: 'string', description: 'e.g. IFMGA Certified' }),
-                defineField({ name: 'summits', title: 'Summit Record', type: 'string', description: 'e.g. Everest ×14' }),
-                defineField({
-                  name: 'stats',
-                  title: 'Field Stats',
-                  description: 'e.g. VO2 MAX: 58 ml/kg/min',
-                  type: 'array',
-                  of: [{ type: 'string' }],
-                }),
+                defineField({ name: 'role', title: 'Role', type: 'string', description: 'e.g. Permits & Logistics Director' }),
+                defineField({ name: 'domain', title: 'Domain', type: 'string', description: 'Short descriptor. e.g. Govt. Liaison · Route Clearance' }),
+                defineField({ name: 'note', title: 'Note', type: 'text', rows: 2, description: 'One-liner about their contribution' }),
                 defineField({ name: 'image', title: 'Photo', type: 'image', options: { hotspot: true } }),
-                defineField({ name: 'instagramHandle', title: 'Instagram Handle', type: 'string', description: 'Without the @ symbol. e.g. lakparita.sherpa' }),
-                defineField({ name: 'whatsappNumber', title: 'WhatsApp Number', type: 'string', description: 'International format without + or spaces. e.g. 9779812345678' }),
               ],
               preview: {
-                select: { name: 'name', title: 'title', media: 'image', visible: 'visible' },
-                prepare: ({ name, title, media, visible }) => ({
+                select: { name: 'name', role: 'role', media: 'image', visible: 'visible' },
+                prepare: ({ name, role, media, visible }) => ({
                   title: `${visible === false ? '○ ' : '● '}${name}`,
-                  subtitle: title,
+                  subtitle: role,
                   media,
                 }),
               },
