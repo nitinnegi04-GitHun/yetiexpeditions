@@ -21,6 +21,7 @@ export const aboutPage = defineType({
     { name: 'crew', title: '⚙️  The Crew' },
     { name: 'whyYeti', title: '✓  Why Yeti' },
     { name: 'cta', title: '🎯  CTA' },
+    { name: 'seo', title: '🔍  SEO' },
   ],
 
   fields: [
@@ -66,7 +67,7 @@ export const aboutPage = defineType({
                   {
                     name: 'highlight',
                     type: 'object',
-                    title: 'Highlight Colour',
+                    title: 'Highlight Sweep',
                     fields: [
                       {
                         name: 'color',
@@ -74,12 +75,12 @@ export const aboutPage = defineType({
                         type: 'string',
                         options: {
                           list: [
-                            { title: 'Red (Brand)', value: 'text-primary' },
-                            { title: 'Dark', value: 'text-slate-900' },
-                            { title: 'Muted', value: 'text-slate-400' },
+                            { title: 'Amber Sweep (default)', value: 'amber' },
+                            { title: 'Red (Brand)', value: 'primary' },
                           ],
                           layout: 'radio',
                         },
+                        initialValue: 'amber',
                       },
                     ],
                   },
@@ -138,9 +139,43 @@ export const aboutPage = defineType({
         defineField({
           name: 'paragraphs',
           title: 'Story Paragraphs',
-          description: 'Each entry is one paragraph of the founding story.',
+          description: 'Each entry is one paragraph. Supports bold, italic, and highlight sweep animation.',
           type: 'array',
-          of: [{ type: 'text' }],
+          of: [
+            {
+              type: 'block',
+              styles: [{ title: 'Normal', value: 'normal' }],
+              lists: [],
+              marks: {
+                decorators: [
+                  { title: 'Bold', value: 'strong' },
+                  { title: 'Italic', value: 'em' },
+                ],
+                annotations: [
+                  {
+                    name: 'highlight',
+                    type: 'object',
+                    title: 'Highlight Sweep',
+                    fields: [
+                      {
+                        name: 'color',
+                        title: 'Colour',
+                        type: 'string',
+                        options: {
+                          list: [
+                            { title: 'Amber Sweep (default)', value: 'amber' },
+                            { title: 'Red (Brand)', value: 'primary' },
+                          ],
+                          layout: 'radio',
+                        },
+                        initialValue: 'amber',
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ],
         }),
       ],
     }),
@@ -319,6 +354,15 @@ export const aboutPage = defineType({
           ],
         }),
       ],
+    }),
+
+
+    // ── SEO ───────────────────────────────────────────────────────────────────
+    defineField({
+      name: 'seo',
+      title: 'SEO & Social Sharing',
+      type: 'seoFields',
+      group: 'seo',
     }),
 
   ],

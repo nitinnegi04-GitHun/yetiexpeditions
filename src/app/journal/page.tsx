@@ -4,6 +4,28 @@ import Footer from "@/components/Footer";
 import JournalInteractive from "./_components/JournalInteractive";
 import { ArrowRight, Clock, User, CalendarDays } from "lucide-react";
 import { ARTICLES } from "./articles";
+import type { Metadata } from "next";
+
+const BASE_URL = 'https://www.yetiexpeditions.com'
+
+export const metadata: Metadata = {
+    title: 'Journal — Field Dispatches from the Himalaya | Yeti Expeditions',
+    description: 'Unfiltered writing from Yeti Expeditions guides — altitude science, expedition reports, trekking advice and stories from the trails of Nepal and Kinnaur.',
+    alternates: { canonical: `${BASE_URL}/journal` },
+    openGraph: {
+        type: 'website',
+        url: `${BASE_URL}/journal`,
+        title: 'Journal — Field Dispatches from the Himalaya | Yeti Expeditions',
+        description: 'Guides writing about the mountains. No sponsored content. No gear reviews we didn\'t earn.',
+        images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Yeti Expeditions Journal — Field Dispatches from the Himalaya' }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Journal — Field Dispatches from the Himalaya | Yeti Expeditions',
+        description: 'Guides writing about the mountains. No sponsored content. No gear reviews we didn\'t earn.',
+        images: ['/og-image.jpg'],
+    },
+}
 
 export default function JournalPage() {
     const featured = ARTICLES.find(a => a.featured)!;

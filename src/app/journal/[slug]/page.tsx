@@ -4,9 +4,47 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ARTICLES, type ArticleBlock } from "../articles";
 import { ArrowLeft, Clock, CalendarDays, Tag, ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
+
+const BASE_URL = 'https://www.yetiexpeditions.com'
 
 interface PageProps {
     params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+    return ARTICLES.map(a => ({ slug: a.slug }))
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { slug } = await params
+    const article = ARTICLES.find(a => a.slug === slug)
+    if (!article) return {}
+
+    const title = `${article.title} | Yeti Expeditions Journal`
+    const description = `${article.category} — by ${article.author}. ${article.readTime} read.`
+    const url = `${BASE_URL}/journal/${slug}`
+
+    return {
+        title,
+        description,
+        alternates: { canonical: url },
+        openGraph: {
+            type: 'article',
+            url,
+            title,
+            description,
+            images: article.image ? [{ url: article.image, width: 1200, height: 630, alt: article.title }] : [],
+            publishedTime: article.date,
+            authors: [article.author],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: article.image ? [article.image] : [],
+        },
+    }
 }
 
 function renderBlock(block: ArticleBlock, i: number) {

@@ -49,6 +49,8 @@ function transformSanityTrek(raw: any) {
   const batches = (raw.batches ?? []).map(
     (b: any) => ({
       date: formatBatchDateRange(b.startDate, b.endDate),
+      startDate: b.startDate,
+      endDate: b.endDate,
       status: deriveBatchStatus(b.status, b.totalSeats, b.seatsBooked),
       remaining: b.totalSeats - b.seatsBooked,
     })
@@ -78,7 +80,8 @@ function transformSanityTrek(raw: any) {
     country: raw.country ?? '',
     difficulty: raw.difficulty ?? '',
     duration: raw.duration ?? '',
-    investment: raw.investment ?? '',
+    priceUSD: raw.priceUSD ?? null,
+    priceINR: raw.priceINR ?? null,
     altitude: raw.altitude ?? '',
     season: raw.season ?? '',
     accommodation: raw.accommodation ?? '',
@@ -99,6 +102,7 @@ function transformSanityTrek(raw: any) {
     permits: raw.permits ?? [],
     faqs: raw.faqs ?? [],
     relatedTreks: raw.relatedTreks ?? [],
+    trekLead: raw.trekLead ?? null,
   }
 }
 
@@ -117,28 +121,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!raw) return {}
 
   const trek = transformSanityTrek(raw)
-  const title = `${trek.name} Trek — ${trek.duration}, ${trek.altitude} | Yeti Expeditions`
-  const description = `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From ${trek.investment}. ${trek.groupSize} trekkers. WFR-certified guides. All permits, meals & accommodation included.`
   const url = `${BASE_URL}/treks/${slug}`
+
+  // Sanity SEO overrides take priority; fall back to auto-generated values
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const seo = (raw as any).seo ?? {}
+  const title = seo.metaTitle ?? `${trek.name} Trek — ${trek.duration}, ${trek.altitude} | Yeti Expeditions`
+  const description = seo.metaDescription ?? `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From $${trek.priceUSD?.toLocaleString('en-US') ?? '—'}. ${trek.groupSize} trekkers. WFR-certified guides. All permits, meals & accommodation included.`
+  const ogImage = seo.ogImageUrl ?? trek.bannerImage
 
   return {
     title,
     description,
     alternates: { canonical: url },
+    robots: seo.noIndex ? { index: false, follow: false } : undefined,
     openGraph: {
       type: 'website',
       url,
       title,
       description,
-      images: trek.bannerImage
-        ? [{ url: trek.bannerImage, width: 1200, height: 630, alt: `${trek.name} Trek — Yeti Expeditions` }]
+      images: ogImage
+        ? [{ url: ogImage, width: 1200, height: 630, alt: `${trek.name} Trek — Yeti Expeditions` }]
         : [],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: trek.bannerImage ? [trek.bannerImage] : [],
+      images: ogImage ? [ogImage] : [],
     },
   }
 }
@@ -153,7 +163,7 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
     '@context': 'https://schema.org',
     '@type': 'TouristTrip',
     name: `${trek.name} Trek`,
-    description: `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From ${trek.investment}.`,
+    description: `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From $${trek.priceUSD?.toLocaleString('en-US') ?? '—'}.`,
     url,
     touristType: 'Adventure Travelers',
     itinerary: trek.itinerary.map((day: any) => ({
@@ -163,7 +173,7 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
     })),
     offers: {
       '@type': 'Offer',
-      price: trek.investment.replace(/[^0-9]/g, ''),
+      price: trek.priceUSD ?? 0,
       priceCurrency: 'USD',
       url,
       availability: 'https://schema.org/InStock',
@@ -177,11 +187,18 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
       '@type': 'Event',
       name: `${trek.name} Trek — ${batch.date}`,
       eventStatus: 'https://schema.org/EventScheduled',
+      startDate: batch.startDate,
+      endDate: batch.endDate,
+      location: {
+        '@type': 'Place',
+        name: trek.region,
+        address: { '@type': 'PostalAddress', addressCountry: trek.country },
+      },
       remainingAttendeeCapacity: batch.remaining,
       organizer: { '@type': 'TravelAgency', name: 'Yeti Expeditions', url: BASE_URL },
       offers: {
         '@type': 'Offer',
-        price: trek.investment.replace(/[^0-9]/g, ''),
+        price: trek.priceUSD ?? 0,
         priceCurrency: 'USD',
         url,
       },
@@ -210,23 +227,28 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
     }
     : null
 
+  const avgRating = trek.testimonials.length
+    ? (trek.testimonials.reduce((sum: number, t: any) => sum + (t.rating ?? 5), 0) / trek.testimonials.length).toFixed(1)
+    : '5.0'
+
   const reviewSchema = trek.testimonials.length
     ? {
       '@context': 'https://schema.org',
-      '@type': 'Product',
+      '@type': 'Service',
       name: `${trek.name} Trek`,
       description: `Guided ${trek.name} trek by Yeti Expeditions`,
       url,
+      provider: { '@type': 'TravelAgency', name: 'Yeti Expeditions', url: BASE_URL },
       aggregateRating: {
         '@type': 'AggregateRating',
-        ratingValue: '5',
+        ratingValue: avgRating,
         bestRating: '5',
         worstRating: '1',
         ratingCount: trek.testimonials.length,
       },
       review: trek.testimonials.map((t: any) => ({
         '@type': 'Review',
-        reviewRating: { '@type': 'Rating', ratingValue: t.rating, bestRating: 5 },
+        reviewRating: { '@type': 'Rating', ratingValue: t.rating ?? 5, bestRating: 5 },
         author: { '@type': 'Person', name: t.name },
         reviewBody: t.text,
         datePublished: t.batch,
@@ -255,6 +277,8 @@ export default async function TrekPage({ params }: PageProps) {
   const schemas = buildTrekSchemas(trek, slug)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const logoUrl: string = settings?.logo ? urlFor((settings as any).logo).height(80).quality(90).url() : ''
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const whatsappNumber: string = (settings as any)?.whatsappNumber ?? ''
 
   return (
     <main className="min-h-screen pb-20 md:pb-0">
@@ -274,7 +298,6 @@ export default async function TrekPage({ params }: PageProps) {
         {/* Mobile: banner stacked above text */}
         <div className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: '160vw', minHeight: '350px' }}>
           <TrekHeroBanner src={trek.bannerImage} videoSrc={trek.bannerVideo} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
           <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '40px', left: '24px' }}>
             <p className="text-white text-xs font-bold uppercase tracking-widest">{trek.region}</p>
             <p className="text-white/80 text-[10px] uppercase">{trek.country}</p>
@@ -301,7 +324,9 @@ export default async function TrekPage({ params }: PageProps) {
                 {trek.difficulty} &middot; {trek.duration} &middot; {trek.altitude}
               </p>
               <a
-                href="#enquire"
+                href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to book the ${trek.name} Trek. Please share more details.`)}` : '#enquire'}
+                target={whatsappNumber ? '_blank' : undefined}
+                rel={whatsappNumber ? 'noopener noreferrer' : undefined}
                 className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors"
               >
                 Book This Trek
@@ -313,7 +338,6 @@ export default async function TrekPage({ params }: PageProps) {
           {/* Right: Image / Video — desktop only */}
           <div className="hidden md:block md:w-1/2 bg-slate-100 relative overflow-hidden group">
             <TrekHeroBanner src={trek.bannerImage} videoSrc={trek.bannerVideo} />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
             <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '64px', left: '40px' }}>
               <p className="text-white text-xs font-bold uppercase tracking-widest">{trek.region}</p>
               <p className="text-white/80 text-[10px] uppercase">{trek.country}</p>
@@ -327,9 +351,33 @@ export default async function TrekPage({ params }: PageProps) {
         </div>
       </section>
 
-      <TrekDetails trek={trek} />
+      <TrekDetails trek={trek} whatsappNumber={whatsappNumber} />
 
       <Footer />
+
+      {/* ── Sticky mobile bottom bar ── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-zinc-border">
+        <a
+          href="#enquire"
+          className="flex-1 flex items-center justify-center bg-white text-slate-900 py-4 text-[11px] font-black uppercase tracking-widest border-r border-zinc-border hover:bg-slate-50 transition-colors"
+        >
+          Book This Trek
+        </a>
+        <a
+          href={trek.trekLead?.whatsappNumber
+            ? `https://wa.me/${trek.trekLead.whatsappNumber}?text=${encodeURIComponent(`Hi ${trek.trekLead.name}! I'm interested in the ${trek.name} Trek. Can we chat?`)}`
+            : whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'm interested in the ${trek.name} Trek.`)}` : '#enquire'
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-4 text-[11px] font-black uppercase tracking-widest hover:brightness-95 transition-all"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          {trek.trekLead ? `Chat with ${trek.trekLead.name.split(' ')[0]}` : 'WhatsApp Us'}
+        </a>
+      </div>
 
       {/* Enables automatic revalidation when content changes in Sanity */}
     </main>

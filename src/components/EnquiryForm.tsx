@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Send } from 'lucide-react';
 
-export default function EnquiryForm({ trekName }: { trekName: string }) {
+export default function EnquiryForm({ trekName, whatsappNumber = '' }: { trekName: string; whatsappNumber?: string }) {
     const [form, setForm] = useState({
         name: '', email: '', phone: '', preferredDate: '', groupSize: '1', message: ''
     });
@@ -14,6 +14,26 @@ export default function EnquiryForm({ trekName }: { trekName: string }) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (whatsappNumber) {
+            const lines = [
+                `Hi! I'd like to enquire about the *${trekName} Trek*.`,
+                ``,
+                `*Name:* ${form.name}`,
+                `*Email:* ${form.email}`,
+                form.phone       ? `*Phone:* ${form.phone}`                         : null,
+                form.preferredDate ? `*Preferred Date:* ${form.preferredDate}`       : null,
+                `*Group Size:* ${form.groupSize} ${form.groupSize === '1' ? 'person (solo)' : 'people'}`,
+                form.message     ? `*Message:* ${form.message}`                      : null,
+            ].filter(Boolean).join('\n');
+
+            window.open(
+                `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines)}`,
+                '_blank',
+                'noopener,noreferrer'
+            );
+        }
+
         setSubmitted(true);
     };
 

@@ -7,8 +7,43 @@ import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { ABOUT_PAGE_QUERY } from "@/sanity/queries/aboutPage";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { highlightSweep } from "@/lib/highlightStyle";
+import type { Metadata } from "next";
 
 export const revalidate = 86400
+
+const BASE_URL = 'https://www.yetiexpeditions.com'
+
+export async function generateMetadata(): Promise<Metadata> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const d: any = await client.fetch(ABOUT_PAGE_QUERY)
+  const seo = d?.seo ?? {}
+  const title = seo.metaTitle ?? 'Our Story — Yeti Expeditions | Born in the Himalayas'
+  const description = seo.metaDescription ?? 'How Yeti Expeditions was founded — by a mountaineering expert, a corporate organiser, and a trek trainer. Rooted in Kinnaur. Active across Nepal and the Indian Himalaya.'
+  const url = `${BASE_URL}/our-story`
+  const ogImage = seo.ogImageUrl ?? null
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    robots: seo.noIndex ? { index: false, follow: false } : undefined,
+    openGraph: {
+      type: 'website',
+      url,
+      title,
+      description,
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: title }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ogImage ? [ogImage] : [],
+    },
+  }
+}
 
 const FALLBACK_LEFT_IMAGE = "https://lh3.googleusercontent.com/aida-public/AB6AXuDiHbmYyYGaTh5ARUWejOA5l9Z7E5DgvlQurzssXYqn0QWZD3Vmnp0Cj5WP12qOqtqJU1vQ6mvGfuEpwLkmf2pow3oQBcKucJRSfaCc7L-shf9FL_gTbJ9TQJ2sV5dburhHwpyRWJv1vnefycut3Af6X2nvKG074F1q0eFM4If8D1zhCPLyAfuGfMcZbbkWtXDhizuVVPZEu6taWsO_X0iyCFOt3sgaH4WkSYb4YBgc8Zb3niHk_MC3ZJ1spQ1bTh2dvQbNEUX9oq4"
 const FALLBACK_GUIDE_IMAGE = "https://lh3.googleusercontent.com/aida-public/AB6AXuDiHbmYyYGaTh5ARUWejOA5l9Z7E5DgvlQurzssXYqn0QWZD3Vmnp0Cj5WP12qOqtqJU1vQ6mvGfuEpwLkmf2pow3oQBcKucJRSfaCc7L-shf9FL_gTbJ9TQJ2sV5dburhHwpyRWJv1vnefycut3Af6X2nvKG074F1q0eFM4If8D1zhCPLyAfuGfMcZbbkWtXDhizuVVPZEu6taWsO_X0iyCFOt3sgaH4WkSYb4YBgc8Zb3niHk_MC3ZJ1spQ1bTh2dvQbNEUX9oq4"
@@ -54,11 +89,34 @@ export default async function AboutPage() {
     // ── Founding ─────────────────────────────────────────────────────────────────
     const foundingTagline = d?.founding?.tagline ?? 'The Beginning'
     const foundingHeading = d?.founding?.heading ?? 'How It Started'
-    const paragraphs: string[] = d?.founding?.paragraphs?.length ? d.founding.paragraphs : [
-        'In 2008, Lakpa Rita Sherpa and two fellow IFMGA guides returned from their fourteenth Everest summit and made a decision: the industry needed to change. Operators were cutting corners. Clients were arriving unprepared. People were dying for avoidable reasons.',
-        'They founded Yeti Expeditions on three words: Safety. Authenticity. Respect. Not as a tagline — as an operating system.',
-        'Sixteen years later, we have guided over 6,200 trekkers across the Himalaya. We have never lost a client. We have turned back on summit day twenty-three times. We are proud of every single one of those decisions.',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const paragraphs: any[] = d?.founding?.paragraphs?.length ? d.founding.paragraphs : [
+        'It starts, as most things do in the mountains, with trust earned over time.',
+        'P.S. Negi has been teaching people to move safely through the high Himalayas for longer than most of our trekkers have been alive — students, corporate teams, institutions. In Kinnaur, where he serves as President of the regional Mountaineering Association, he is not just a guide. He is the custodian of a tradition. Around him, over years, gathered a group of trek leads whose collective expertise spans the great routes of both India and Nepal.',
+        'Nitin — his nephew, returning from years in corporate — saw what was missing. Not talent. Not passion. A structure that could carry all of it outward into the world.',
+        'Gurdit completed the picture. A trainer of trainers, forged in Nepal\'s trekking corridors, he brought the operational fluency that only comes from having done the work yourself, at every level.',
+        'Together they asked a simple question: what if the best guides in the Himalayas owned the platform, instead of just working for one?',
+        'The answer is Yeti Expeditions. Rooted in Kinnaur. Active across Nepal and the Indian Himalaya. Built on the belief that expertise shared is expertise multiplied.',
+        'Yeti Expeditions exists because the best guides in the Himalayas deserved better than obscurity. Every lead on our roster is a partner — not a hire. They don\'t work for us. We work together. That distinction is the whole point.',
     ]
+
+    const foundingComponents: PortableTextComponents = {
+        marks: {
+            strong: ({ children }) => <strong className="font-bold text-slate-900">{children}</strong>,
+            em: ({ children }) => <em className="italic">{children}</em>,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            highlight: ({ children, value }: { children?: React.ReactNode; value?: any }) => (
+                <span style={{
+                    ...highlightSweep({ color: value?.color === 'primary' ? 'rgba(244,99,46,0.3)' : 'rgba(255,200,0,0.35)' }),
+                }}>
+                    {children}
+                </span>
+            ),
+        },
+        block: {
+            normal: ({ children }) => <p className="text-sm text-slate-600 leading-relaxed">{children}</p>,
+        },
+    }
 
     // ── Stats ────────────────────────────────────────────────────────────────────
     const stats = d?.stats?.length ? d.stats : [
@@ -127,10 +185,9 @@ export default async function AboutPage() {
                 {/* Mobile: banner stacked above text */}
                 <div className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: '160vw', minHeight: '350px' }}>
                     <div
-                        className="absolute inset-0 bg-cover bg-center grayscale brightness-75 contrast-125"
+                        className="absolute inset-0 bg-cover bg-center grayscale brightness-90 contrast-110"
                         style={{ backgroundImage: `url('${panelImageUrl}')` }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                     <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '40px', left: '24px' }}>
                         <p className="text-white text-xs font-bold uppercase tracking-widest">{city}</p>
                         <p className="text-white/80 text-[10px] uppercase">{country}</p>
@@ -173,10 +230,9 @@ export default async function AboutPage() {
                     {/* Right: Image — desktop only */}
                     <div className="hidden md:block md:w-1/2 bg-slate-100 relative overflow-hidden group">
                         <div
-                            className="absolute inset-0 bg-cover bg-center grayscale brightness-75 contrast-125 group-hover:grayscale-0 transition-all duration-700"
+                            className="absolute inset-0 bg-cover bg-center grayscale brightness-90 contrast-110 group-hover:grayscale-0 transition-all duration-700"
                             style={{ backgroundImage: `url('${panelImageUrl}')` }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
                         <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '64px', left: '40px' }}>
                             <p className="text-white text-xs font-bold uppercase tracking-widest">{city}</p>
                             <p className="text-white/80 text-[10px] uppercase">{country}</p>
@@ -199,9 +255,11 @@ export default async function AboutPage() {
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-10 text-slate-900">
                         {foundingHeading}
                     </h2>
-                    <div className="space-y-6 text-sm text-slate-600 leading-relaxed">
-                        {paragraphs.map((para: string, i: number) => (
-                            <p key={i}>{para}</p>
+                    <div className="space-y-6">
+                        {paragraphs.map((para: any, i: number) => (
+                            typeof para === 'string'
+                                ? <p key={i} className="text-sm text-slate-600 leading-relaxed">{para}</p>
+                                : <PortableText key={para._key ?? i} value={[para]} components={foundingComponents} />
                         ))}
                     </div>
                 </div>
@@ -291,9 +349,8 @@ export default async function AboutPage() {
                                         <img
                                             src={guideImageUrl}
                                             alt={g.name}
-                                            className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700"
+                                            className="w-full h-full object-cover object-top grayscale brightness-90 contrast-110 group-hover:grayscale-0 transition-all duration-700"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                                         <div className="absolute bottom-4 left-4">
                                             <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-1">{g.guideId}</p>
                                         </div>
@@ -379,9 +436,8 @@ export default async function AboutPage() {
                                     <img
                                         src={memberImageUrl}
                                         alt={member.name}
-                                        className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 transition-all duration-700"
+                                        className="w-full h-full object-cover object-top grayscale brightness-90 contrast-110 group-hover:grayscale-0 transition-all duration-700"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                                     <div className="absolute bottom-4 left-4">
                                         <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">{member.memberId}</p>
                                     </div>

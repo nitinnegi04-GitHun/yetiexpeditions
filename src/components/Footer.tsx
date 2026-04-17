@@ -5,7 +5,7 @@ import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 
 const NAV_LINKS = [
   { label: "The Treks",   href: "/treks"   },
-  { label: "Our Story",   href: "/about"   },
+  { label: "Our Story",   href: "/our-story" },
   { label: "Journal",     href: "/journal" },
   { label: "Enquire Now", href: "#enquire" },
 ]
@@ -177,9 +177,9 @@ export default async function Footer() {
       {/* ── Bottom bar ── */}
       <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center mt-12 gap-6">
         <div className="flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-          <span>Privacy Protocol</span>
-          <span>Terms of Ascent</span>
-          <span>Cookie Policy</span>
+          <Link href="/privacy-protocol" className="hover:text-slate-900 transition-colors">Privacy Protocol</Link>
+          <Link href="/terms-of-ascent" className="hover:text-slate-900 transition-colors">Terms of Ascent</Link>
+          <Link href="/cookie-policy" className="hover:text-slate-900 transition-colors">Cookie Policy</Link>
         </div>
         <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">
           © {new Date().getFullYear()} {s.siteName ?? "Yeti Expeditions"}. All Rights Reserved.

@@ -7,10 +7,13 @@ import { siteSettings } from './siteSettings'
 import { homepage } from './homepage'
 import { aboutPage } from './aboutPage'
 import { guide } from './guide'
+import { seoFields } from './seoFields'
+import { testimonial } from './testimonial'
 
 export const schemaTypes = [
   // Object types (embedded)
   calendarBatch,
+  seoFields,
 
   // Document types
   homepage,
@@ -19,4 +22,5 @@ export const schemaTypes = [
   article,
   siteSettings,
   guide,
+  testimonial,
 ]

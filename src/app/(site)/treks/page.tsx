@@ -18,6 +18,13 @@ export const metadata: Metadata = {
     title: 'All Treks & Expeditions | Yeti Expeditions',
     description:
       'Browse guided Himalayan treks by Yeti Expeditions. Small groups, expert guides, full logistics.',
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'Yeti Expeditions — Himalayan Trek Index' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'All Treks & Expeditions | Yeti Expeditions',
+    description: 'Browse guided Himalayan treks by Yeti Expeditions. Small groups, expert guides, full logistics.',
+    images: ['/og-image.jpg'],
   },
 }
 

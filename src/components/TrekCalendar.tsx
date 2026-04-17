@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, MessageCircle, Instagram } from "lucide-react";
+import { ArrowRight, CalendarDays } from "lucide-react";
+import { highlightSweep } from "@/lib/highlightStyle";
+import { useCurrency } from "@/lib/CurrencyContext";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -33,7 +35,8 @@ type Trek = {
     difficulty: string
     duration: string
     altitude: string
-    price: string
+    priceUSD: number | null
+    priceINR: number | null
     batches: Batch[]
     trekLead?: TrekLead | null
 }
@@ -48,6 +51,7 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
     const activeMonths = new Set(treks.flatMap(t => t.batches.map(b => b.month)));
     const firstActive = MONTHS.find(m => activeMonths.has(m)) ?? "Mar";
     const [selectedMonth, setSelectedMonth] = useState(firstActive);
+    const { currency, setCurrency, formatPrice, hasBothPrices } = useCurrency();
 
     const monthTreks = treks.flatMap(trek => {
         const batch = trek.batches.find(b => b.month === selectedMonth);
@@ -123,13 +127,26 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
 
                             {/* Editorial nudge strip */}
                             <div className="border border-zinc-border bg-white px-4 md:px-6 py-3 md:py-4 flex items-center gap-4 mb-4">
-                                <div className="w-0.5 self-stretch bg-primary shrink-0" />
                                 <div className="flex items-center gap-3 flex-1 min-w-0 md:justify-center">
-                                    <MessageCircle className="nudge-icon w-4 h-4 md:w-5 md:h-5 shrink-0 text-slate-400" />
-                                    <p className="text-xs md:text-sm text-slate-500 leading-relaxed text-left md:text-center">
-                                        <span className="nudge-highlight font-black text-slate-900 uppercase tracking-wide">Skip the sales pitch.</span>{" "}
-                                        Every question about a trek is best answered by the person who&apos;s actually done it — talk to your Trail Expert directly, not our sales team, before you decide.
-                                    </p>
+                                    <div className="text-left md:text-center">
+                                        <div className="inline-block mb-2">
+                                            <span className="font-black text-slate-900 uppercase tracking-wide text-[18px] md:text-xl">
+                                                TALK TO THE GUIDE.{" "}
+                                                <span style={highlightSweep()}>NOT THE SALES TEAM.</span>
+                                            </span>
+                                            <span
+                                                className="block bg-primary"
+                                                style={{
+                                                    height: '2px',
+                                                    width: '0%',
+                                                    animation: 'headline-underline 0.6s ease 900ms 1 forwards',
+                                                }}
+                                            />
+                                        </div>
+                                        <p className="text-[14px] text-slate-500 leading-relaxed">
+                                            Most companies hide their guides behind a sales team. We don&apos;t. <span className="font-bold text-black text-[16px] italic" style={highlightSweep()}>Your trek lead   </span> is your first point of contact — because the best person to answer your questions is the one who&apos;s actually been there.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex flex-col border border-zinc-border bg-white shadow-sm">
@@ -168,13 +185,11 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
                                                                         src={trek.trekLead.imageUrl}
                                                                         alt={trek.trekLead.name}
                                                                         style={{ width: 60, height: 60, borderRadius: '50%' }}
-                                                                        className="object-cover object-top border-2 border-white shadow"
+                                                                        className="object-cover object-top border-2 border-white shadow grayscale brightness-90 contrast-110"
                                                                     />
-                                                                    <div className="absolute inset-0" style={{ borderRadius: '50%', backgroundColor: 'rgba(100,100,100,0.25)' }} />
                                                                 </div>
                                                             )}
                                                             <div className="min-w-0">
-                                                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Your Direct Contact</p>
                                                                 <p className="text-xs font-black uppercase tracking-tight text-slate-900 truncate">{trek.trekLead.name}</p>
                                                                 {trek.trekLead.summits && (
                                                                     <p className="text-[9px] font-bold text-primary uppercase tracking-wider break-words">{trek.trekLead.summits}</p>
@@ -184,15 +199,15 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
                                                                 )}
                                                             </div>
                                                         </div>
-                                                        {/* Chat button — full width row below */}
+                                                        {/* WhatsApp button */}
                                                         {trek.trekLead.whatsappNumber && (
                                                             <a
                                                                 href={`https://wa.me/${trek.trekLead.whatsappNumber}`}
                                                                 target="_blank"
                                                                 rel="noopener noreferrer"
-                                                                className="inline-flex items-center justify-center gap-1 w-full bg-slate-900 text-white px-2 py-1.5 text-[8px] font-black uppercase tracking-[0.15em] hover:bg-primary transition-colors"
+                                                                className="inline-flex items-center justify-center gap-1.5 w-full px-2 py-1.5 text-[8px] font-black uppercase tracking-[0.15em] text-green-700 bg-green-50 border border-green-200"
                                                             >
-                                                                <MessageCircle className="w-2.5 h-2.5 text-green-400 shrink-0" />
+                                                                <svg className="w-3 h-3 shrink-0 fill-green-700" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                                                                 Chat with {trek.trekLead.name.split(' ')[0]}
                                                             </a>
                                                         )}
@@ -204,9 +219,9 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
                                                         <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Dur</p>
                                                         <p className="text-xs font-bold uppercase">{trek.duration}</p>
                                                     </div>
-                                                    <div>
+                                                    <div className="min-w-0">
                                                         <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Diff</p>
-                                                        <p className={`text-xs font-bold uppercase ${trek.difficulty === "Difficult" ? "text-primary" : "text-amber-600"}`}>{trek.difficulty}</p>
+                                                        <p className={`text-[10px] font-bold uppercase truncate ${trek.difficulty === "Difficult" ? "text-primary" : "text-amber-600"}`}>{trek.difficulty}</p>
                                                     </div>
                                                     <div>
                                                         <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Alt</p>
@@ -224,33 +239,31 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
                                                 {trek.trekLead && (
                                                     <>
                                                         {trek.trekLead.imageUrl && (
-                                                            <div className="relative shrink-0" style={{ width: 100, height: 100, borderRadius: '50%' }}>
+                                                            <div className="relative shrink-0" style={{ width: 72, height: 72, borderRadius: '50%' }}>
                                                                 <img
                                                                     src={trek.trekLead.imageUrl}
                                                                     alt={trek.trekLead.name}
-                                                                    style={{ width: 100, height: 100, borderRadius: '50%' }}
-                                                                    className="object-cover object-top border-2 border-white shadow"
+                                                                    style={{ width: 72, height: 72, borderRadius: '50%' }}
+                                                                    className="object-cover object-top border-2 border-white shadow grayscale brightness-90 contrast-110"
                                                                 />
-                                                                <div className="absolute inset-0" style={{ borderRadius: '50%', backgroundColor: 'rgba(109, 106, 106, 0.25)' }} />
                                                             </div>
                                                         )}
                                                         <div className="min-w-0 flex-1">
-                                                            <p className="text-[9px] font-black uppercase tracking-[0.25em] text-primary mb-0.5">Your Direct Contact</p>
                                                             <p className="text-xs font-black uppercase tracking-tight text-slate-900 truncate">{trek.trekLead.name}</p>
                                                             {trek.trekLead.summits && (
                                                                 <p className="text-[9px] font-bold text-primary uppercase tracking-wider break-words">{trek.trekLead.summits}</p>
                                                             )}
                                                             {trek.trekLead.quote && (
-                                                                <p className="mt-1 text-[9px] text-slate-500 italic leading-relaxed">&ldquo;{trek.trekLead.quote}&rdquo;</p>
+                                                                <p className="mt-1.5 border-l-2 border-slate-200 pl-2 text-[10px] text-slate-500 italic leading-relaxed">&ldquo;{trek.trekLead.quote}&rdquo;</p>
                                                             )}
                                                             {trek.trekLead.whatsappNumber && (
                                                                 <a
                                                                     href={`https://wa.me/${trek.trekLead.whatsappNumber}`}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="mt-2 inline-flex items-center gap-1.5 bg-slate-900 text-white px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.15em] hover:bg-primary transition-colors"
+                                                                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.15em] text-green-700 bg-green-50 border border-green-200"
                                                                 >
-                                                                    <MessageCircle className="w-3 h-3 text-green-400 shrink-0" />
+                                                                    <svg className="w-3.5 h-3.5 shrink-0 fill-green-700" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
                                                                     Chat with {trek.trekLead.name.split(' ')[0]}
                                                                 </a>
                                                             )}
@@ -281,8 +294,7 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
                                                     {trek.activeBatch.status}
                                                 </span>
                                                 <p className="text-xl font-black tracking-tight shrink-0">
-                                                    {trek.price}
-                                                    <span className="text-[10px] text-slate-400 font-bold uppercase ml-1">USD</span>
+                                                    {formatPrice(trek.priceUSD, trek.priceINR)}
                                                 </p>
                                                 <Link
                                                     href={`/treks/${trek.slug}`}
@@ -295,10 +307,20 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
 
                                             {/* Mobile bottom row: Price + CTA */}
                                             <div className="lg:hidden flex items-center justify-between w-full border-t border-zinc-border/50 pt-3">
-                                                <p className="text-xl font-black tracking-tight">
-                                                    {trek.price}
-                                                    <span className="text-[10px] text-slate-400 font-bold uppercase ml-1">USD</span>
-                                                </p>
+                                                <div className="flex items-center gap-2">
+                                                    <p className="text-xl font-black tracking-tight">
+                                                        {formatPrice(trek.priceUSD, trek.priceINR)}
+                                                    </p>
+                                                    {/* Mobile inline currency toggle — only shown when both prices exist */}
+                                                    {hasBothPrices(trek.priceUSD, trek.priceINR) && (
+                                                        <button
+                                                            onClick={() => setCurrency(currency === 'USD' ? 'INR' : 'USD')}
+                                                            className="text-[8px] font-black uppercase tracking-widest px-1.5 py-1 border border-zinc-300 text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-colors"
+                                                        >
+                                                            {currency === 'USD' ? '₹' : '$'}
+                                                        </button>
+                                                    )}
+                                                </div>
                                                 <Link
                                                     href={`/treks/${trek.slug}`}
                                                     className="inline-flex items-center gap-2 px-5 py-3 bg-zinc-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-colors group/link shrink-0"

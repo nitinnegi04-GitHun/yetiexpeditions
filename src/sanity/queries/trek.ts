@@ -11,7 +11,8 @@ export const ALL_TREKS_QUERY = groq`
     duration,
     altitude,
     season,
-    investment,
+    priceUSD,
+    priceINR,
     region,
     country,
     groupSize,
@@ -27,7 +28,8 @@ export const ALL_TREKS_QUERY = groq`
       stats,
       image,
       whatsappNumber,
-      instagramHandle
+      instagramHandle,
+      quote
     }
   }
 `
@@ -45,7 +47,8 @@ export const TREK_BY_SLUG_QUERY = groq`
     duration,
     altitude,
     season,
-    investment,
+    priceUSD,
+    priceINR,
     accommodation,
     groupSize,
     region,
@@ -56,7 +59,18 @@ export const TREK_BY_SLUG_QUERY = groq`
     excluded,
     packingList,
     physicalPrep,
-    testimonials,
+    "trekLead": trekLead-> {
+      name,
+      title,
+      cert,
+      summits,
+      "imageUrl": image.asset->url,
+      whatsappNumber,
+      quote
+    },
+    "testimonials": *[_type == "testimonial" && trek._ref == ^._id] | order(_createdAt desc) {
+      name, location, rating, text, batch
+    },
     gettingThere,
     accommodationDetails,
     permits,
@@ -70,6 +84,12 @@ export const TREK_BY_SLUG_QUERY = groq`
     "batches": batches[] | order(startDate asc) {
       batchId, startDate, endDate, price, discountedPrice,
       totalSeats, seatsBooked, status, meetingPoint, notes
+    },
+    "seo": seo {
+      metaTitle,
+      metaDescription,
+      "ogImageUrl": ogImage.asset->url,
+      noIndex
     }
   }
 `
@@ -85,14 +105,22 @@ export const FEATURED_TREKS_QUERY = groq`
     duration,
     altitude,
     region,
-    investment,
+    priceUSD,
+    priceINR,
     "nextBatch": batches[status == "open" && startDate > now()] | order(startDate asc)[0] {
       startDate, price, discountedPrice
     }
   }
 `
 
+// All testimonials — used by homepage testimonials section
+export const ALL_TESTIMONIALS_QUERY = groq`
+  *[_type == "testimonial"] | order(_createdAt desc) {
+    name, location, rating, text, batch
+  }
+`
+
 // Minimal slug list — used by generateStaticParams
 export const TREK_SLUGS_QUERY = groq`
-  *[_type == "trek"] { "slug": slug.current }
+  *[_type == "trek"] { "slug": slug.current, "updatedAt": _updatedAt }
 `

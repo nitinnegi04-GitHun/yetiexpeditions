@@ -1,6 +1,15 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      // Legacy routes → canonical URLs (301 permanent)
+      { source: '/Our_story', destination: '/our-story', permanent: true },
+      { source: '/about', destination: '/our-story', permanent: true },
+      { source: '/trek/:slug', destination: '/treks/:slug', permanent: true },
+    ]
+  },
+
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.sanity.io' },

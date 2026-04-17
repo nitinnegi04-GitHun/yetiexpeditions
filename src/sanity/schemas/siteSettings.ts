@@ -10,6 +10,8 @@ export const siteSettings = defineType({
     { name: 'brand',   title: '🎨  Brand & Identity', default: true },
     { name: 'contact', title: '📞  Contact'                         },
     { name: 'social',  title: '🔗  Social Media'                    },
+    { name: 'seo',     title: '🔍  SEO'                             },
+    { name: 'legal',   title: '⚖️  Legal Pages'                     },
   ],
 
   fields: [
@@ -113,6 +115,98 @@ export const siteSettings = defineType({
       type: 'url',
       group: 'social',
       description: 'e.g. https://x.com/yetiexpeditions',
+    }),
+
+
+    // ── SEO ───────────────────────────────────────────────────
+    defineField({
+      name: 'seo',
+      title: 'SEO & Social Sharing',
+      type: 'seoFields',
+      group: 'seo',
+    }),
+
+    // ── LEGAL PAGES ───────────────────────────────────────────
+    defineField({
+      name: 'privacyPolicy',
+      title: 'Privacy Protocol',
+      group: 'legal',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'Heading 2', value: 'h2' },
+            { title: 'Heading 3', value: 'h3' },
+          ],
+          lists: [
+            { title: 'Bullet', value: 'bullet' },
+            { title: 'Numbered', value: 'number' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Bold', value: 'strong' },
+              { title: 'Italic', value: 'em' },
+            ],
+          },
+        },
+      ],
+      description: 'Full content for the /privacy-protocol page.',
+    }),
+    defineField({
+      name: 'termsOfAscent',
+      title: 'Terms of Ascent',
+      group: 'legal',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'Heading 2', value: 'h2' },
+            { title: 'Heading 3', value: 'h3' },
+          ],
+          lists: [
+            { title: 'Bullet', value: 'bullet' },
+            { title: 'Numbered', value: 'number' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Bold', value: 'strong' },
+              { title: 'Italic', value: 'em' },
+            ],
+          },
+        },
+      ],
+      description: 'Full content for the /terms-of-ascent page.',
+    }),
+    defineField({
+      name: 'cookiePolicy',
+      title: 'Cookie Policy',
+      group: 'legal',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            { title: 'Normal', value: 'normal' },
+            { title: 'Heading 2', value: 'h2' },
+            { title: 'Heading 3', value: 'h3' },
+          ],
+          lists: [
+            { title: 'Bullet', value: 'bullet' },
+            { title: 'Numbered', value: 'number' },
+          ],
+          marks: {
+            decorators: [
+              { title: 'Bold', value: 'strong' },
+              { title: 'Italic', value: 'em' },
+            ],
+          },
+        },
+      ],
+      description: 'Full content for the /cookie-policy page.',
     }),
 
   ],

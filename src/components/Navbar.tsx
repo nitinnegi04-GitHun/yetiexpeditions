@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
+import { useCurrency } from "@/lib/CurrencyContext";
 
 const sanity = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'qmj04x7n',
@@ -25,6 +26,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [logoUrl, setLogoUrl] = useState<string | null>(initialLogoUrl ?? null);
     const [siteName, setSiteName] = useState(initialSiteName ?? 'Yeti Expeditions');
+    const { currency, setCurrency } = useCurrency();
     useEffect(() => {
         sanity
             .fetch(`*[_type == "siteSettings"][0]{ logo, siteName }`)
@@ -47,7 +49,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
 
     // Helpers for active states
     const isHomeActive = pathname === '/';
-    const isOurStoryActive = pathname === '/Our_story' || pathname === '/about';
+    const isOurStoryActive = pathname === '/our-story';
     const isJournalActive = pathname === '/journal';
     const isChatActive = pathname === '/contact';
 
@@ -93,8 +95,27 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                     {/* Desktop Nav - Always Right Aligned */}
                     <nav className="hidden md:flex items-center gap-12 text-sm font-bold uppercase tracking-widest text-slate-900 ml-auto">
                         <Link className="hover:text-primary transition-colors" href="/#treks">Treks</Link>
-                        <Link className="hover:text-primary transition-colors" href="/Our_story">Our Story</Link>
+                        <Link className="hover:text-primary transition-colors" href="/our-story">Our Story</Link>
                         <Link className="hover:text-primary transition-colors" href="/journal">Journal</Link>
+
+                        {/* Currency Toggle — desktop only */}
+                        <div className="flex items-center border border-zinc-200 overflow-hidden">
+                            <button
+                                onClick={() => setCurrency('USD')}
+                                className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest transition-colors cursor-pointer border-none outline-none"
+                                style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#475569' }}
+                            >
+                                $ USD
+                            </button>
+                            <button
+                                onClick={() => setCurrency('INR')}
+                                className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest transition-colors cursor-pointer border-none outline-none border-l border-zinc-200"
+                                style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#475569' }}
+                            >
+                                ₹ INR
+                            </button>
+                        </div>
+
                         <button className="bg-primary text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-black transition-all cursor-pointer border-none outline-none">
                             Enquire Now
                         </button>
@@ -134,7 +155,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                         </Link>
 
                         {/* Our Story */}
-                        <Link href="/Our_story" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
+                        <Link href="/our-story" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
                             <Users size={22} color={isOurStoryActive ? ACTIVE_COLOR : INACTIVE_COLOR} />
                             <span style={{ color: isOurStoryActive ? ACTIVE_COLOR : INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Our Story</span>
                         </Link>
@@ -171,7 +192,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                     </div>
                     <nav style={{ display: 'flex', flexDirection: 'column', gap: '24px', fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#0f172a' }}>
                         <Link href="/#treks" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: '#0f172a' }}>Treks</Link>
-                        <Link href="/Our_story" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: '#0f172a' }}>Our Story</Link>
+                        <Link href="/our-story" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: '#0f172a' }}>Our Story</Link>
                         <Link href="/journal" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: '#0f172a' }}>Journal</Link>
                     </nav>
                     <div style={{ marginTop: '32px', paddingTop: '32px', borderTop: '1px solid #f4f4f5' }}>

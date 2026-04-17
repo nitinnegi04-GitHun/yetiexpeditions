@@ -5,7 +5,7 @@ export const ABOUT_PAGE_QUERY = groq`
     leftPanel { image, expeditionCity, expeditionCountry },
     coFounder { name, role, bio[] { ..., markDefs[] { ..., _type == "highlight" => { color } } }, quoteAttribution, credentials[] { _key, code, label, sub } },
     hero { badge, headlineLine1, headlineLine2, headlineLine3, openingQuote },
-    founding { tagline, heading, paragraphs },
+    founding { tagline, heading, paragraphs[] { ..., markDefs[] { ..., _type == "highlight" => { color } } } },
     stats[] { _key, value, label },
     philosophy {
       tagline,
@@ -34,6 +34,12 @@ export const ABOUT_PAGE_QUERY = groq`
       headlineLine2,
       headlineLine3,
       buttons[] { _key, text, url }
+    },
+    "seo": seo {
+      metaTitle,
+      metaDescription,
+      "ogImageUrl": ogImage.asset->url,
+      noIndex
     }
   }
 `

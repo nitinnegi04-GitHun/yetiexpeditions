@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useScrollGrayscale } from "@/hooks/useScrollGrayscale";
+import { useCurrency } from "@/lib/CurrencyContext";
 
 function TrekCardBg({ src }: { src: string }) {
     const { ref, filter } = useScrollGrayscale();
@@ -23,7 +24,8 @@ interface Trek {
     region: string;
     country: string;
     difficulty: string;
-    price: string;
+    priceUSD: number | null;
+    priceINR: number | null;
     duration?: string;
     altitude?: string;
     bannerImageUrl?: string;
@@ -33,13 +35,14 @@ interface Trek {
 }
 
 const FALLBACK_TREKS: Trek[] = [
-    { id: "01", name: "Everest Base Camp", slug: "everest-base-camp", region: "Khumbu Region", country: "Nepal", difficulty: "Difficult", price: "$4,250" },
-    { id: "02", name: "Annapurna Circuit", slug: "annapurna-circuit", region: "Gandaki Province", country: "Nepal", difficulty: "Moderate", price: "$3,100" },
-    { id: "03", name: "Markha Valley", slug: "markha-valley", region: "Ladakh", country: "India", difficulty: "Moderate", price: "$2,850" },
+    { id: "01", name: "Everest Base Camp", slug: "everest-base-camp", region: "Khumbu Region", country: "Nepal", difficulty: "Difficult", priceUSD: 4250, priceINR: 355000 },
+    { id: "02", name: "Annapurna Circuit", slug: "annapurna-circuit", region: "Gandaki Province", country: "Nepal", difficulty: "Moderate", priceUSD: 3100, priceINR: 259000 },
+    { id: "03", name: "Markha Valley", slug: "markha-valley", region: "Ladakh", country: "India", difficulty: "Moderate", priceUSD: 2850, priceINR: 238000 },
 ];
 
 export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
     const allTreks = treksProp?.length ? treksProp : FALLBACK_TREKS;
+    const { currency, setCurrency, formatPrice, hasBothPrices } = useCurrency();
 
     const REGIONS = ["All", ...Array.from(new Set(allTreks.map(t => t.country)))];
     const DIFFICULTIES = ["All", ...Array.from(new Set(allTreks.map(t => t.difficulty)))];
@@ -55,10 +58,11 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
 
     const difficultyDesktopClass = (d: string) =>
         d === "Difficult"
-            ? "text-primary border-primary/30 bg-primary/5"
+            ? "text-white border-primary/30 bg-primary/50"
             : d === "Moderate"
                 ? "text-amber-600 border-amber-200 bg-amber-50"
                 : "border-zinc-border text-slate-500";
+
 
     const filterBtnActiveClass = (type: "region" | "difficulty", value: string) => {
         if (type === "region") return "bg-primary text-white border-primary";
@@ -147,15 +151,19 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                             <p className="text-white/80 text-[10px] uppercase whitespace-nowrap">{trek.region}{trek.altitude ? ` | ${trek.altitude}` : ''}</p>
                                         </div>
                                     </div>
+                                    {/* Difficulty badge — bottom-left, aligned with name bar */}
+                                    <div className={`absolute z-10 px-2 py-1 border text-[9px] font-black uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`} style={{ bottom: '20px', left: '20px' }}>
+                                        {trek.difficulty}
+                                    </div>
+                                    {/* Days — bottom-right of image */}
+                                    <div className="absolute z-10 px-3 py-2" style={{ bottom: '20px', right: '20px', backgroundColor: 'rgba(24, 24, 26, 0.80)' }}>
+                                        <p className="text-white text-[9px] font-bold uppercase tracking-wides leading-none">{trek.duration || '—'}</p>
+                                    </div>
                                 </div>
 
                                 {/* Bottom — single info row */}
                                 <div className="bg-white border-t border-zinc-border px-4 py-3 flex items-center justify-between gap-2">
                                     <div className="flex items-center gap-4">
-                                        <div>
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Days</p>
-                                            <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.duration || '—'}</p>
-                                        </div>
                                         <div>
                                             <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Next Batch</p>
                                             <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.nextBatchRange || 'TBA'}</p>
@@ -168,12 +176,28 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 shrink-0">
-                                        <span className={`px-2 py-1 border text-[9px] font-black uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`}>
-                                            {trek.difficulty}
-                                        </span>
                                         <span className="text-xs font-bold tracking-tight text-slate-900">
-                                            {trek.price} <span className="text-[9px] text-slate-400 uppercase">USD</span>
+                                            {formatPrice(trek.priceUSD, trek.priceINR)}
                                         </span>
+                                        {/* Mobile inline currency toggle — only shown when both prices exist */}
+                                        {hasBothPrices(trek.priceUSD, trek.priceINR) && (
+                                            <div className="flex items-center border border-zinc-200 overflow-hidden shrink-0" onClick={(e) => e.preventDefault()}>
+                                                <button
+                                                    onClick={(e) => { e.preventDefault(); setCurrency('USD'); }}
+                                                    className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none transition-colors cursor-pointer"
+                                                    style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#94a3b8' }}
+                                                >
+                                                    $ USD
+                                                </button>
+                                                <button
+                                                    onClick={(e) => { e.preventDefault(); setCurrency('INR'); }}
+                                                    className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none border-l border-zinc-200 transition-colors cursor-pointer"
+                                                    style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#94a3b8' }}
+                                                >
+                                                    ₹ INR
+                                                </button>
+                                            </div>
+                                        )}
                                         <ArrowRight className="text-primary w-4 h-4" />
                                     </div>
                                 </div>
@@ -211,7 +235,7 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                         {trek.difficulty}
                                     </span>
                                     <span className="text-xl font-bold tracking-tight">
-                                        {trek.price} <span className="text-[10px] text-slate-400 uppercase">USD</span>
+                                        {formatPrice(trek.priceUSD, trek.priceINR)}
                                     </span>
                                     <ArrowRight className="text-slate-300 group-hover:text-primary group-hover:translate-x-2 transition-all" />
                                 </div>

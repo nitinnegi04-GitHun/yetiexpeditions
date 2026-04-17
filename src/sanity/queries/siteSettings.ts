@@ -14,6 +14,20 @@ export const SITE_SETTINGS_QUERY = groq`
     linkedin,
     facebook,
     youtube,
-    x
+    x,
+    "seo": seo {
+      metaTitle,
+      metaDescription,
+      "ogImageUrl": ogImage.asset->url,
+      noIndex
+    }
+  }
+`
+
+export const LEGAL_CONTENT_QUERY = groq`
+  *[_type == "siteSettings"][0] {
+    privacyPolicy,
+    termsOfAscent,
+    cookiePolicy
   }
 `

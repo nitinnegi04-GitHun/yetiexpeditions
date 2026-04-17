@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { X, ArrowRight } from "lucide-react"
 import { PortableText, type PortableTextComponents } from "@portabletext/react"
+import { highlightSweep } from "@/lib/highlightStyle"
 
 interface Credential {
     code: string
@@ -29,7 +30,9 @@ const bioComponents: PortableTextComponents = {
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         highlight: ({ children, value }: { children?: React.ReactNode; value?: any }) => (
-            <span className={value?.color ?? 'text-primary'}>{children}</span>
+            <span style={highlightSweep({ color: value?.color === 'primary' ? 'rgba(244,99,46,0.3)' : 'rgba(255,200,0,0.35)' })}>
+                {children}
+            </span>
         ),
     },
     block: {

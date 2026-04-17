@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { ChevronUp } from 'lucide-react';
 
 const NAV_ITEMS = [
   { label: 'Itinerary', href: '#itinerary' },
@@ -16,6 +17,8 @@ const NAV_ITEMS = [
 export default function TrekSubNav() {
   const [visible, setVisible] = useState(false);
   const [active, setActive]   = useState('');
+
+  const scrollToTop = useCallback(() => window.scrollTo({ top: 0, behavior: 'smooth' }), []);
 
   // Show only once #itinerary has scrolled up to the top of the viewport
   useEffect(() => {
@@ -58,13 +61,47 @@ export default function TrekSubNav() {
       }`}
       style={{ transform: 'translateZ(0)', willChange: 'opacity' }}
     >
-      <div className="max-w-[1440px] mx-auto px-4 md:px-8 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+      {/* Mobile — up-arrow + two rows of 4 */}
+      <div className="md:hidden flex">
+        {/* Up arrow — spans both rows */}
+        <button
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          className="w-10 shrink-0 flex flex-col items-center justify-center gap-0.5 border-r border-zinc-border text-slate-400 active:text-primary transition-colors"
+        >
+          <ChevronUp className="w-3.5 h-3.5" />
+          <span className="text-[8px] font-black uppercase tracking-wider">Top</span>
+        </button>
+        {/* Nav rows */}
+        <div className="flex-1 flex flex-col">
+          {[NAV_ITEMS.slice(0, 4), NAV_ITEMS.slice(4)].map((row, rowIdx) => (
+            <div key={rowIdx} className={`flex ${rowIdx === 0 ? 'border-b border-zinc-border' : ''}`}>
+              {row.map(item => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`flex-1 text-center py-2.5 text-[9px] font-black uppercase tracking-wider transition-colors border-b-2 ${
+                    active === item.href
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-slate-400'
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop — original horizontal scrolling strip */}
+      <div className="hidden md:block max-w-[1440px] mx-auto px-8 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
         <nav className="flex items-center min-w-max">
           {NAV_ITEMS.map(item => (
             <a
               key={item.href}
               href={item.href}
-              className={`px-4 md:px-6 py-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap border-b-2 transition-colors ${
+              className={`px-6 py-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap border-b-2 transition-colors ${
                 active === item.href
                   ? 'border-primary text-primary'
                   : 'border-transparent text-slate-400 hover:text-slate-900'

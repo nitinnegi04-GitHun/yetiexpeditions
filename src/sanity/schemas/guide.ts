@@ -66,6 +66,12 @@ export const guide = defineType({
       description: 'Without the @ symbol. e.g. lakparita.sherpa',
     }),
     defineField({
+      name: 'quote',
+      title: 'Personal Quote',
+      type: 'string',
+      description: 'A short first-person quote shown on the trek calendar card. e.g. "I\'ve done this route 14 times. Ask me anything."',
+    }),
+    defineField({
       name: 'order',
       title: 'Display Order',
       type: 'number',

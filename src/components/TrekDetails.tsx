@@ -1,7 +1,14 @@
+'use client';
+
 import {
-    Shield, Activity, Thermometer, Check, X, MapPin, Plane, Mountain,
-    BedDouble, FileText, Dumbbell, HelpCircle, ArrowRight, Star
+    Shield, Activity, Thermometer, Check, X, Mountain,
+    BedDouble, HelpCircle, ArrowRight, MessageCircle
 } from "lucide-react";
+import { useCurrency } from "@/lib/CurrencyContext";
+import TestimonialsCarousel from "./TestimonialsCarousel";
+import PackingListCarousel from "./PackingListCarousel";
+import PhysicalPrepCarousel from "./PhysicalPrepCarousel";
+import GettingThereCarousel from "./GettingThereCarousel";
 import FAQAccordion from "./FAQAccordion";
 import EnquiryForm from "./EnquiryForm";
 import AltitudeChart from "./AltitudeChart";
@@ -10,17 +17,19 @@ import TrekGallery from "./TrekGallery";
 import Link from "next/link";
 
 interface TrekProps {
+    whatsappNumber?: string;
     trek: {
         name: string;
         difficulty: string;
         duration: string;
-        investment: string;
+        priceUSD: number | null;
+        priceINR: number | null;
         altitude: string;
         season: string;
         accommodation: string;
         groupSize: string;
         itinerary: { day: string; title: string; content: string }[];
-        batches: { date: string; status: "Open" | "Limited" | "Full"; remaining: number }[];
+        batches: { date: string; startDate?: string; status: "Open" | "Limited" | "Full"; remaining: number }[];
         included: string[];
         excluded: string[];
         altitudeProfile: { day: number; label: string; altitude: number }[];
@@ -33,11 +42,22 @@ interface TrekProps {
         permits: { name: string; cost: string; handledBy: string; notes: string }[];
         faqs: { question: string; answer: string }[];
         relatedTreks?: { name: string; slug: string; duration: string; altitude: string }[];
+        trekLead?: {
+            name: string;
+            title: string;
+            cert: string;
+            summits: string;
+            imageUrl: string;
+            whatsappNumber: string;
+            quote: string;
+        } | null;
     };
 }
 
 
-export default function TrekDetails({ trek }: TrekProps) {
+export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
+    const { currency, setCurrency, formatPrice, hasBothPrices } = useCurrency();
+
     return (
         <div className="bg-white">
 
@@ -46,29 +66,44 @@ export default function TrekDetails({ trek }: TrekProps) {
                 <div className="max-w-[1440px] mx-auto grid grid-cols-2 md:grid-cols-4">
                     {[
                         { label: 'Difficulty', value: trek.difficulty },
-                        { label: 'Duration',   value: trek.duration   },
-                        { label: 'Investment', value: trek.investment  },
-                        { label: 'Altitude',   value: trek.altitude   },
+                        { label: 'Duration', value: trek.duration },
+                        { label: 'Altitude', value: trek.altitude },
                     ].map((stat, index) => (
                         <div
                             key={stat.label}
-                            className={`p-6 md:p-12 flex flex-col gap-3 group hover:bg-white transition-colors border-zinc-border ${
-                                index === 0 ? 'border-r border-b md:border-b-0' :
-                                index === 1 ? 'border-b md:border-b-0 md:border-r' :
-                                index === 2 ? 'border-r' : ''
-                            }`}
+                            className={`p-6 md:p-12 flex flex-col gap-3 group hover:bg-white transition-colors border-zinc-border ${index === 0 ? 'border-r border-b md:border-b-0' :
+                                index === 1 ? 'border-b md:border-b-0 md:border-r' : 'border-b md:border-b-0 md:border-r'
+                                }`}
                         >
                             <span className="text-primary font-bold uppercase text-[10px] md:text-xs tracking-widest">{stat.label}</span>
-                            <span className="text-4xl md:text-6xl font-black tracking-tighter uppercase">{stat.value}</span>
+                            <span className="text-2xl md:text-5xl font-black tracking-tighter uppercase break-words md:break-normal">{stat.value}</span>
                         </div>
                     ))}
+                    {/* Investment stat — currency-aware */}
+                    <div className="p-6 md:p-12 flex flex-col gap-3 group hover:bg-white transition-colors border-zinc-border">
+                        <div className="flex items-center gap-2">
+                            <span className="text-primary font-bold uppercase text-[10px] md:text-xs tracking-widest">Investment</span>
+                            {/* Mobile inline currency toggle — only shown when both prices exist */}
+                            {hasBothPrices(trek.priceUSD, trek.priceINR) && (
+                                <button
+                                    onClick={() => setCurrency(currency === 'USD' ? 'INR' : 'USD')}
+                                    className="md:hidden text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 border border-zinc-300 text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-colors"
+                                >
+                                    {currency === 'USD' ? '₹' : '$'}
+                                </button>
+                            )}
+                        </div>
+                        <span className="text-2xl md:text-5xl font-black tracking-tighter uppercase break-words md:break-normal">
+                            {formatPrice(trek.priceUSD, trek.priceINR)}
+                        </span>
+                    </div>
                 </div>
             </section>
 
             {/* ── Itinerary + Sidebar ── */}
             <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row">
                 {/* Itinerary */}
-                <section id="itinerary" className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
+                <section id="itinerary" style={{ scrollMarginTop: '80px' }} className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
                     <div className="max-w-2xl">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Timeline</span>
                         <h2 className="text-5xl font-black uppercase tracking-tighter mb-12">The Vertical Itinerary</h2>
@@ -79,6 +114,49 @@ export default function TrekDetails({ trek }: TrekProps) {
                 {/* Sidebar */}
                 <aside className="w-full xl:w-[480px] bg-slate-50">
                     <div className="xl:sticky xl:top-[112px] z-[0]">
+
+                        {/* ── Trek Lead Card ── */}
+                        {trek.trekLead && (
+                            <div className="p-8 md:p-12 border-b border-zinc-border bg-white">
+                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Your Trek Lead</h3>
+                                <div className="flex items-start gap-2">
+                                    {trek.trekLead.imageUrl && (
+                                        <img
+                                            src={trek.trekLead.imageUrl}
+                                            alt={trek.trekLead.name}
+                                            className="w-24 h-24 object-cover object-top shrink-0 grayscale"
+                                        />
+                                    )}
+                                    <div className="min-w-0">
+                                        <p className="font-black uppercase text-sm tracking-tight leading-tight">{trek.trekLead.name}</p>
+                                        <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">{trek.trekLead.title}</p>
+                                        <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                                            {trek.trekLead.cert && (
+                                                <span className="text-[9px] font-black uppercase tracking-widest text-primary">{trek.trekLead.cert}</span>
+                                            )}
+                                            {trek.trekLead.summits && (
+                                                <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400">{trek.trekLead.summits}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                                {trek.trekLead.quote && (
+                                    <blockquote className="mt-6 text-xs text-slate-600 leading-relaxed italic border-l-2 border-primary pl-4">
+                                        &ldquo;{trek.trekLead.quote}&rdquo;
+                                    </blockquote>
+                                )}
+                                <a
+                                    href={`https://wa.me/${trek.trekLead.whatsappNumber || whatsappNumber}?text=${encodeURIComponent(`Hi ${trek.trekLead.name}! I'm looking at the ${trek.name} Trek and have a few questions. Can we chat?`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-6 w-full flex items-center justify-center gap-2.5 bg-[#25D366] text-white py-3.5 text-xs font-black uppercase tracking-widest hover:brightness-95 transition-all"
+                                >
+                                    <MessageCircle className="w-4 h-4" />
+                                    Chat with {trek.trekLead.name.split(' ')[0]} on WhatsApp
+                                </a>
+                            </div>
+                        )}
+
                         {/* Safety Protocols */}
                         <div className="p-8 md:p-12 border-b border-zinc-border">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Safety Protocols</h3>
@@ -111,7 +189,7 @@ export default function TrekDetails({ trek }: TrekProps) {
                         <div className="p-8 md:p-12">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Upcoming Batches</h3>
                             <div className="space-y-4">
-                                {trek.batches.map((batch, index) => (
+                                {trek.batches.filter(batch => !batch.startDate || new Date(batch.startDate) >= new Date()).map((batch, index) => (
                                     <div key={index} className="bg-white border border-zinc-border p-5 flex flex-col gap-4">
                                         <div className="flex justify-between items-start">
                                             <div>
@@ -125,9 +203,14 @@ export default function TrekDetails({ trek }: TrekProps) {
                                                 <p className="text-xs font-bold">{batch.remaining} / {trek.groupSize}</p>
                                             </div>
                                         </div>
-                                        <button className="w-full bg-slate-900 text-white py-3 text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors">
+                                        <a
+                                            href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to secure a spot for the ${trek.name} Trek — ${batch.date}. Please confirm availability.`)}` : '#enquire'}
+                                            target={whatsappNumber ? '_blank' : undefined}
+                                            rel={whatsappNumber ? 'noopener noreferrer' : undefined}
+                                            className="w-full block text-center bg-slate-900 text-white py-3 text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors"
+                                        >
                                             Secure Spot
-                                        </button>
+                                        </a>
                                     </div>
                                 ))}
                             </div>
@@ -140,7 +223,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             </div>
 
             {/* ── What's Included / Excluded ── */}
-            <section id="included" className="border-t border-zinc-border">
+            <section id="included" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border">
                 <div className="max-w-[1440px] mx-auto">
                     <div className="p-8 md:p-16 border-b border-zinc-border">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Investment Breakdown</span>
@@ -175,8 +258,53 @@ export default function TrekDetails({ trek }: TrekProps) {
                 </div>
             </section>
 
+            {/* ── Ask the Expert ── */}
+            {trek.trekLead && (
+                <section className="border-t border-zinc-border bg-slate-900 text-white">
+                    <div className="max-w-[1440px] mx-auto p-8 md:p-16 flex justify-center">
+                        <div className="flex flex-col md:flex-row items-left gap-10 md:gap-16 max-w-3xl w-full">
+                            {trek.trekLead.imageUrl && (
+                                <img
+                                    src={trek.trekLead.imageUrl}
+                                    alt={trek.trekLead.name}
+                                    className="w-full h-80 md:w-80 md:h-[380px] object-cover object-top grayscale opacity-70 shrink-0"
+                                />
+                            )}
+                            {/* Copy + CTA */}
+                            <div className="flex flex-col gap-6">
+                                <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px]">Direct Line</span>
+                                <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter leading-tight">
+                                    Questions about the route?<br />
+                                    <span className="text-slate-400">Ask {trek.trekLead.name.split(' ')[0]} directly.</span>
+                                </h2>
+                                <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
+                                    {trek.trekLead.name} has led this route countless times. Gear concerns, fitness doubts,
+                                    altitude worries — message them on WhatsApp and get a straight answer from the field.
+                                </p>
+                                <div className="flex flex-row gap-3 mt-2">
+                                    <a
+                                        href={`https://wa.me/${trek.trekLead.whatsappNumber || whatsappNumber}?text=${encodeURIComponent(`Hi ${trek.trekLead.name}! I've been reading about the ${trek.name} Trek. Can you answer a few questions before I commit?`)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1 inline-flex items-center justify-center gap-2.5 bg-[#25D366] text-white px-4 py-3 text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all duration-200"
+                                    >
+                                        Message {trek.trekLead.name.split(' ')[0]} on WhatsApp
+                                    </a>
+                                    <a
+                                        href="#enquire"
+                                        className="flex-1 inline-flex items-center justify-center gap-2 border border-white/20 text-white px-4 py-3 text-xs font-black uppercase tracking-widest hover:bg-white hover:text-slate-900 hover:border-white transition-all duration-200"
+                                    >
+                                        Send a Written Enquiry
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
+
             {/* ── Altitude Profile ── */}
-            <section id="altitude" className="border-t border-zinc-border bg-slate-50" style={{ position: 'relative', zIndex: 0, transform: 'translateZ(0)' }}>
+            <section id="altitude" className="border-t border-zinc-border bg-slate-50" style={{ scrollMarginTop: '80px', position: 'relative', zIndex: 0, transform: 'translateZ(0)' }}>
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <div className="mb-12 flex items-end justify-between flex-wrap gap-4">
                         <div>
@@ -195,7 +323,7 @@ export default function TrekDetails({ trek }: TrekProps) {
             </section>
 
             {/* ── Photo Gallery ── */}
-            <section id="gallery" className="border-t border-zinc-border" style={{ position: 'relative', zIndex: 0, transform: 'translateZ(0)' }}>
+            <section id="gallery" className="border-t border-zinc-border" style={{ scrollMarginTop: '80px', position: 'relative', zIndex: 0, transform: 'translateZ(0)' }}>
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">On the Ground</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trek Gallery</h2>
@@ -204,60 +332,20 @@ export default function TrekDetails({ trek }: TrekProps) {
             </section>
 
             {/* ── Testimonials ── */}
-            <section id="reviews" className="border-t border-zinc-border bg-slate-50">
+            <section id="reviews" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border bg-slate-50">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Field Reports</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trekker Testimonials</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-zinc-border">
-                        {trek.testimonials.map((t, i) => (
-                            <div key={i} className="bg-white p-8 md:p-10 flex flex-col gap-6">
-                                <div className="flex gap-0.5">
-                                    {Array.from({ length: 5 }).map((_, s) => (
-                                        <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? 'text-primary fill-primary' : 'text-slate-200 fill-slate-200'}`} />
-                                    ))}
-                                </div>
-                                <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
-                                    &ldquo;{t.text}&rdquo;
-                                </blockquote>
-                                <div className="border-t border-zinc-border pt-6">
-                                    <p className="font-black uppercase text-sm tracking-tight">{t.name}</p>
-                                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">{t.location}</p>
-                                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{t.batch}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <TestimonialsCarousel testimonials={trek.testimonials} />
                 </div>
             </section>
 
             {/* ── Getting There ── */}
-            <section id="logistics" className="border-t border-zinc-border">
+            <section id="logistics" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Logistics</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Getting There</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-zinc-border border border-zinc-border">
-                        <div className="bg-white p-8 md:p-10">
-                            <div className="flex items-center gap-3 mb-6">
-                                <MapPin className="text-primary w-5 h-5 shrink-0" />
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em]">Arrival & Transfer</h3>
-                            </div>
-                            <p className="text-sm text-slate-600 leading-relaxed">{trek.gettingThere.arrival}</p>
-                        </div>
-                        <div className="bg-slate-50 p-8 md:p-10">
-                            <div className="flex items-center gap-3 mb-6">
-                                <FileText className="text-primary w-5 h-5 shrink-0" />
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em]">Visa</h3>
-                            </div>
-                            <p className="text-sm text-slate-600 leading-relaxed">{trek.gettingThere.visa}</p>
-                        </div>
-                        <div className="bg-white p-8 md:p-10">
-                            <div className="flex items-center gap-3 mb-6">
-                                <Plane className="text-primary w-5 h-5 shrink-0" />
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em]">Domestic Flight</h3>
-                            </div>
-                            <p className="text-sm text-slate-600 leading-relaxed">{trek.gettingThere.domesticFlight}</p>
-                        </div>
-                    </div>
+                    <GettingThereCarousel gettingThere={trek.gettingThere} />
                 </div>
             </section>
 
@@ -323,21 +411,7 @@ export default function TrekDetails({ trek }: TrekProps) {
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Gear Guide</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Packing List</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-zinc-border border border-zinc-border">
-                        {Object.entries(trek.packingList).map(([category, items]) => (
-                            <div key={category} className="bg-white p-8">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-6">{category}</h3>
-                                <ul className="space-y-3">
-                                    {items.map((item, i) => (
-                                        <li key={i} className="flex items-start gap-3 text-xs text-slate-600">
-                                            <span className="w-1 h-1 bg-slate-300 rounded-full shrink-0 mt-1.5" />
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
+                    <PackingListCarousel packingList={trek.packingList} />
                 </div>
             </section>
 
@@ -346,26 +420,12 @@ export default function TrekDetails({ trek }: TrekProps) {
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Training Protocol</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Physical Preparation</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-zinc-border border border-zinc-border">
-                        {trek.physicalPrep.map((phase, i) => (
-                            <div key={i} className={`p-8 md:p-10 ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
-                                <div className="flex items-center gap-3 mb-6">
-                                    <Dumbbell className="text-primary w-4 h-4 shrink-0" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{phase.weeks}</span>
-                                </div>
-                                <h3 className="font-black uppercase text-base tracking-tight mb-4">{phase.focus}</h3>
-                                <p className="text-sm text-slate-600 leading-relaxed">{phase.description}</p>
-                                <div className="mt-6 text-[10px] font-black uppercase tracking-widest text-slate-200">
-                                    {(i + 1).toString().padStart(2, '0')}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    <PhysicalPrepCarousel physicalPrep={trek.physicalPrep} />
                 </div>
             </section>
 
             {/* ── FAQ ── */}
-            <section id="faqs" className="border-t border-zinc-border bg-slate-50">
+            <section id="faqs" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border bg-slate-50">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <div className="flex items-end gap-4 mb-12">
                         <div>
@@ -384,9 +444,9 @@ export default function TrekDetails({ trek }: TrekProps) {
                     <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Explore More</span>
                         <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Compare Expeditions</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-px bg-white/10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                             {trek.relatedTreks.map((rt, i) => (
-                                <Link key={i} href={`/treks/${rt.slug}`} className="bg-slate-900 p-8 md:p-10 hover:bg-slate-800 transition-colors group flex flex-col gap-4">
+                                <Link key={i} href={`/treks/${rt.slug}`} className="bg-slate-900 border border-white/10 -mt-px -ml-px p-8 md:p-10 hover:bg-slate-800 transition-colors group flex flex-col gap-4">
                                     <h3 className="font-black uppercase text-lg tracking-tight">{rt.name}</h3>
                                     <div className="flex gap-6 text-xs text-slate-400 uppercase font-bold">
                                         <span>{rt.duration}</span>
@@ -403,14 +463,14 @@ export default function TrekDetails({ trek }: TrekProps) {
             )}
 
             {/* ── Enquiry Form ── */}
-            <section id="enquire" className="border-t border-zinc-border">
+            <section id="enquire" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Custom Dates & Private Groups</span>
                     <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Make an Enquiry</h2>
                     <p className="text-slate-500 text-sm mb-12 max-w-xl">
                         Can't find a batch that suits your schedule? Request a private departure or ask our team anything about {trek.name}.
                     </p>
-                    <EnquiryForm trekName={trek.name} />
+                    <EnquiryForm trekName={trek.name} whatsappNumber={whatsappNumber} />
                 </div>
             </section>
 

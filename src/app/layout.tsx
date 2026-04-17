@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
 import "./globals.css";
+import { client } from "@/sanity/client";
+import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
+import { CurrencyProvider } from "@/lib/CurrencyContext";
 
 const publicSans = Public_Sans({
   variable: "--font-public-sans",
@@ -71,63 +74,75 @@ export const metadata: Metadata = {
   },
 };
 
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": ["Organization", "TravelAgency"],
-  name: "Yeti Expeditions",
-  url: BASE_URL,
-  logo: `${BASE_URL}/logo.png`,
-  description:
-    "Premium guided trekking operator specialising in Himalayan expeditions. WFR-certified guides, maximum 8 trekkers per group, 1:4 guide-to-trekker ratio.",
-  foundingLocation: {
-    "@type": "Place",
-    name: "Kathmandu, Nepal",
-  },
-  areaServed: ["Nepal", "India", "Himalayas"],
-  knowsAbout: [
-    "Himalayan trekking",
-    "Everest Base Camp trek",
-    "Annapurna Circuit trek",
-    "High altitude safety",
-    "Wilderness First Response",
-  ],
-  contactPoint: [
-    {
-      "@type": "ContactPoint",
-      contactType: "customer service",
-      email: "info@yetiexpeditions.com",
-      availableLanguage: ["English"],
-    },
-  ],
-  location: [
-    {
-      "@type": "Place",
-      name: "Kathmandu Office",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Thamel, Kathmandu",
-        addressCountry: "NP",
-      },
-    },
-    {
-      "@type": "Place",
-      name: "Leh Office",
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Leh",
-        addressRegion: "Ladakh",
-        addressCountry: "IN",
-      },
-    },
-  ],
-  sameAs: [],
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch social links from Sanity to populate sameAs in Organization schema
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const settings: any = await client.fetch(SITE_SETTINGS_QUERY)
+  const sameAs = [
+    settings?.instagram,
+    settings?.linkedin,
+    settings?.facebook,
+    settings?.youtube,
+    settings?.x,
+  ].filter(Boolean)
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": ["Organization", "TravelAgency"],
+    name: "Yeti Expeditions",
+    url: BASE_URL,
+    logo: `${BASE_URL}/logo.png`,
+    description:
+      "Premium guided trekking operator specialising in Himalayan expeditions. WFR-certified guides, maximum 8 trekkers per group, 1:4 guide-to-trekker ratio.",
+    foundingLocation: {
+      "@type": "Place",
+      name: "Kathmandu, Nepal",
+    },
+    areaServed: ["Nepal", "India", "Himalayas"],
+    knowsAbout: [
+      "Himalayan trekking",
+      "Everest Base Camp trek",
+      "Annapurna Circuit trek",
+      "High altitude safety",
+      "Wilderness First Response",
+    ],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer service",
+        email: settings?.contactEmail ?? "info@yetiexpeditions.com",
+        telephone: settings?.contactPhone ?? undefined,
+        availableLanguage: ["English"],
+      },
+    ],
+    location: [
+      {
+        "@type": "Place",
+        name: "Kathmandu Office",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Thamel, Kathmandu",
+          addressCountry: "NP",
+        },
+      },
+      {
+        "@type": "Place",
+        name: "Leh Office",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Leh",
+          addressRegion: "Ladakh",
+          addressCountry: "IN",
+        },
+      },
+    ],
+    sameAs,
+  };
+
   return (
     <html lang="en">
       <head>
@@ -137,7 +152,9 @@ export default function RootLayout({
         />
       </head>
       <body className={`${publicSans.variable} font-body antialiased`}>
-        {children}
+        <CurrencyProvider>
+          {children}
+        </CurrencyProvider>
       </body>
     </html>
   );
