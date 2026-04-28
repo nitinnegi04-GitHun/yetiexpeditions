@@ -332,6 +332,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
             </section>
 
             {/* ── Testimonials ── */}
+            {trek.testimonials?.length > 0 && (
             <section id="reviews" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border bg-slate-50">
                 <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Field Reports</span>
@@ -339,6 +340,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                     <TestimonialsCarousel testimonials={trek.testimonials} />
                 </div>
             </section>
+            )}
 
             {/* ── Getting There ── */}
             <section id="logistics" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border">

@@ -2,6 +2,7 @@ import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import { schemaTypes } from './src/sanity/schemas'
+import { DuplicateTrekAction } from './src/sanity/actions/duplicateTrek'
 
 export default defineConfig({
   name: 'trekking-website',
@@ -11,4 +12,8 @@ export default defineConfig({
   plugins: [structureTool(), visionTool()],
   schema: { types: schemaTypes },
   basePath: '/studio',
+  document: {
+    actions: (prev, { schemaType }) =>
+      schemaType === 'trek' ? [...prev, DuplicateTrekAction] : prev,
+  },
 })

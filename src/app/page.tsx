@@ -121,6 +121,17 @@ export default async function Home() {
       status: mapBatchStatus(b.status, b.seatsBooked ?? 0, b.totalSeats ?? 8),
       booked: b.seatsBooked ?? 0,
       capacity: b.totalSeats ?? 8,
+      trekLead: b.trekLead ? {
+        name: b.trekLead.name ?? '',
+        title: b.trekLead.title ?? '',
+        cert: b.trekLead.cert ?? '',
+        summits: b.trekLead.summits ?? '',
+        stats: b.trekLead.stats ?? [],
+        imageUrl: b.trekLead.image ? urlFor(b.trekLead.image).width(200).quality(80).url() : '',
+        whatsappNumber: b.trekLead.whatsappNumber ?? '',
+        instagramHandle: b.trekLead.instagramHandle ?? '',
+        quote: b.trekLead.quote || "I've done this route more times than I can count. Message me — any question is a good question.",
+      } : null,
     })),
     trekLead: t.trekLead ? {
       name: t.trekLead.name ?? '',

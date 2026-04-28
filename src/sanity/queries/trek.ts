@@ -18,7 +18,8 @@ export const ALL_TREKS_QUERY = groq`
     groupSize,
     accommodation,
     "upcomingBatches": batches[status == "open" && startDate > now()] | order(startDate asc)[0..11] {
-      batchId, startDate, endDate, price, discountedPrice, seatsBooked, totalSeats, status
+      batchId, startDate, endDate, price, discountedPrice, seatsBooked, totalSeats, status,
+      "trekLead": trekLead-> { name, title, cert, summits, stats, image, whatsappNumber, instagramHandle, quote }
     },
     "trekLead": trekLead-> {
       name,
@@ -83,7 +84,8 @@ export const TREK_BY_SLUG_QUERY = groq`
     },
     "batches": batches[] | order(startDate asc) {
       batchId, startDate, endDate, price, discountedPrice,
-      totalSeats, seatsBooked, status, meetingPoint, notes
+      totalSeats, seatsBooked, status, meetingPoint, notes,
+      "trekLead": trekLead-> { name, title, cert, summits, "imageUrl": image.asset->url, whatsappNumber, quote }
     },
     "seo": seo {
       metaTitle,

@@ -5,13 +5,23 @@ import { useScrollGrayscale } from '@/hooks/useScrollGrayscale';
 
 function GalleryImg({ src, alt }: { src: string; alt: string }) {
     const { ref, filter } = useScrollGrayscale();
+    const [hovered, setHovered] = useState(false);
     return (
-        <div ref={ref} className="absolute inset-0 overflow-hidden bg-slate-100">
+        <div
+            ref={ref}
+            className="absolute inset-0 overflow-hidden bg-slate-100"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
             <img
                 src={src}
                 alt={alt}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                style={{ filter, transition: 'filter 300ms ease, transform 500ms ease' }}
+                className="w-full h-full object-cover"
+                style={{
+                    filter: hovered ? 'grayscale(0%) contrast(1)' : filter,
+                    transform: hovered ? 'scale(1.05)' : 'scale(1)',
+                    transition: 'filter 400ms ease, transform 500ms ease',
+                }}
             />
         </div>
     );

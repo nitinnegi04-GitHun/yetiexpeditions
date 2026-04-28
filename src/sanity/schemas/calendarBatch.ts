@@ -71,6 +71,13 @@ export const calendarBatch = defineType({
       description: 'e.g. Dehradun Railway Station'
     }),
     defineField({
+      name: 'trekLead',
+      title: 'Trek Lead (Override)',
+      type: 'reference',
+      to: [{ type: 'guide' }],
+      description: 'Leave empty to use the trek-level Trek Lead. Set this only if a different guide is leading this specific departure.',
+    }),
+    defineField({
       name: 'notes',
       title: 'Batch Notes',
       type: 'text',
@@ -85,12 +92,14 @@ export const calendarBatch = defineType({
       status: 'status',
       price: 'price',
       seats: 'totalSeats',
-      booked: 'seatsBooked'
+      booked: 'seatsBooked',
+      leadName: 'trekLead.name',
     },
-    prepare({ start, end, status, price, seats, booked }) {
+    prepare({ start, end, status, price, seats, booked, leadName }) {
+      const leadSuffix = leadName ? ` · ${leadName}` : ''
       return {
         title: `${start} → ${end}`,
-        subtitle: `₹${price} · ${seats - booked} seats left · ${status}`
+        subtitle: `₹${price} · ${seats - booked} seats left · ${status}${leadSuffix}`
       }
     }
   }
