@@ -53,6 +53,7 @@ function transformSanityTrek(raw: any) {
       endDate: b.endDate,
       status: deriveBatchStatus(b.status, b.totalSeats, b.seatsBooked),
       remaining: b.totalSeats - b.seatsBooked,
+      trekLead: b.trekLead ?? null,
     })
   )
 
@@ -90,8 +91,10 @@ function transformSanityTrek(raw: any) {
     bannerVideo,
     itinerary: raw.itinerary ?? [],
     batches,
+    safetyProtocols: raw.safetyProtocols ?? [],
     included: raw.included ?? [],
     excluded: raw.excluded ?? [],
+    nonNegotiables: raw.nonNegotiables ?? [],
     altitudeProfile: raw.altitudeProfile ?? [],
     packingList,
     physicalPrep: raw.physicalPrep ?? [],

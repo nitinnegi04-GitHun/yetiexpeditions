@@ -56,8 +56,10 @@ export const TREK_BY_SLUG_QUERY = groq`
     country,
     itinerary,
     altitudeProfile,
+    safetyProtocols,
     included,
     excluded,
+    nonNegotiables,
     packingList,
     physicalPrep,
     "trekLead": trekLead-> {

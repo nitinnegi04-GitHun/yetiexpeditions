@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { richTextBlock } from './richTextBlock'
 
 export const article = defineType({
   name: 'article',
@@ -6,10 +7,8 @@ export const article = defineType({
   type: 'document',
 
   groups: [
-    { name: 'content',  title: '✏️  Content',  default: true },
-    { name: 'taxonomy', title: '🏷  Taxonomy'               },
-    { name: 'author',   title: '👤  Author'                 },
-    { name: 'meta',     title: '⚙️  Meta'                   },
+    { name: 'content', title: '✏️  Content', default: true },
+    { name: 'seo',     title: '🔍  SEO'                    },
   ],
 
   fields: [
@@ -20,12 +19,16 @@ export const article = defineType({
     defineField({ name: 'featured', title: 'Featured Article', type: 'boolean', group: 'content', initialValue: false, description: 'Pinned to the top of the journal page' }),
     defineField({ name: 'image',    title: 'Cover Image',   type: 'image',  group: 'content', options: { hotspot: true }, validation: Rule => Rule.required() }),
 
-    // ── Taxonomy ───────────────────────────────────────────────
+    // ── Author ─────────────────────────────────────────────────
+    defineField({ name: 'author',      title: 'Author Name',  type: 'string', group: 'content', validation: Rule => Rule.required() }),
+    defineField({ name: 'authorTitle', title: 'Author Title', type: 'string', group: 'content', description: 'e.g. Lead Expedition Guide · WFR Certified' }),
+
+    // ── Taxonomy & Meta ────────────────────────────────────────
     defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
-      group: 'taxonomy',
+      group: 'content',
       options: {
         list: [
           { title: 'Expedition Reports', value: 'Expedition Reports' },
@@ -38,15 +41,9 @@ export const article = defineType({
       },
       validation: Rule => Rule.required(),
     }),
-    defineField({ name: 'tags', title: 'Tags', type: 'array', group: 'taxonomy', of: [{ type: 'string' }], options: { layout: 'tags' } }),
-
-    // ── Author ─────────────────────────────────────────────────
-    defineField({ name: 'author',      title: 'Author Name',  type: 'string', group: 'author', validation: Rule => Rule.required() }),
-    defineField({ name: 'authorTitle', title: 'Author Title', type: 'string', group: 'author', description: 'e.g. Lead Expedition Guide · IFMGA Certified' }),
-
-    // ── Meta ───────────────────────────────────────────────────
-    defineField({ name: 'date',     title: 'Publish Date', type: 'date',   group: 'meta', validation: Rule => Rule.required() }),
-    defineField({ name: 'readTime', title: 'Read Time',    type: 'string', group: 'meta', description: 'e.g. 8 min read' }),
+    defineField({ name: 'tags',     title: 'Tags',         type: 'array',  group: 'content', of: [{ type: 'string' }], options: { layout: 'tags' } }),
+    defineField({ name: 'date',     title: 'Publish Date', type: 'date',   group: 'content', validation: Rule => Rule.required() }),
+    defineField({ name: 'readTime', title: 'Read Time',    type: 'string', group: 'content', description: 'e.g. 8 min read' }),
 
     // ── Body ───────────────────────────────────────────────────
     defineField({
@@ -55,56 +52,14 @@ export const article = defineType({
       type: 'array',
       group: 'content',
       of: [
+        richTextBlock,
         {
-          type: 'object',
-          name: 'paragraph',
-          title: 'Paragraph',
+          type: 'image',
+          options: { hotspot: true },
           fields: [
-            defineField({ name: 'type', type: 'string', hidden: true, initialValue: 'p' }),
-            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'caption', type: 'string', title: 'Caption' }),
+            defineField({ name: 'alt', type: 'string', title: 'Alt Text' }),
           ],
-          preview: { select: { text: 'text' }, prepare: ({ text }) => ({ title: text?.slice(0, 80) }) },
-        },
-        {
-          type: 'object',
-          name: 'heading',
-          title: 'Heading (H2)',
-          fields: [
-            defineField({ name: 'type', type: 'string', hidden: true, initialValue: 'h2' }),
-            defineField({ name: 'text', title: 'Heading Text', type: 'string' }),
-          ],
-          preview: { select: { text: 'text' }, prepare: ({ text }) => ({ title: `H2: ${text}` }) },
-        },
-        {
-          type: 'object',
-          name: 'quote',
-          title: 'Pull Quote',
-          fields: [
-            defineField({ name: 'type', type: 'string', hidden: true, initialValue: 'quote' }),
-            defineField({ name: 'text', title: 'Quote Text', type: 'text', rows: 2 }),
-            defineField({ name: 'attribution', title: 'Attribution', type: 'string', description: 'Optional source name' }),
-          ],
-          preview: { select: { text: 'text' }, prepare: ({ text }) => ({ title: `"${text?.slice(0, 60)}"` }) },
-        },
-        {
-          type: 'object',
-          name: 'articleImage',
-          title: 'Image',
-          fields: [
-            defineField({ name: 'type', type: 'string', hidden: true, initialValue: 'image' }),
-            defineField({ name: 'src', title: 'Image', type: 'image', options: { hotspot: true } }),
-            defineField({ name: 'caption', title: 'Caption', type: 'string' }),
-          ],
-          preview: { select: { media: 'src', caption: 'caption' }, prepare: ({ media, caption }) => ({ title: caption ?? 'Image', media }) },
-        },
-        {
-          type: 'object',
-          name: 'divider',
-          title: 'Divider',
-          fields: [
-            defineField({ name: 'type', type: 'string', hidden: true, initialValue: 'divider' }),
-          ],
-          preview: { prepare: () => ({ title: '— Divider —' }) },
         },
       ],
       validation: Rule => Rule.required().min(1),

@@ -119,7 +119,7 @@ export const aboutPage = defineType({
       type: 'object',
       group: 'hero',
       fields: [
-        defineField({ name: 'badge', title: 'Badge Text', type: 'string', initialValue: 'IFMGA Certified Expedition Company' }),
+        defineField({ name: 'badge', title: 'Badge Text', type: 'string', initialValue: 'Active Since 2008. Zero Fatalities.' }),
         defineField({ name: 'headlineLine1', title: 'Headline — Line 1', type: 'string', initialValue: 'Born' }),
         defineField({ name: 'headlineLine2', title: 'Headline — Line 2', type: 'string', initialValue: 'From The' }),
         defineField({ name: 'headlineLine3', title: 'Headline — Line 3', type: 'string', initialValue: 'Mountain' }),

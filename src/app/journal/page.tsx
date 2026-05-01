@@ -3,7 +3,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import JournalInteractive from "./_components/JournalInteractive";
 import { ArrowRight, Clock, User, CalendarDays } from "lucide-react";
-import { ARTICLES } from "./articles";
+import { client } from "@/sanity/client";
+import { ALL_ARTICLES_QUERY } from "@/sanity/queries/article";
 import type { Metadata } from "next";
 
 const BASE_URL = 'https://www.yetiexpeditions.com'
@@ -27,8 +28,12 @@ export const metadata: Metadata = {
     },
 }
 
-export default function JournalPage() {
-    const featured = ARTICLES.find(a => a.featured)!;
+export const revalidate = 3600;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function JournalPage() {
+    const articles: any[] = await client.fetch(ALL_ARTICLES_QUERY) ?? [];
+    const featured = articles.find(a => a.featured) ?? articles[0] ?? null;
 
     return (
         <div className="min-h-screen bg-white">
@@ -52,59 +57,61 @@ export default function JournalPage() {
             </section>
 
             {/* ── Featured Article ── */}
-            <section className="border-b border-zinc-border">
-                <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row">
-                    <div className="w-full lg:w-1/2 overflow-hidden" style={{ minHeight: "420px" }}>
-                        <img
-                            src={featured.image}
-                            alt={featured.title}
-                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                            style={{ minHeight: "420px" }}
-                        />
-                    </div>
-                    <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 md:p-12 lg:p-16 bg-slate-50">
-                        <div>
-                            <div className="flex items-center gap-4 mb-8">
-                                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary border border-primary/30 px-3 py-1">
-                                    Featured
-                                </span>
-                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 border border-zinc-border px-3 py-1">
-                                    {featured.category}
-                                </span>
-                            </div>
-                            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-tight mb-6">
-                                {featured.title}
-                            </h2>
-                            <p className="text-slate-600 text-sm leading-relaxed mb-8">
-                                {featured.excerpt}
-                            </p>
+            {featured && (
+                <section className="border-b border-zinc-border">
+                    <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row">
+                        <div className="w-full lg:w-1/2 overflow-hidden" style={{ minHeight: "420px" }}>
+                            <img
+                                src={featured.image}
+                                alt={featured.title}
+                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                                style={{ minHeight: "420px" }}
+                            />
                         </div>
-                        <div>
-                            <div className="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8 flex-wrap">
-                                <span className="flex items-center gap-2">
-                                    <User className="w-3 h-3" />{featured.author}
-                                </span>
-                                <span className="flex items-center gap-2">
-                                    <CalendarDays className="w-3 h-3" />{featured.date}
-                                </span>
-                                <span className="flex items-center gap-2">
-                                    <Clock className="w-3 h-3" />{featured.readTime}
-                                </span>
+                        <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 md:p-12 lg:p-16 bg-slate-50">
+                            <div>
+                                <div className="flex items-center gap-4 mb-8">
+                                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary border border-primary/30 px-3 py-1">
+                                        Featured
+                                    </span>
+                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 border border-zinc-border px-3 py-1">
+                                        {featured.category}
+                                    </span>
+                                </div>
+                                <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter leading-tight mb-6">
+                                    {featured.title}
+                                </h2>
+                                <p className="text-slate-600 text-sm leading-relaxed mb-8">
+                                    {featured.excerpt}
+                                </p>
                             </div>
-                            <Link
-                                href={`/journal/${featured.slug}`}
-                                className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-colors group"
-                            >
-                                Read Dispatch
-                                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                            </Link>
+                            <div>
+                                <div className="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8 flex-wrap">
+                                    <span className="flex items-center gap-2">
+                                        <User className="w-3 h-3" />{featured.author}
+                                    </span>
+                                    <span className="flex items-center gap-2">
+                                        <CalendarDays className="w-3 h-3" />{featured.date}
+                                    </span>
+                                    <span className="flex items-center gap-2">
+                                        <Clock className="w-3 h-3" />{featured.readTime}
+                                    </span>
+                                </div>
+                                <Link
+                                    href={`/journal/${featured.slug}`}
+                                    className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-colors group"
+                                >
+                                    Read Dispatch
+                                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                                </Link>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             {/* ── Filter + Grid + Newsletter (client) ── */}
-            <JournalInteractive />
+            <JournalInteractive articles={articles.filter(a => a.slug !== featured?.slug)} />
 
             <Footer />
         </div>

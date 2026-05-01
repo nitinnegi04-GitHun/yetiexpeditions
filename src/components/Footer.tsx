@@ -180,6 +180,7 @@ export default async function Footer() {
           <Link href="/privacy-protocol" className="hover:text-slate-900 transition-colors">Privacy Protocol</Link>
           <Link href="/terms-of-ascent" className="hover:text-slate-900 transition-colors">Terms of Ascent</Link>
           <Link href="/cookie-policy" className="hover:text-slate-900 transition-colors">Cookie Policy</Link>
+          <Link href="/cancellation-policy" className="hover:text-slate-900 transition-colors">Cancellation Policy</Link>
         </div>
         <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">
           © {new Date().getFullYear()} {s.siteName ?? "Yeti Expeditions"}. All Rights Reserved.

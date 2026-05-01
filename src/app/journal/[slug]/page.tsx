@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ARTICLES, type ArticleBlock } from "../articles";
+import { client } from "@/sanity/client";
+import { ARTICLE_BY_SLUG_QUERY, ALL_ARTICLES_QUERY, ARTICLE_SLUGS_QUERY } from "@/sanity/queries/article";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { sharedMarks } from "@/lib/portableTextComponents";
 import { ArrowLeft, Clock, CalendarDays, Tag, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -12,13 +15,16 @@ interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
-    return ARTICLES.map(a => ({ slug: a.slug }))
+    const articles: { slug: string }[] = await client.fetch(ARTICLE_SLUGS_QUERY)
+    return articles.map(a => ({ slug: a.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params
-    const article = ARTICLES.find(a => a.slug === slug)
+    const article = await client.fetch(ARTICLE_BY_SLUG_QUERY, { slug })
     if (!article) return {}
 
     const title = `${article.title} | Yeti Expeditions Journal`
@@ -47,62 +53,96 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 }
 
-function renderBlock(block: ArticleBlock, i: number) {
-    switch (block.type) {
-        case 'h2':
-            return (
-                <h2 key={i} className="text-2xl md:text-3xl font-black uppercase tracking-tighter mt-14 mb-5 text-slate-900">
-                    {block.text}
-                </h2>
-            );
-        case 'p':
-            return (
-                <p key={i} className="text-slate-700 leading-relaxed text-base md:text-[17px] mb-6">
-                    {block.text}
-                </p>
-            );
-        case 'quote':
-            return (
-                <blockquote key={i} className="my-10 border-l-2 border-primary pl-6 md:pl-8">
-                    <p className="text-xl md:text-2xl font-light italic text-slate-800 leading-relaxed">
-                        &ldquo;{block.text}&rdquo;
-                    </p>
-                    {block.attribution && (
-                        <cite className="block mt-4 text-[10px] font-black uppercase tracking-[0.25em] text-primary not-italic">
-                            — {block.attribution}
-                        </cite>
-                    )}
-                </blockquote>
-            );
-        case 'image':
-            return (
-                <figure key={i} className="my-10 border border-zinc-border">
-                    <img
-                        src={block.src}
-                        alt={block.caption}
-                        className="w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                        style={{ maxHeight: "420px" }}
-                    />
-                    <figcaption className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 border-t border-zinc-border bg-slate-50">
-                        {block.caption}
-                    </figcaption>
-                </figure>
-            );
-        case 'divider':
-            return <hr key={i} className="my-12 border-zinc-border" />;
-        default:
-            return null;
-    }
+function slugify(text: string) {
+    return text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim()
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getH2Headings(body: any[]) {
+    return (body ?? [])
+        .filter(b => b._type === 'block' && b.style === 'h2')
+        .map(b => {
+            const text = (b.children ?? []).map((c: any) => c.text ?? '').join('')
+            return { text, id: slugify(text) }
+        })
+        .filter(h => h.text)
+}
+
+const articleBodyComponents: PortableTextComponents = {
+    block: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        h2: ({ children, value }: any) => {
+            const text = (value.children ?? []).map((c: any) => c.text ?? '').join('')
+            return (
+                <h2 id={slugify(text)} className="text-2xl md:text-3xl font-black uppercase tracking-tighter mt-14 mb-5 text-slate-900 scroll-mt-24">
+                    {children}
+                </h2>
+            )
+        },
+        h3: ({ children }) => (
+            <h3 className="text-xl font-black uppercase tracking-tight mt-10 mb-4 text-slate-800">
+                {children}
+            </h3>
+        ),
+        normal: ({ children }) => (
+            <p className="text-slate-700 leading-relaxed text-base md:text-[17px] mb-6">
+                {children}
+            </p>
+        ),
+        blockquote: ({ children }) => (
+            <blockquote className="my-10 border-l-2 border-primary pl-6 md:pl-8">
+                <p className="text-xl md:text-2xl font-light italic text-slate-800 leading-relaxed">
+                    &ldquo;{children}&rdquo;
+                </p>
+            </blockquote>
+        ),
+    },
+    list: {
+        bullet: ({ children }) => <ul className="space-y-2 mb-6 pl-2">{children}</ul>,
+        number: ({ children }) => <ol className="space-y-2 mb-6 pl-4 list-decimal">{children}</ol>,
+    },
+    listItem: {
+        bullet: ({ children }) => (
+            <li className="text-slate-700 leading-relaxed text-base md:text-[17px] flex gap-3">
+                <span className="text-primary mt-1.5 shrink-0">—</span>
+                <span>{children}</span>
+            </li>
+        ),
+        number: ({ children }) => (
+            <li className="text-slate-700 leading-relaxed text-base md:text-[17px]">{children}</li>
+        ),
+    },
+    marks: sharedMarks,
+    types: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        image: ({ value }: any) => (
+            <figure className="my-10 border border-zinc-border">
+                <img
+                    src={value.imageUrl}
+                    alt={value.alt ?? value.caption ?? ''}
+                    className="w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                    style={{ maxHeight: "420px" }}
+                />
+                {value.caption && (
+                    <figcaption className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 border-t border-zinc-border bg-slate-50">
+                        {value.caption}
+                    </figcaption>
+                )}
+            </figure>
+        ),
+    },
+};
 
 export default async function ArticlePage({ params }: PageProps) {
     const { slug } = await params;
-    const article = ARTICLES.find(a => a.slug === slug);
+    const article = await client.fetch(ARTICLE_BY_SLUG_QUERY, { slug });
     if (!article) notFound();
 
-    const related = ARTICLES.filter(a => a.slug !== slug && a.category === article.category).slice(0, 2);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const allArticles: any[] = await client.fetch(ALL_ARTICLES_QUERY) ?? [];
+    const related = allArticles.filter(a => a.slug !== slug && a.category === article.category).slice(0, 2);
     const others = related.length < 2
-        ? [...related, ...ARTICLES.filter(a => a.slug !== slug && !related.includes(a)).slice(0, 2 - related.length)]
+        ? [...related, ...allArticles.filter(a => a.slug !== slug && !related.find((r: any) => r.slug === a.slug)).slice(0, 2 - related.length)]
         : related;
 
     return (
@@ -189,7 +229,7 @@ export default async function ArticlePage({ params }: PageProps) {
                                 <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Tags</p>
                             </div>
                             <div className="flex flex-wrap gap-2">
-                                {article.tags.map(tag => (
+                                {(article.tags ?? []).map((tag: string) => (
                                     <span
                                         key={tag}
                                         className="text-[9px] font-black uppercase tracking-widest px-3 py-1.5 border border-zinc-border text-slate-600 bg-white"
@@ -226,9 +266,38 @@ export default async function ArticlePage({ params }: PageProps) {
                         {article.excerpt}
                     </p>
 
+                    {/* Table of Contents */}
+                    {(() => {
+                        const headings = getH2Headings(article.body)
+                        if (headings.length === 0) return null
+                        return (
+                            <div className="border border-zinc-border mb-14 bg-slate-50">
+                                <div className="border-b border-zinc-border px-6 py-4 flex items-center gap-3">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Contents</span>
+                                    <span className="text-[10px] font-black text-primary">— {headings.length} section{headings.length !== 1 ? 's' : ''}</span>
+                                </div>
+                                <ol className="px-6 py-5 space-y-3">
+                                    {headings.map((h, i) => (
+                                        <li key={h.id} className="flex items-baseline gap-4">
+                                            <span className="text-[10px] font-black text-primary shrink-0 tabular-nums">
+                                                {String(i + 1).padStart(2, '0')}
+                                            </span>
+                                            <a
+                                                href={`#${h.id}`}
+                                                className="text-sm font-bold uppercase tracking-tight text-slate-700 hover:text-primary transition-colors leading-snug"
+                                            >
+                                                {h.text}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ol>
+                            </div>
+                        )
+                    })()}
+
                     {/* Body blocks */}
                     <div>
-                        {article.body.map((block, i) => renderBlock(block, i))}
+                        {article.body && <PortableText value={article.body} components={articleBodyComponents} />}
                     </div>
 
                     {/* End mark */}

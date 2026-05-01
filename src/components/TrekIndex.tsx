@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { useScrollGrayscale } from "@/hooks/useScrollGrayscale";
 import { useCurrency } from "@/lib/CurrencyContext";
+import PriceTooltip from "./PriceTooltip";
 
 function TrekCardBg({ src }: { src: string }) {
     const { ref, filter } = useScrollGrayscale();
@@ -179,6 +180,7 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                         <span className="text-xs font-bold tracking-tight text-slate-900">
                                             {formatPrice(trek.priceUSD, trek.priceINR)}
                                         </span>
+                                        <PriceTooltip />
                                         {/* Mobile inline currency toggle — only shown when both prices exist */}
                                         {hasBothPrices(trek.priceUSD, trek.priceINR) && (
                                             <div className="flex items-center border border-zinc-200 overflow-hidden shrink-0" onClick={(e) => e.preventDefault()}>
@@ -234,9 +236,12 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                     <span className={`px-4 py-1 border text-[10px] font-bold uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`}>
                                         {trek.difficulty}
                                     </span>
-                                    <span className="text-xl font-bold tracking-tight">
-                                        {formatPrice(trek.priceUSD, trek.priceINR)}
-                                    </span>
+                                    <div className="flex items-center gap-1">
+                                        <span className="text-xl font-bold tracking-tight">
+                                            {formatPrice(trek.priceUSD, trek.priceINR)}
+                                        </span>
+                                        <PriceTooltip />
+                                    </div>
                                     <ArrowRight className="text-slate-300 group-hover:text-primary group-hover:translate-x-2 transition-all" />
                                 </div>
                             </Link>

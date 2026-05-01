@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { sharedMarks } from "@/lib/portableTextComponents";
 import { ArrowLeft } from "lucide-react";
 
 const portableTextComponents: PortableTextComponents = {
@@ -47,14 +48,7 @@ const portableTextComponents: PortableTextComponents = {
             </li>
         ),
     },
-    marks: {
-        strong: ({ children }) => (
-            <strong className="font-black text-slate-900">{children}</strong>
-        ),
-        em: ({ children }) => (
-            <em className="italic">{children}</em>
-        ),
-    },
+    marks: sharedMarks,
 };
 
 interface LegalPageLayoutProps {

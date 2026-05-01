@@ -3,16 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Clock, User, Mail } from "lucide-react";
-import { ARTICLES } from "../articles";
 
 const CATEGORIES = ["All", "Expedition Reports", "Gear & Kit", "Training", "Altitude Science", "Community"];
 
-export default function JournalInteractive() {
+interface ArticleCard {
+    slug: string;
+    title: string;
+    excerpt: string;
+    category: string;
+    author: string;
+    readTime: string;
+    date: string;
+    image: string;
+}
+
+export default function JournalInteractive({ articles }: { articles: ArticleCard[] }) {
     const [activeCategory, setActiveCategory] = useState("All");
     const [email, setEmail] = useState("");
     const [subscribed, setSubscribed] = useState(false);
 
-    const grid = ARTICLES.filter(a => !a.featured && (activeCategory === "All" || a.category === activeCategory));
+    const grid = articles.filter(a => activeCategory === "All" || a.category === activeCategory);
 
     return (
         <>

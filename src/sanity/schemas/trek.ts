@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { simpleRichTextBlock } from './richTextBlock'
 
 export const trek = defineType({
   name: 'trek',
@@ -106,21 +107,39 @@ export const trek = defineType({
     }),
 
     // ── Included / Excluded ────────────────────────────────────
+    defineField({ name: 'included', title: "What's Included", type: 'array', group: 'includes', of: [simpleRichTextBlock] }),
+    defineField({ name: 'excluded', title: "What's Excluded", type: 'array', group: 'includes', of: [simpleRichTextBlock] }),
+
+    // ── Safety Protocols ──────────────────────────────────────
     defineField({
-      name: 'included',
-      title: "What's Included",
+      name: 'safetyProtocols',
+      title: 'Safety Protocols',
       type: 'array',
-      group: 'includes',
-      of: [{ type: 'string' }],
-      validation: Rule => Rule.required().min(1),
+      group: 'overview',
+      description: 'Shown in the sidebar on the trek page. Add each safety measure as a title + description.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string', description: 'e.g. WFR Certified Guides' }),
+            defineField({ name: 'description', title: 'Description', type: 'text', rows: 2 }),
+          ],
+          preview: {
+            select: { title: 'title', subtitle: 'description' },
+            prepare: ({ title, subtitle }) => ({ title, subtitle }),
+          },
+        },
+      ],
     }),
+
+    // ── Non-Negotiables ───────────────────────────────────────
     defineField({
-      name: 'excluded',
-      title: "What's Excluded",
+      name: 'nonNegotiables',
+      title: 'Non-Negotiables',
       type: 'array',
       group: 'includes',
-      of: [{ type: 'string' }],
-      validation: Rule => Rule.required().min(1),
+      description: 'Important points every trekker must read and acknowledge before booking.',
+      of: [simpleRichTextBlock],
     }),
 
     // ── Packing List ───────────────────────────────────────────

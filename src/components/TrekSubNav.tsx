@@ -4,14 +4,16 @@ import { useEffect, useState, useCallback } from 'react';
 import { ChevronUp } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { label: 'Itinerary', href: '#itinerary' },
-  { label: 'Includes',  href: '#included'  },
-  { label: 'Altitude',  href: '#altitude'  },
-  { label: 'Gallery',   href: '#gallery'   },
-  { label: 'Reviews',   href: '#reviews'   },
-  { label: 'Logistics', href: '#logistics' },
-  { label: 'FAQs',      href: '#faqs'      },
-  { label: 'Enquire',   href: '#enquire'   },
+  { label: 'Itinerary',   href: '#itinerary'        },
+  { label: 'Includes',    href: '#included'          },
+  { label: 'Protocol',    href: '#non-negotiables'   },
+  { label: 'Altitude',    href: '#altitude'          },
+  { label: 'Gallery',     href: '#gallery'           },
+  { label: 'Reviews',     href: '#reviews'           },
+  { label: 'Logistics',   href: '#logistics'         },
+  { label: 'Stay',        href: '#accommodation'     },
+  { label: 'FAQs',        href: '#faqs'              },
+  { label: 'Enquire',     href: '#enquire'           },
 ];
 
 export default function TrekSubNav() {
@@ -74,7 +76,7 @@ export default function TrekSubNav() {
         </button>
         {/* Nav rows */}
         <div className="flex-1 flex flex-col">
-          {[NAV_ITEMS.slice(0, 4), NAV_ITEMS.slice(4)].map((row, rowIdx) => (
+          {[NAV_ITEMS.slice(0, 5), NAV_ITEMS.slice(5)].map((row, rowIdx) => (
             <div key={rowIdx} className={`flex ${rowIdx === 0 ? 'border-b border-zinc-border' : ''}`}>
               {row.map(item => (
                 <a

@@ -80,7 +80,7 @@ export default async function AboutPage() {
     }
 
     // ── Hero ─────────────────────────────────────────────────────────────────────
-    const heroBadge = d?.hero?.badge ?? 'IFMGA Certified Expedition Company'
+    const heroBadge = d?.hero?.badge ?? 'Active Since 2008. Zero Fatalities.'
     const heroLine1 = d?.hero?.headlineLine1 ?? 'Born'
     const heroLine2 = d?.hero?.headlineLine2 ?? 'From The'
     const heroLine3 = d?.hero?.headlineLine3 ?? 'Mountain'
@@ -132,7 +132,7 @@ export default async function AboutPage() {
     const principles = d?.philosophy?.principles?.length ? d.philosophy.principles : [
         { code: '01', title: 'The Mountain Decides', body: 'No summit is worth a life. We turn back when the mountain demands it — and we train our clients to trust that call. Ego is the most dangerous piece of kit you can carry above 5,000m.' },
         { code: '02', title: 'Oxygen Is Non-Negotiable', body: "Twice-daily SpO2 monitoring isn't a nice-to-have. It's protocol. Every guide carries supplemental oxygen. Every itinerary has built-in acclimatisation. There are no shortcuts above the clouds." },
-        { code: '03', title: 'The Guide Is Not A Porter', body: 'Our guides are IFMGA-certified mountaineers with decades of high-altitude experience. They read weather, manage altitude, and carry the knowledge of generations. Treat them accordingly.' },
+        { code: '03', title: 'The Guide Is Not A Porter', body: 'Our guides are expert mountaineers with decades of high-altitude experience. They read weather, manage altitude, and carry the knowledge of generations. Treat them accordingly.' },
         { code: '04', title: 'Leave Less Than You Found', body: 'Every permit fee funds trail restoration. Every camp is left cleaner than we arrived. We operate at a deficit with the mountain — it has given us everything, we owe it our best effort.' },
     ]
 
@@ -140,9 +140,9 @@ export default async function AboutPage() {
     const guidesTagline = d?.guides?.tagline ?? 'The Team'
     const guidesHeading = d?.guides?.heading ?? 'Our Guides'
     const guides = d?.guides?.guidesList?.length ? d.guides.guidesList : [
-        { _id: 'GUIDE-001', guideId: 'GUIDE-001', name: 'Lakpa Rita Sherpa', title: 'Lead Expedition Guide', cert: 'IFMGA Certified', summits: 'Everest ×14', stats: ['VO2 MAX: 58 ml/kg/min', 'SpO2 @ 8000m: 88%', 'Active Since: 1998'] },
+        { _id: 'GUIDE-001', guideId: 'GUIDE-001', name: 'Lakpa Rita Sherpa', title: 'Lead Expedition Guide', cert: '', summits: 'Everest ×14', stats: ['VO2 MAX: 58 ml/kg/min', 'SpO2 @ 8000m: 88%', 'Active Since: 1998'] },
         { _id: 'GUIDE-002', guideId: 'GUIDE-002', name: 'Dawa Gyalje Sherpa', title: 'High Altitude Specialist', cert: 'WFR Certified', summits: 'Everest ×9 / Lhotse ×6', stats: ['VO2 MAX: 61 ml/kg/min', 'SpO2 @ 8000m: 91%', 'Active Since: 2004'] },
-        { _id: 'GUIDE-003', guideId: 'GUIDE-003', name: 'Mingma Tshering', title: 'Route & Safety Director', cert: 'IFMGA / WFR', summits: 'Annapurna ×12 / Manaslu ×8', stats: ['VO2 MAX: 59 ml/kg/min', 'SpO2 @ 8000m: 89%', 'Active Since: 2001'] },
+        { _id: 'GUIDE-003', guideId: 'GUIDE-003', name: 'Mingma Tshering', title: 'Route & Safety Director', cert: 'WFR Certified', summits: 'Annapurna ×12 / Manaslu ×8', stats: ['VO2 MAX: 59 ml/kg/min', 'SpO2 @ 8000m: 89%', 'Active Since: 2001'] },
     ]
 
     // ── The Crew ─────────────────────────────────────────────────────────────

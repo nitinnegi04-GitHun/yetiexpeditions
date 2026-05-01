@@ -28,6 +28,7 @@ export const LEGAL_CONTENT_QUERY = groq`
   *[_type == "siteSettings"][0] {
     privacyPolicy,
     termsOfAscent,
-    cookiePolicy
+    cookiePolicy,
+    cancellationPolicy
   }
 `
