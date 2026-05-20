@@ -27,13 +27,26 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json()
-  const slug = body?.result?.slug?.current
+  // Sanity sends the document at the top level; some webhook configs wrap it under `result`
+  const doc = body?.result ?? body
+  const slug = doc?.slug?.current
+  const type = doc?._type
   const BASE_URL = 'https://www.yetiexpeditions.com'
 
-  // 1. Revalidate Next.js ISR cache
-  const pathsToRevalidate = ['/treks', '/']
-  if (slug) pathsToRevalidate.push(`/treks/${slug}`)
+  // Always revalidate homepage and listing pages
+  const pathsToRevalidate = ['/', '/treks', '/journal', '/our-story']
 
+  if (slug) {
+    if (type === 'article') {
+      pathsToRevalidate.push(`/journal/${slug}`)
+    } else if (type === 'trek') {
+      pathsToRevalidate.push(`/treks/${slug}`)
+    } else {
+      pathsToRevalidate.push(`/treks/${slug}`, `/journal/${slug}`)
+    }
+  }
+
+  // 1. Revalidate Next.js ISR cache
   for (const path of pathsToRevalidate) {
     revalidatePath(path)
   }
@@ -42,5 +55,5 @@ export async function POST(req: NextRequest) {
   const urlsToPurge = pathsToRevalidate.map(p => `${BASE_URL}${p}`)
   await purgeCloudflare(urlsToPurge)
 
-  return NextResponse.json({ revalidated: true, slug, purged: urlsToPurge })
+  return NextResponse.json({ revalidated: true, type, slug, purged: urlsToPurge })
 }
