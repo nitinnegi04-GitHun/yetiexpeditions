@@ -14,8 +14,6 @@
 
 **The origin sentence:** *"What if the best guides in the Himalayas owned the platform, instead of just working for one?"*
 
-**IFMGA Certified Expedition Company. Active since 2008. 16 years. Zero fatalities.**
-
 ---
 
 ## 2. BRAND POSITIONING
@@ -24,8 +22,8 @@
 |---|---|
 | Guide-owned expedition operator | A travel agency or tour aggregator |
 | Safety-first, data-driven | Adventure-for-thrills marketing |
-| Small groups (max 8, non-negotiable) | Mass-market trekking company |
-| Transparent — guides are your first contact | Hidden behind a sales team |
+| Small groups (max 12, non-negotiable) | Mass-market trekking company |
+| Honest — We give Honest Guidance, You speak with trek Leads before making final decision not a sales team
 | Partners with the mountain | Conquerors of the mountain |
 | Rooted in Kinnaur & the Indian Himalaya | A Kathmandu desk operation |
 
@@ -169,7 +167,6 @@ We cite specifics: SpO2 readings, guide-to-trekker ratios, permit success rates,
 - Stats: 847 expeditions, 6,200+ trekkers, 16 years zero fatalities
 - Group cap: 8 — why this number matters
 - Fitness vetting: we turn people down, here's why
-- IFMGA certification: what it means in practice
 - Trekker testimonials and post-trip dispatches
 
 ### Pillar 5: The Philosophy (Brand)
@@ -211,8 +208,7 @@ We cite specifics: SpO2 readings, guide-to-trekker ratios, permit success rates,
 |---|---|---|---|---|
 | Everest Base Camp | Nepal | Difficult | ~14 Days | 5,364m |
 | Annapurna Circuit | Nepal | Moderate–Difficult | ~14 Days | 5,416m (Thorong La) |
-| Kedarkantha | India (Uttarakhand) | Easy–Moderate | ~6 Days | 3,810m |
-| Hampta Pass | India (Himachal) | Moderate | ~5 Days | 4,270m |
+| Sandakphu | India (Westbengal) | Moderate | ~4 Days | 3,636 m |
 | Ladakh treks | India (Ladakh) | Moderate–Difficult | Varies | Varies |
 
 **Countries served:** Nepal, India (Uttarakhand, Himachal Pradesh, Kinnaur, Ladakh), Bhutan
@@ -227,7 +223,7 @@ We cite specifics: SpO2 readings, guide-to-trekker ratios, permit success rates,
 No summit is worth a life. We turn back when the mountain demands it and we train our clients to trust that call. Ego is the most dangerous piece of kit above 5,000m.
 
 **02 — Oxygen Is Non-Negotiable**
-Twice-daily SpO2 monitoring from Namche onwards. Every guide carries supplemental oxygen. Every itinerary has built-in acclimatisation. No shortcuts above the clouds.
+Twice-daily SpO2 monitoring. Every guide carries supplemental oxygen as & when required. Every itinerary has built-in acclimatisation. No shortcuts above the clouds.
 
 **03 — The Guide Is Not A Porter**
 Our guides are IFMGA-certified mountaineers. They read weather, manage altitude, and carry the knowledge of generations. They are experts — treat them accordingly.

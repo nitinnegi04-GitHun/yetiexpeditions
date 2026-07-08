@@ -11,9 +11,9 @@ import { useRef, useState, useEffect } from 'react';
  * Fades to full colour as the container scrolls out of view — matching
  * the desktop hover-to-colour behaviour.
  */
-export function useScrollGrayscale() {
+export function useScrollGrayscale(maxGrayscale = 100) {
   const ref = useRef<HTMLDivElement>(null);
-  const [grayscale, setGrayscale] = useState(100);
+  const [grayscale, setGrayscale] = useState(maxGrayscale);
 
   useEffect(() => {
     if (typeof window === 'undefined' || window.innerWidth >= 768) return;
@@ -24,7 +24,7 @@ export function useScrollGrayscale() {
       const rect = el.getBoundingClientRect();
       const scrolledOut = Math.max(0, -rect.top);
       const progress = Math.min(1, scrolledOut / rect.height);
-      setGrayscale(Math.round(100 * (1 - progress)));
+      setGrayscale(Math.round(maxGrayscale * (1 - progress)));
     };
 
     update();

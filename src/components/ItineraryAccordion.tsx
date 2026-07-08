@@ -2,12 +2,27 @@
 
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { PortableText, type PortableTextBlock } from '@portabletext/react';
+import { sharedMarks } from '@/lib/portableTextComponents';
 
 interface Step {
     day: string;
     title: string;
-    content: string;
+    content: PortableTextBlock[];
 }
+
+const contentComponents = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    block: {
+        normal: ({ children }: any) => <p className="mb-3 last:mb-0">{children}</p>,
+        h3: ({ children }: any) => <h3 className="text-xs font-black uppercase tracking-widest mt-4 mb-2 text-slate-900">{children}</h3>,
+    },
+    list: {
+        bullet: ({ children }: any) => <ul className="space-y-1.5 mb-3 pl-4 list-disc">{children}</ul>,
+        number: ({ children }: any) => <ol className="space-y-1.5 mb-3 pl-4 list-decimal">{children}</ol>,
+    },
+    marks: sharedMarks,
+};
 
 export default function ItineraryAccordion({ steps }: { steps: Step[] }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -49,9 +64,9 @@ export default function ItineraryAccordion({ steps }: { steps: Step[] }) {
                         {isOpen && (
                             <div className="flex gap-6 md:gap-8 pb-6">
                                 <div className="w-12 shrink-0" />
-                                <p className="text-slate-600 leading-relaxed text-sm flex-1 border-l-2 border-primary/20 pl-5">
-                                    {step.content}
-                                </p>
+                                <div className="text-slate-600 leading-relaxed text-sm flex-1 border-l-2 border-primary/20 pl-5">
+                                    <PortableText value={step.content} components={contentComponents} />
+                                </div>
                             </div>
                         )}
                     </div>

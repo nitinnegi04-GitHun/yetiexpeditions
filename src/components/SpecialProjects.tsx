@@ -8,7 +8,7 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
       <img
         src={src}
         alt={alt}
-        className="absolute inset-0 w-full h-full object-cover grayscale brightness-90 contrast-110 group-hover:grayscale-0 transition-all duration-700"
+        className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
       />
     </div>
   );

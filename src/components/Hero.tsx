@@ -143,11 +143,11 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
                 muted
                 loop
                 playsInline
-                className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700"
+                className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
               />
             ) : (
               <div
-                className="absolute inset-0 bg-cover bg-center grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700"
+                className="absolute inset-0 bg-cover bg-center grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
                 style={{ backgroundImage: `url('${imageUrl}')` }}
               />
             )}

@@ -77,7 +77,7 @@ export default function TrekCalendar({ treks }: { treks: Trek[] }) {
                             <span className="text-slate-300">Season</span>
                         </h2>
                         <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
-                            Select a month to see all available departures. Batch sizes are capped at 8 — early booking is advised.
+                            Select a month to see all available departures. Batch sizes are capped at 12 — early booking is advised.
                         </p>
                     </div>
                 </div>

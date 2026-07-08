@@ -28,7 +28,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!article) return {}
 
     const title = `${article.title} | Yeti Expeditions Journal`
-    const description = `${article.category} — by ${article.author}. ${article.readTime} read.`
+    const description = article.excerpt
+        ? article.excerpt.slice(0, 155).trimEnd() + (article.excerpt.length > 155 ? '…' : '')
+        : `${article.category} — by ${article.author}. ${article.readTime} read.`
     const url = `${BASE_URL}/journal/${slug}`
 
     return {
@@ -43,6 +45,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             images: article.image ? [{ url: article.image, width: 1200, height: 630, alt: article.title }] : [],
             publishedTime: article.date,
             authors: [article.author],
+            section: article.category,
+            tags: article.tags ?? [],
         },
         twitter: {
             card: 'summary_large_image',
@@ -145,8 +149,67 @@ export default async function ArticlePage({ params }: PageProps) {
         ? [...related, ...allArticles.filter(a => a.slug !== slug && !related.find((r: any) => r.slug === a.slug)).slice(0, 2 - related.length)]
         : related;
 
+    const articleJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: article.title,
+        description: article.excerpt ?? '',
+        url: `${BASE_URL}/journal/${slug}`,
+        datePublished: article.date,
+        dateModified: article.date,
+        articleSection: article.category,
+        keywords: (article.tags ?? []).join(', '),
+        image: article.image ? {
+            '@type': 'ImageObject',
+            url: article.image,
+            width: 1200,
+            height: 630,
+        } : undefined,
+        author: {
+            '@type': 'Person',
+            name: article.author,
+            jobTitle: article.authorTitle ?? '',
+            worksFor: {
+                '@type': 'Organization',
+                name: 'Yeti Expeditions',
+                url: BASE_URL,
+            },
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'Yeti Expeditions',
+            url: BASE_URL,
+            logo: {
+                '@type': 'ImageObject',
+                url: `${BASE_URL}/logo.png`,
+            },
+        },
+        mainEntityOfPage: {
+            '@type': 'WebPage',
+            '@id': `${BASE_URL}/journal/${slug}`,
+        },
+    }
+
+    const breadcrumbJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Journal', item: `${BASE_URL}/journal` },
+            { '@type': 'ListItem', position: 3, name: article.title, item: `${BASE_URL}/journal/${slug}` },
+        ],
+    }
+
     return (
         <div className="min-h-screen bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+            />
             <Navbar />
 
             {/* ── Hero Image ── */}

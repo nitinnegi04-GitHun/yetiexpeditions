@@ -110,14 +110,27 @@ body {
 }
 
 @keyframes headline-bg-sweep {
-  0%   { background-size: 0% 75%; }
-  60%  { background-size: 105% 75%; }
-  100% { background-size: 105% 75%; }
+  0% {
+    background-size: 0% 75%;
+  }
+
+  60% {
+    background-size: 105% 75%;
+  }
+
+  100% {
+    background-size: 105% 75%;
+  }
 }
 
 @keyframes headline-underline {
-  0%   { width: 0%; }
-  100% { width: 100%; }
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
 }
 
 /* Trek Calendar card — 3-column grid on desktop */
@@ -134,18 +147,22 @@ body {
 
 /* Special Departure label — shimmer sweep on text */
 @keyframes special-departure-sweep {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 .special-departure-shimmer {
   background: linear-gradient(90deg,
-    #ff4500 0%,
-    #ff4500 35%,
-    #ffaa44 50%,
-    #ff4500 65%,
-    #ff4500 100%
-  );
+      #ff4500 0%,
+      #ff4500 35%,
+      #ffaa44 50%,
+      #ff4500 65%,
+      #ff4500 100%);
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
@@ -155,7 +172,7 @@ body {
 
 /* Article body — Text Background mark */
 .article-text-bg {
-  background: linear-gradient(rgba(255,200,0,0.35), rgba(255,200,0,0.35)) no-repeat left center;
+  background: linear-gradient(rgba(255, 200, 0, 0.35), rgba(255, 200, 0, 0.35)) no-repeat left center;
   background-size: 0% 75%;
   animation: headline-bg-sweep 1000ms ease 200ms 1 forwards;
   padding-bottom: 2px;

@@ -15,7 +15,17 @@
       "Bash(node scripts/seed-about.mjs)",
       "Bash(npx --yes dotenv-cli node scripts/seed-about.mjs)",
       "Bash(node -e \" const { createClient } = require\\('@sanity/client'\\); \")",
-      "Bash(curl -s http://localhost:3000/about)"
+      "Bash(curl -s http://localhost:3000/about)",
+      "Bash(SANITY_WRITE_TOKEN=sk6qXXPFqNKYWXRuxKXDvOCExnvbhRvv28xHulGtUMcdzXkcSFtW8ERAteNeNZdxlfJv4IWgppETQCBaLI7BWpkh0CKRFek8d3iTN2jFM6ilQxqcStaTbAu2sDLD6xrRKXtfRSU3rkQyZTm86xwPbM6zM0yNFqyc4ZTBkjGvwJuZInxQx4ao node scripts/patch-founding-story.mjs)",
+      "Bash(SANITY_WRITE_TOKEN=sk6qXXPFqNKYWXRuxKXDvOCExnvbhRvv28xHulGtUMcdzXkcSFtW8ERAteNeNZdxlfJv4IWgppETQCBaLI7BWpkh0CKRFek8d3iTN2jFM6ilQxqcStaTbAu2sDLD6xrRKXtfRSU3rkQyZTm86xwPbM6zM0yNFqyc4ZTBkjGvwJuZInxQx4ao node scripts/migrate-founding-to-blocks.mjs)",
+      "Bash(SANITY_WRITE_TOKEN=sk6qXXPFqNKYWXRuxKXDvOCExnvbhRvv28xHulGtUMcdzXkcSFtW8ERAteNeNZdxlfJv4IWgppETQCBaLI7BWpkh0CKRFek8d3iTN2jFM6ilQxqcStaTbAu2sDLD6xrRKXtfRSU3rkQyZTm86xwPbM6zM0yNFqyc4ZTBkjGvwJuZInxQx4ao node scripts/seed-seo.mjs)",
+      "Bash(git mv:*)",
+      "Bash(git rm:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Read(//Users/nitinnegi/.claude/**)",
+      "WebFetch(domain:yetiexpeditions.com)",
+      "Bash(node scripts/update-ebc-excluded.mjs)",
+      "Bash(node -e ' *)"
     ],
     "additionalDirectories": [
       "/Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/app/(site)/treks"

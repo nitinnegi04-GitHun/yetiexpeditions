@@ -8,12 +8,15 @@ import { useCurrency } from "@/lib/CurrencyContext";
 import PriceTooltip from "./PriceTooltip";
 
 function TrekCardBg({ src }: { src: string }) {
-    const { ref, filter } = useScrollGrayscale();
+    const { ref, filter } = useScrollGrayscale(55);
+    const [hovered, setHovered] = useState(false);
     return (
         <div
             ref={ref}
-            className="absolute inset-0 bg-cover bg-center brightness-75"
-            style={{ backgroundImage: `url(${src})`, filter, transition: 'filter 300ms ease' }}
+            className="absolute inset-0 bg-cover bg-center brightness-95"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            style={{ backgroundImage: `url(${src})`, filter: hovered ? 'grayscale(0%) contrast(1)' : filter, transition: 'filter 300ms ease' }}
         />
     );
 }
@@ -51,18 +54,20 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
     const [activeRegion, setActiveRegion] = useState("All");
     const [activeDifficulty, setActiveDifficulty] = useState("All");
 
-    const filtered = allTreks.filter(t => {
-        const regionMatch = activeRegion === "All" || t.country === activeRegion;
-        const difficultyMatch = activeDifficulty === "All" || t.difficulty === activeDifficulty;
-        return regionMatch && difficultyMatch;
-    });
+    const filtered = allTreks
+        .filter(t => {
+            const regionMatch = activeRegion === "All" || t.country === activeRegion;
+            const difficultyMatch = activeDifficulty === "All" || t.difficulty === activeDifficulty;
+            return regionMatch && difficultyMatch;
+        })
+        .sort((a, b) => Number(!a.nextBatchRange) - Number(!b.nextBatchRange));
 
     const difficultyDesktopClass = (d: string) =>
         d === "Difficult"
             ? "text-white border-primary/30 bg-primary/50"
             : d === "Moderate"
                 ? "text-amber-600 border-amber-200 bg-amber-50"
-                : "border-zinc-border text-slate-500";
+                : "text-white border-emerald-700/30 bg-emerald-700/70";
 
 
     const filterBtnActiveClass = (type: "region" | "difficulty", value: string) => {
@@ -124,128 +129,89 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                     </div>
                 </div>
 
-                {/* ── Mobile card grid ── */}
-                <div className="md:hidden flex flex-col gap-0 border-t border-zinc-border">
+                {/* ── Trek card grid ── */}
+                <div className="border-t border-zinc-border pt-6 md:pt-8">
                     {filtered.length === 0 ? (
-                        <div className="py-16 text-center border-b border-zinc-border">
+                        <div className="py-16 text-center">
                             <p className="text-sm text-slate-400 uppercase tracking-widest font-bold">No expeditions found.</p>
                         </div>
                     ) : (
-                        filtered.map((trek) => (
-                            <Link
-                                key={trek.id}
-                                href={`/treks/${trek.slug}`}
-                                className="block border-b border-zinc-border"
-                            >
-                                {/* Top — banner image */}
-                                <div
-                                    className="relative w-full overflow-hidden bg-slate-800"
-                                    style={{ height: '56vw', minHeight: '200px' }}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            {filtered.map((trek) => (
+                                <Link
+                                    key={trek.id}
+                                    href={`/treks/${trek.slug}`}
+                                    className="block border border-zinc-border group hover:shadow-lg transition-shadow"
                                 >
-                                    {trek.bannerImageUrl && (
-                                        <TrekCardBg src={trek.bannerImageUrl} />
-                                    )}
-                                    {/* Trek name + location — solid bar sized to text */}
-                                    <div className="absolute z-10 inline-flex border-l-4 border-primary px-3 py-2" style={{ top: '20px', left: '20px', backgroundColor: 'rgba(24, 24, 26, 0.80)' }}>
-                                        <div>
-                                            <p className="text-white text-xs font-bold uppercase tracking-widest whitespace-nowrap">{trek.name}</p>
-                                            <p className="text-white/80 text-[10px] uppercase whitespace-nowrap">{trek.region}{trek.altitude ? ` | ${trek.altitude}` : ''}</p>
-                                        </div>
-                                    </div>
-                                    {/* Difficulty badge — bottom-left, aligned with name bar */}
-                                    <div className={`absolute z-10 px-2 py-1 border text-[9px] font-black uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`} style={{ bottom: '20px', left: '20px' }}>
-                                        {trek.difficulty}
-                                    </div>
-                                    {/* Days — bottom-right of image */}
-                                    <div className="absolute z-10 px-3 py-2" style={{ bottom: '20px', right: '20px', backgroundColor: 'rgba(24, 24, 26, 0.80)' }}>
-                                        <p className="text-white text-[9px] font-bold uppercase tracking-wides leading-none">{trek.duration || '—'}</p>
-                                    </div>
-                                </div>
-
-                                {/* Bottom — single info row */}
-                                <div className="bg-white border-t border-zinc-border px-4 py-3 flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-4">
-                                        <div>
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Next Batch</p>
-                                            <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.nextBatchRange || 'TBA'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Booked</p>
-                                            <p className="text-xs font-black uppercase tracking-tight text-slate-900">
-                                                {trek.seatsBooked != null && trek.totalSeats != null ? `${trek.seatsBooked} / ${trek.totalSeats}` : '—'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2 shrink-0">
-                                        <span className="text-xs font-bold tracking-tight text-slate-900">
-                                            {formatPrice(trek.priceUSD, trek.priceINR)}
-                                        </span>
-                                        <PriceTooltip />
-                                        {/* Mobile inline currency toggle — only shown when both prices exist */}
-                                        {hasBothPrices(trek.priceUSD, trek.priceINR) && (
-                                            <div className="flex items-center border border-zinc-200 overflow-hidden shrink-0" onClick={(e) => e.preventDefault()}>
-                                                <button
-                                                    onClick={(e) => { e.preventDefault(); setCurrency('USD'); }}
-                                                    className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none transition-colors cursor-pointer"
-                                                    style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#94a3b8' }}
-                                                >
-                                                    $ USD
-                                                </button>
-                                                <button
-                                                    onClick={(e) => { e.preventDefault(); setCurrency('INR'); }}
-                                                    className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none border-l border-zinc-200 transition-colors cursor-pointer"
-                                                    style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#94a3b8' }}
-                                                >
-                                                    ₹ INR
-                                                </button>
-                                            </div>
+                                    {/* Top — banner image */}
+                                    <div
+                                        className="relative w-full overflow-hidden bg-slate-800"
+                                        style={{ height: '56vw', maxHeight: '260px', minHeight: '200px' }}
+                                    >
+                                        {trek.bannerImageUrl && (
+                                            <TrekCardBg src={trek.bannerImageUrl} />
                                         )}
-                                        <ArrowRight className="text-primary w-4 h-4" />
+                                        {/* Trek name + location — solid bar sized to text */}
+                                        <div className="absolute z-10 inline-flex border-l-4 border-primary px-3 py-2" style={{ top: '20px', left: '20px', backgroundColor: 'rgba(24, 24, 26, 0.80)' }}>
+                                            <div>
+                                                <p className="text-white text-xs font-bold uppercase tracking-widest whitespace-nowrap">{trek.name}</p>
+                                                <p className="text-white/80 text-[10px] uppercase whitespace-nowrap">{trek.region}{trek.altitude ? ` | ${trek.altitude}` : ''}</p>
+                                            </div>
+                                        </div>
+                                        {/* Difficulty badge — bottom-left, aligned with name bar */}
+                                        <div className={`absolute z-10 px-2 py-1 border text-[9px] font-black uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`} style={{ bottom: '20px', left: '20px' }}>
+                                            {trek.difficulty}
+                                        </div>
+                                        {/* Days — bottom-right of image */}
+                                        <div className="absolute z-10 px-3 py-2" style={{ bottom: '20px', right: '20px', backgroundColor: 'rgba(24, 24, 26, 0.80)' }}>
+                                            <p className="text-white text-[9px] font-bold uppercase tracking-wides leading-none">{trek.duration || '—'}</p>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))
-                    )}
-                </div>
 
-                {/* ── Desktop list ── */}
-                <div className="hidden md:block border-t border-zinc-border">
-                    {filtered.length === 0 ? (
-                        <div className="py-16 text-center border-b border-zinc-border">
-                            <p className="text-sm text-slate-400 uppercase tracking-widest font-bold">No expeditions found for this region.</p>
+                                    {/* Bottom — single info row */}
+                                    <div className="bg-white border-t border-zinc-border px-4 py-3 flex items-center justify-between gap-2">
+                                        <div className="flex items-center gap-4">
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Next Batch</p>
+                                                <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.nextBatchRange || 'TBA'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Booked</p>
+                                                <p className="text-xs font-black uppercase tracking-tight text-slate-900">
+                                                    {trek.seatsBooked != null && trek.totalSeats != null ? `${trek.seatsBooked} / ${trek.totalSeats}` : '—'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <span className="text-xs font-bold tracking-tight text-slate-900">
+                                                {formatPrice(trek.priceUSD, trek.priceINR)}
+                                            </span>
+                                            <PriceTooltip />
+                                            {/* Inline currency toggle — only shown when both prices exist */}
+                                            {hasBothPrices(trek.priceUSD, trek.priceINR) && (
+                                                <div className="flex items-center border border-zinc-200 overflow-hidden shrink-0" onClick={(e) => e.preventDefault()}>
+                                                    <button
+                                                        onClick={(e) => { e.preventDefault(); setCurrency('USD'); }}
+                                                        className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none transition-colors cursor-pointer"
+                                                        style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#94a3b8' }}
+                                                    >
+                                                        $ USD
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.preventDefault(); setCurrency('INR'); }}
+                                                        className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none border-l border-zinc-200 transition-colors cursor-pointer"
+                                                        style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#94a3b8' }}
+                                                    >
+                                                        ₹ INR
+                                                    </button>
+                                                </div>
+                                            )}
+                                            <ArrowRight className="text-primary w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
-                    ) : (
-                        filtered.map((trek) => (
-                            <Link
-                                key={trek.id}
-                                href={`/treks/${trek.slug}`}
-                                className="flex items-center justify-between py-6 px-4 border-b border-zinc-border hover:bg-slate-50 transition-colors cursor-pointer group"
-                            >
-                                <div className="flex items-center gap-8 w-1/2">
-                                    <span className="text-primary/40 font-bold">{trek.id}</span>
-                                    <div>
-                                        <h4 className="text-2xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">
-                                            {trek.name}
-                                        </h4>
-                                        <p className="text-xs text-slate-400 uppercase tracking-widest">
-                                            {trek.region}, {trek.country}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-12">
-                                    <span className={`px-4 py-1 border text-[10px] font-bold uppercase tracking-widest ${difficultyDesktopClass(trek.difficulty)}`}>
-                                        {trek.difficulty}
-                                    </span>
-                                    <div className="flex items-center gap-1">
-                                        <span className="text-xl font-bold tracking-tight">
-                                            {formatPrice(trek.priceUSD, trek.priceINR)}
-                                        </span>
-                                        <PriceTooltip />
-                                    </div>
-                                    <ArrowRight className="text-slate-300 group-hover:text-primary group-hover:translate-x-2 transition-all" />
-                                </div>
-                            </Link>
-                        ))
                     )}
                 </div>
 

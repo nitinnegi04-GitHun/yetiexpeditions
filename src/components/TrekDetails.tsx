@@ -4,7 +4,7 @@ import {
     Shield, Check, X, Mountain, Compass,
     BedDouble, HelpCircle, ArrowRight, AlertTriangle
 } from "lucide-react";
-import { PortableText } from "@portabletext/react";
+import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { sharedMarks } from "@/lib/portableTextComponents";
 import { useCurrency } from "@/lib/CurrencyContext";
 import TestimonialsCarousel from "./TestimonialsCarousel";
@@ -100,7 +100,7 @@ interface TrekProps {
         season: string;
         accommodation: string;
         groupSize: string;
-        itinerary: { day: string; title: string; content: string }[];
+        itinerary: { day: string; title: string; content: PortableTextBlock[] }[];
         batches: { date: string; startDate?: string; status: "Open" | "Limited" | "Full"; remaining: number; trekLead?: { name: string; summits?: string; imageUrl?: string } | null }[];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         included: any[];
@@ -220,68 +220,97 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                         {/* Upcoming Batches */}
                         <div className="p-8 md:p-12">
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Upcoming Batches</h3>
-                            <div className="space-y-4">
-                                {trek.batches.filter(batch => !batch.startDate || new Date(batch.startDate) >= new Date()).map((batch, index) => (
-                                    <div key={index} className="bg-white border border-zinc-border p-5 flex flex-col gap-4">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <p className="font-bold text-sm uppercase">{batch.date}</p>
-                                                <p className={`text-[10px] font-black uppercase tracking-widest mt-1 ${batch.status === "Open" ? "text-green-600" : "text-amber-600"}`}>
-                                                    Status: {batch.status}
-                                                </p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="text-[10px] font-bold uppercase text-slate-400">Availability</p>
-                                                <p className="text-xs font-bold">{batch.remaining} / {trek.groupSize}</p>
-                                            </div>
+                            {(() => {
+                                const upcomingBatches = trek.batches.filter(batch => !batch.startDate || new Date(batch.startDate) >= new Date());
+                                if (upcomingBatches.length === 0) {
+                                    return (
+                                        <div className="border border-zinc-border bg-slate-900 text-white p-6">
+                                            <span className="text-primary font-black uppercase tracking-[0.2em] text-[9px] mb-4 block">Departure Status</span>
+                                            <h4 className="text-xl font-black uppercase tracking-tight leading-tight mb-4">
+                                                No Fixed<br />Departure<br />Planned Yet.
+                                            </h4>
+                                            <p className="text-xs text-slate-400 leading-relaxed mb-6">
+                                                We run this route on custom dates for private groups. If you have a travel window in mind, reach out — our trek leads will assess the logistics and build a departure around your group.
+                                            </p>
+                                            <a
+                                                href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'm interested in the ${trek.name} Trek but don't see any upcoming batches. Can you help me plan a custom departure?`)}` : '#enquire'}
+                                                target={whatsappNumber ? '_blank' : undefined}
+                                                rel={whatsappNumber ? 'noopener noreferrer' : undefined}
+                                                className="w-full flex items-center justify-center gap-2.5 bg-[#25D366] text-white py-3.5 text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                                            >
+                                                <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                                                Inquire for a Custom Batch
+                                            </a>
                                         </div>
-                                        {batch.trekLead && (
-                                            <div className="border-t border-zinc-border pt-3 flex items-center gap-2.5">
-                                                <div className="flex-1">
-                                                    <div className="flex items-center gap-1.5 mb-0.5">
-                                                        <span className="relative flex h-1.5 w-1.5 shrink-0">
-                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                                                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
-                                                        </span>
-                                                        <p className="special-departure-shimmer text-[9px] font-black uppercase tracking-[0.25em]">Special Departure</p>
+                                    );
+                                }
+                                return (
+                                    <>
+                                        <div className="space-y-4">
+                                            {upcomingBatches.map((batch, index) => (
+                                                <div key={index} className="bg-white border border-zinc-border p-5 flex flex-col gap-4">
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <p className="font-bold text-sm uppercase">{batch.date}</p>
+                                                            <p className={`text-[10px] font-black uppercase tracking-widest mt-1 ${batch.status === "Open" ? "text-green-600" : "text-amber-600"}`}>
+                                                                Status: {batch.status}
+                                                            </p>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-[10px] font-bold uppercase text-slate-400">Availability</p>
+                                                            <p className="text-xs font-bold">{batch.remaining} / {trek.groupSize}</p>
+                                                        </div>
                                                     </div>
-                                                    <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Led by</p>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    {batch.trekLead.imageUrl ? (
-                                                        <img
-                                                            src={batch.trekLead.imageUrl}
-                                                            alt={batch.trekLead.name}
-                                                            className="w-8 h-8 rounded-full object-cover object-top grayscale border border-zinc-200 shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-8 h-8 rounded-full bg-slate-200 shrink-0 flex items-center justify-center">
-                                                            <span className="text-[11px] font-black text-slate-500">{batch.trekLead.name.charAt(0)}</span>
+                                                    {batch.trekLead && (
+                                                        <div className="border-t border-zinc-border pt-3 flex items-center gap-2.5">
+                                                            <div className="flex-1">
+                                                                <div className="flex items-center gap-1.5 mb-0.5">
+                                                                    <span className="relative flex h-1.5 w-1.5 shrink-0">
+                                                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                                                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary" />
+                                                                    </span>
+                                                                    <p className="special-departure-shimmer text-[9px] font-black uppercase tracking-[0.25em]">Special Departure</p>
+                                                                </div>
+                                                                <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400">Led by</p>
+                                                            </div>
+                                                            <div className="flex items-center gap-2">
+                                                                {batch.trekLead.imageUrl ? (
+                                                                    <img
+                                                                        src={batch.trekLead.imageUrl}
+                                                                        alt={batch.trekLead.name}
+                                                                        className="w-8 h-8 rounded-full object-cover object-top grayscale border border-zinc-200 shrink-0"
+                                                                    />
+                                                                ) : (
+                                                                    <div className="w-8 h-8 rounded-full bg-slate-200 shrink-0 flex items-center justify-center">
+                                                                        <span className="text-[11px] font-black text-slate-500">{batch.trekLead.name.charAt(0)}</span>
+                                                                    </div>
+                                                                )}
+                                                                <div className="min-w-0">
+                                                                    <p className="text-xs font-black uppercase tracking-tight text-slate-900 leading-tight">{batch.trekLead.name}</p>
+                                                                    {batch.trekLead.summits && (
+                                                                        <p className="text-[9px] font-bold uppercase tracking-wider text-primary leading-tight mt-0.5">{batch.trekLead.summits}</p>
+                                                                    )}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     )}
-                                                    <div className="min-w-0">
-                                                        <p className="text-xs font-black uppercase tracking-tight text-slate-900 leading-tight">{batch.trekLead.name}</p>
-                                                        {batch.trekLead.summits && (
-                                                            <p className="text-[9px] font-bold uppercase tracking-wider text-primary leading-tight mt-0.5">{batch.trekLead.summits}</p>
-                                                        )}
-                                                    </div>
+                                                    <a
+                                                        href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to secure a spot for the ${trek.name} Trek — ${batch.date}. Please confirm availability.`)}` : '#enquire'}
+                                                        target={whatsappNumber ? '_blank' : undefined}
+                                                        rel={whatsappNumber ? 'noopener noreferrer' : undefined}
+                                                        className="w-full block text-center bg-slate-900 text-white py-3 text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors"
+                                                    >
+                                                        Secure Spot
+                                                    </a>
                                                 </div>
-                                            </div>
-                                        )}
-                                        <a
-                                            href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to secure a spot for the ${trek.name} Trek — ${batch.date}. Please confirm availability.`)}` : '#enquire'}
-                                            target={whatsappNumber ? '_blank' : undefined}
-                                            rel={whatsappNumber ? 'noopener noreferrer' : undefined}
-                                            className="w-full block text-center bg-slate-900 text-white py-3 text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors"
-                                        >
-                                            Secure Spot
-                                        </a>
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="mt-2 text-[10px] text-primary font-bold uppercase leading-relaxed italic">
-                                * Prices listed apply to groups of 5+ trekkers. Smaller groups available on request.
-                            </p>
+                                            ))}
+                                        </div>
+                                        <p className="mt-2 text-[10px] text-primary font-bold uppercase leading-relaxed italic">
+                                            * Prices listed apply to groups of 5+ trekkers. Smaller groups available on request.
+                                        </p>
+                                    </>
+                                );
+                            })()}
                         </div>
                     </div>
                 </aside>

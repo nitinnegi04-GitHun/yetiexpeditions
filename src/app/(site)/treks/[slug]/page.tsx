@@ -12,6 +12,14 @@ import { SITE_SETTINGS_QUERY } from '@/sanity/queries/siteSettings'
 
 const BASE_URL = 'https://www.yetiexpeditions.com'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function portableTextToPlain(blocks: any[]): string {
+  return (blocks ?? [])
+    .map((block) => (block?.children ?? []).map((span: { text?: string }) => span.text ?? '').join(''))
+    .join(' ')
+    .trim()
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
@@ -172,7 +180,7 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
     itinerary: trek.itinerary.map((day: any) => ({
       '@type': 'TouristAttraction',
       name: day.title,
-      description: day.content,
+      description: portableTextToPlain(day.content),
     })),
     offers: {
       '@type': 'Offer',

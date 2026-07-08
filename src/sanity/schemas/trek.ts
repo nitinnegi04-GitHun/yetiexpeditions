@@ -72,7 +72,7 @@ export const trek = defineType({
           fields: [
             defineField({ name: 'day', title: 'Day', type: 'string', description: 'e.g. 01' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
-            defineField({ name: 'content', title: 'Description', type: 'text', rows: 3 }),
+            defineField({ name: 'content', title: 'Description', type: 'array', of: [simpleRichTextBlock] }),
           ],
           preview: {
             select: { day: 'day', title: 'title' },
