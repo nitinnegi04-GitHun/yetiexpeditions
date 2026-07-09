@@ -91,6 +91,7 @@ function transformSanityTrek(raw: any) {
     duration: raw.duration ?? '',
     priceUSD: raw.priceUSD ?? null,
     priceINR: raw.priceINR ?? null,
+    batchPricingNote: raw.batchPricingNote ?? '',
     altitude: raw.altitude ?? '',
     season: raw.season ?? '',
     accommodation: raw.accommodation ?? '',

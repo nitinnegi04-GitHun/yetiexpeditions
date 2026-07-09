@@ -2,7 +2,9 @@
 import { useState } from 'react';
 import { Info } from 'lucide-react';
 
-export default function PriceTooltip() {
+const DEFAULT_NOTE = 'Price applies to batches of 5+ trekkers. Smaller groups available on request — pricing varies.';
+
+export default function PriceTooltip({ note }: { note?: string }) {
     const [show, setShow] = useState(false);
     return (
         <div
@@ -19,7 +21,7 @@ export default function PriceTooltip() {
                     <div className="bg-slate-900 text-white px-4 py-3">
                         <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Pricing Note</p>
                         <p className="text-[11px] leading-relaxed text-slate-300" style={{ whiteSpace: 'normal' }}>
-                            Price applies to batches of 5+ trekkers. Smaller groups available on request — pricing varies.
+                            {note || DEFAULT_NOTE}
                         </p>
                     </div>
                     <span className="block w-0 h-0 ml-auto mr-1" style={{ borderLeft: '6px solid transparent', borderRight: '6px solid transparent', borderTop: '6px solid #0f172a' }} />

@@ -50,6 +50,7 @@ export const TREK_BY_SLUG_QUERY = groq`
     season,
     priceUSD,
     priceINR,
+    batchPricingNote,
     accommodation,
     groupSize,
     region,

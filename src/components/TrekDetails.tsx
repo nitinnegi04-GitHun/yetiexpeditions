@@ -96,6 +96,7 @@ interface TrekProps {
         duration: string;
         priceUSD: number | null;
         priceINR: number | null;
+        batchPricingNote: string;
         altitude: string;
         season: string;
         accommodation: string;
@@ -174,13 +175,13 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                             <span className="text-2xl md:text-5xl font-black tracking-tighter uppercase break-words md:break-normal">
                                 {formatPrice(trek.priceUSD, trek.priceINR)}
                             </span>
-                            <PriceTooltip />
+                            <PriceTooltip note={trek.batchPricingNote} />
                         </div>
                     </div>
                 </div>
                 {/* Option 2 — slim footnote under the stats bar */}
                 <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-3 border-t border-zinc-border/50">
-                    <p className="text-[11px] text-primary font-bold uppercase tracking-widest  italic">* Price applies to batches of 5 or more trekkers. Smaller groups available on request — pricing varies.</p>
+                    <p className="text-[11px] text-primary font-bold uppercase tracking-widest  italic">* {trek.batchPricingNote}</p>
                 </div>
             </section>
 
@@ -306,7 +307,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                                             ))}
                                         </div>
                                         <p className="mt-2 text-[10px] text-primary font-bold uppercase leading-relaxed italic">
-                                            * Prices listed apply to groups of 5+ trekkers. Smaller groups available on request.
+                                            * {trek.batchPricingNote}
                                         </p>
                                     </>
                                 );
