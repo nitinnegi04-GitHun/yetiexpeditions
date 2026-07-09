@@ -9,6 +9,7 @@ type Testimonial = {
     rating: number;
     text: string;
     batch: string;
+    imageUrl?: string;
 };
 
 function TestimonialCard({ t }: { t: Testimonial }) {
@@ -22,10 +23,23 @@ function TestimonialCard({ t }: { t: Testimonial }) {
             <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
                 &ldquo;{t.text}&rdquo;
             </blockquote>
-            <div className="border-t border-zinc-border pt-6">
-                <p className="font-black uppercase text-sm tracking-tight">{t.name}</p>
-                <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">{t.location}</p>
-                <p className="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{t.batch}</p>
+            <div className="border-t border-zinc-border pt-6 flex items-center gap-4">
+                {t.imageUrl ? (
+                    <img
+                        src={t.imageUrl}
+                        alt={t.name}
+                        className="w-12 h-12 rounded-full object-cover object-top grayscale shrink-0 border border-zinc-200"
+                    />
+                ) : (
+                    <div className="w-12 h-12 rounded-full bg-slate-200 shrink-0 flex items-center justify-center">
+                        <span className="text-[11px] font-black text-slate-500">{t.name.charAt(0)}</span>
+                    </div>
+                )}
+                <div>
+                    <p className="font-black uppercase text-sm tracking-tight">{t.name}</p>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">{t.location}</p>
+                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{t.batch}</p>
+                </div>
             </div>
         </div>
     );

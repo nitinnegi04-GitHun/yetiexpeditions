@@ -61,6 +61,18 @@ const excludedComponents = {
     marks: sharedMarks,
 };
 
+const overviewComponents = {
+    block: {
+        normal: ({ children }: any) => <p className="text-slate-600 leading-relaxed text-base mb-4 last:mb-0">{children}</p>,
+        h3: ({ children }: any) => <h3 className="text-lg font-black uppercase tracking-tight mt-6 mb-2 text-slate-900">{children}</h3>,
+    },
+    list: {
+        bullet: ({ children }: any) => <ul className="space-y-2 mb-4 pl-4 list-disc">{children}</ul>,
+        number: ({ children }: any) => <ol className="space-y-2 mb-4 pl-4 list-decimal">{children}</ol>,
+    },
+    marks: sharedMarks,
+};
+
 const nonNegotiablesComponents = {
     block: {
         normal: ({ children }: any) => (
@@ -101,7 +113,8 @@ interface TrekProps {
         season: string;
         accommodation: string;
         groupSize: string;
-        itinerary: { day: string; title: string; content: PortableTextBlock[] }[];
+        overview: PortableTextBlock[];
+        itinerary: { day: string; title: string; content: PortableTextBlock[]; imageUrl?: string }[];
         batches: { date: string; startDate?: string; status: "Open" | "Limited" | "Full"; remaining: number; trekLead?: { name: string; summits?: string; imageUrl?: string } | null }[];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         included: any[];
@@ -110,7 +123,7 @@ interface TrekProps {
         altitudeProfile: { day: number; label: string; altitude: number }[];
         packingList: Record<string, string[]>;
         physicalPrep: { weeks: string; focus: string; description: string }[];
-        testimonials: { name: string; location: string; rating: number; text: string; batch: string }[];
+        testimonials: { name: string; location: string; rating: number; text: string; batch: string; imageUrl?: string }[];
         gallery: string[];
         gettingThere: { arrival: string; visa: string; domesticFlight: string };
         accommodationDetails: { location: string; type: string; nights: number; notes: string }[];
@@ -190,6 +203,12 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                 {/* Itinerary */}
                 <section id="itinerary" style={{ scrollMarginTop: '80px' }} className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
                     <div className="max-w-2xl">
+                        {trek.overview && trek.overview.length > 0 && (
+                            <div className="mb-12">
+                                <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Overview</span>
+                                <PortableText value={trek.overview} components={overviewComponents} />
+                            </div>
+                        )}
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Timeline</span>
                         <h2 className="text-5xl font-black uppercase tracking-tighter mb-12">The Vertical Itinerary</h2>
                         <ItineraryAccordion steps={trek.itinerary} />
@@ -347,7 +366,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                             <AlertTriangle className="w-4 h-4 text-primary shrink-0" />
                             <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px]">Expedition Protocol</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Non-Negotiables</h2>
+                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Important Points</h2>
                         <div>
                             <PortableText value={trek.nonNegotiables} components={nonNegotiablesComponents} />
                         </div>

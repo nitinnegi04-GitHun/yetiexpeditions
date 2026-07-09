@@ -18,6 +18,13 @@ export const testimonial = defineType({
       description: 'e.g. London, UK',
     }),
     defineField({
+      name: 'photo',
+      title: 'Photo',
+      type: 'image',
+      options: { hotspot: true },
+      description: "The trekker's photo, shown alongside their review.",
+    }),
+    defineField({
       name: 'rating',
       title: 'Rating (1–5)',
       type: 'number',
@@ -51,10 +58,12 @@ export const testimonial = defineType({
       title: 'name',
       subtitle: 'batch',
       trek: 'trek.name',
+      media: 'photo',
     },
-    prepare: ({ title, subtitle, trek }) => ({
+    prepare: ({ title, subtitle, trek, media }) => ({
       title,
       subtitle: [trek, subtitle].filter(Boolean).join(' · '),
+      media,
     }),
   },
   orderings: [

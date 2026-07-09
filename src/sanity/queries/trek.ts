@@ -55,6 +55,7 @@ export const TREK_BY_SLUG_QUERY = groq`
     groupSize,
     region,
     country,
+    overview,
     itinerary,
     altitudeProfile,
     safetyProtocols,
@@ -73,7 +74,7 @@ export const TREK_BY_SLUG_QUERY = groq`
       quote
     },
     "testimonials": *[_type == "testimonial" && trek._ref == ^._id] | order(_createdAt desc) {
-      name, location, rating, text, batch
+      name, location, rating, text, batch, "imageUrl": photo.asset->url
     },
     gettingThere,
     accommodationDetails,
@@ -121,7 +122,7 @@ export const FEATURED_TREKS_QUERY = groq`
 // All testimonials — used by homepage testimonials section
 export const ALL_TESTIMONIALS_QUERY = groq`
   *[_type == "testimonial"] | order(_createdAt desc) {
-    name, location, rating, text, batch
+    name, location, rating, text, batch, "imageUrl": photo.asset->url
   }
 `
 

@@ -83,6 +83,12 @@ function transformSanityTrek(raw: any) {
   // Banner video → direct Sanity CDN URL (autoplay, takes priority over image)
   const bannerVideo: string = raw.bannerVideoUrl ?? ''
 
+  // Itinerary: resolve each day's image to a URL
+  const itinerary = (raw.itinerary ?? []).map((step: any) => ({
+    ...step,
+    imageUrl: step.image ? urlFor(step.image).width(1200).quality(80).url() : undefined,
+  }))
+
   return {
     name: raw.name ?? '',
     region: raw.region ?? '',
@@ -98,7 +104,8 @@ function transformSanityTrek(raw: any) {
     groupSize: raw.groupSize ?? '',
     bannerImage,
     bannerVideo,
-    itinerary: raw.itinerary ?? [],
+    overview: raw.overview ?? [],
+    itinerary,
     batches,
     safetyProtocols: raw.safetyProtocols ?? [],
     included: raw.included ?? [],

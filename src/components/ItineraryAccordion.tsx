@@ -4,11 +4,37 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { PortableText, type PortableTextBlock } from '@portabletext/react';
 import { sharedMarks } from '@/lib/portableTextComponents';
+import { useScrollGrayscale } from '@/hooks/useScrollGrayscale';
 
 interface Step {
     day: string;
     title: string;
     content: PortableTextBlock[];
+    imageUrl?: string;
+}
+
+function ItineraryImage({ src, alt }: { src: string; alt: string }) {
+    const { ref, filter } = useScrollGrayscale(55);
+    const [hovered, setHovered] = useState(false);
+    return (
+        <div
+            ref={ref}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100 mb-4"
+        >
+            <img
+                src={src}
+                alt={alt}
+                className="w-full h-full object-cover"
+                style={{
+                    filter: hovered ? 'grayscale(0%) contrast(1)' : filter,
+                    transform: hovered ? 'scale(1.05)' : 'scale(1)',
+                    transition: 'filter 400ms ease, transform 500ms ease',
+                }}
+            />
+        </div>
+    );
 }
 
 const contentComponents = {
@@ -64,8 +90,13 @@ export default function ItineraryAccordion({ steps }: { steps: Step[] }) {
                         {isOpen && (
                             <div className="flex gap-6 md:gap-8 pb-6">
                                 <div className="w-12 shrink-0" />
-                                <div className="text-slate-600 leading-relaxed text-sm flex-1 border-l-2 border-primary/20 pl-5">
-                                    <PortableText value={step.content} components={contentComponents} />
+                                <div className="flex-1 border-l-2 border-primary/20 pl-5">
+                                    {step.imageUrl && (
+                                        <ItineraryImage src={step.imageUrl} alt={`Day ${step.day}: ${step.title}`} />
+                                    )}
+                                    <div className="text-slate-600 leading-relaxed text-sm">
+                                        <PortableText value={step.content} components={contentComponents} />
+                                    </div>
                                 </div>
                             </div>
                         )}

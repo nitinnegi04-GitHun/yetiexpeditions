@@ -71,6 +71,14 @@ export const trek = defineType({
 
     // ── Itinerary ──────────────────────────────────────────────
     defineField({
+      name: 'overview',
+      title: 'Trip Overview',
+      type: 'array',
+      group: 'itinerary',
+      of: [simpleRichTextBlock],
+      description: 'A brief overview of the trek, shown just above the itinerary.',
+    }),
+    defineField({
       name: 'itinerary',
       title: 'Itinerary',
       type: 'array',
@@ -81,6 +89,7 @@ export const trek = defineType({
           fields: [
             defineField({ name: 'day', title: 'Day', type: 'string', description: 'e.g. 01' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true }, description: 'Shown above the description for this day.' }),
             defineField({ name: 'content', title: 'Description', type: 'array', of: [simpleRichTextBlock] }),
           ],
           preview: {
