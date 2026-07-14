@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.yetiexpeditions.com').replace(/\/+$/, '')
   return {
     rules: [
       { userAgent: '*', allow: '/', disallow: ['/studio/', '/api/'] },
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.yetiexpeditions.com'}/sitemap.xml`,
+    sitemap: `${baseUrl}/sitemap.xml`,
   }
 }

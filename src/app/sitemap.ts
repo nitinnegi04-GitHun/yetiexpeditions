@@ -5,7 +5,7 @@ import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const treks: { slug: string; updatedAt: string }[] = await client.fetch(TREK_SLUGS_QUERY)
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.yetiexpeditions.com'
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.yetiexpeditions.com').replace(/\/+$/, '')
 
   const trekUrls = treks.map(t => ({
     url: `${baseUrl}/treks/${t.slug}`,
