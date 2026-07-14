@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Clock, User, Mail } from "lucide-react";
+import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
 
 const CATEGORIES = ["All", "Expedition Reports", "Gear & Kit", "Training", "Altitude Science", "Community"];
 
@@ -67,13 +68,13 @@ export default function JournalInteractive({ articles }: { articles: ArticleCard
                                     className="bg-white flex flex-col group hover:bg-slate-50 transition-colors"
                                 >
                                     <div className="relative overflow-hidden h-52 border-b border-zinc-border">
-                                        <img
+                                        <ScrollGrayscaleImage
                                             src={article.image}
                                             alt={article.title}
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                                            className="absolute inset-0"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                                        <span className="absolute bottom-3 left-4 text-[9px] font-black uppercase tracking-[0.2em] text-white/80">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                                        <span className="absolute bottom-3 left-4 text-[9px] font-black uppercase tracking-[0.2em] text-white/80 pointer-events-none">
                                             {article.category}
                                         </span>
                                     </div>

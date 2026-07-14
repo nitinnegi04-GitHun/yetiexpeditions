@@ -1,16 +1,16 @@
 'use client';
 
 import { urlFor } from "@/sanity/image";
+import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
 
 function ProjectImage({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="relative overflow-hidden border-b border-zinc-border" style={{ height: '280px' }}>
-      <img
-        src={src}
-        alt={alt}
-        className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
-      />
-    </div>
+    <ScrollGrayscaleImage
+      src={src}
+      alt={alt}
+      className="relative overflow-hidden border-b border-zinc-border"
+      style={{ height: '280px' }}
+    />
   );
 }
 
@@ -139,7 +139,7 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
                       {project.category}
                     </span>
                   </div>
-                  <h3 className="text-xl font-black uppercase tracking-tighter leading-tight mb-1">{project.name}</h3>
+                  <h3 className="text-xl font-black uppercase tracking-tighter leading-tight mb-1 group-hover:text-primary transition-colors">{project.name}</h3>
                   <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{project.tagline}</p>
                   <p className="text-sm text-slate-600 leading-relaxed flex-1 mb-4">{project.description}</p>
                   <div className="border-t border-zinc-border pt-4">

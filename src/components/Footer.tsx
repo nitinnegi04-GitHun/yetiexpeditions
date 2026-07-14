@@ -1,7 +1,8 @@
-import { Mountain, ArrowRight, ExternalLink, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Mountain, ExternalLink, Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { client } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
+import NewsletterForm from "./NewsletterForm";
 
 const NAV_LINKS = [
   { label: "The Treks",   href: "/treks"   },
@@ -113,7 +114,7 @@ export default async function Footer() {
               {s.whatsappNumber && (
                 <li>
                   <a
-                    href={`https://wa.me/${s.whatsappNumber}`}
+                    href={`https://wa.me/${s.whatsappNumber}?text=${encodeURIComponent("Hi! I'd like to know more about trekking with Yeti Expeditions.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-start gap-3 group"
@@ -159,14 +160,7 @@ export default async function Footer() {
         {/* ── Col 4: Newsletter ── */}
         <div>
           <h6 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Newsletter</h6>
-          <div className="flex border-b border-slate-900 pb-2">
-            <input
-              className="bg-transparent border-none focus:ring-0 text-sm w-full p-0 outline-none"
-              placeholder="Email Address"
-              type="email"
-            />
-            <ArrowRight className="text-slate-900 w-5 h-5 shrink-0" />
-          </div>
+          <NewsletterForm />
           <p className="text-[10px] text-slate-400 mt-4 uppercase tracking-widest">
             Receive dispatch updates from the field.
           </p>

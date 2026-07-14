@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import JournalInteractive from "./_components/JournalInteractive";
+import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
 import { ArrowRight, Clock, User, CalendarDays } from "lucide-react";
 import { client } from "@/sanity/client";
 import { ALL_ARTICLES_QUERY } from "@/sanity/queries/article";
@@ -60,12 +61,12 @@ export default async function JournalPage() {
             {featured && (
                 <section className="border-b border-zinc-border">
                     <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row">
-                        <div className="w-full lg:w-1/2 overflow-hidden" style={{ minHeight: "420px" }}>
-                            <img
+                        <div className="w-full lg:w-1/2 overflow-hidden min-h-[420px]">
+                            <ScrollGrayscaleImage
                                 src={featured.image}
                                 alt={featured.title}
-                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                                style={{ minHeight: "420px" }}
+                                className="w-full h-full min-h-[420px]"
+                                scaleOnHover={false}
                             />
                         </div>
                         <div className="w-full lg:w-1/2 flex flex-col justify-between p-8 md:p-12 lg:p-16 bg-slate-50">

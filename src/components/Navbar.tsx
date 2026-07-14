@@ -26,13 +26,15 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [logoUrl, setLogoUrl] = useState<string | null>(initialLogoUrl ?? null);
     const [siteName, setSiteName] = useState(initialSiteName ?? 'Yeti Expeditions');
+    const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
     const { currency, setCurrency } = useCurrency();
     useEffect(() => {
         sanity
-            .fetch(`*[_type == "siteSettings"][0]{ logo, siteName }`)
+            .fetch(`*[_type == "siteSettings"][0]{ logo, siteName, whatsappNumber }`)
             .then((s: any) => {
                 if (s?.siteName) setSiteName(s.siteName);
                 if (s?.logo) setLogoUrl(urlFor(s.logo).height(64).quality(90).url());
+                if (s?.whatsappNumber) setWhatsappNumber(s.whatsappNumber);
             })
             .catch(() => {});
     }, []);
@@ -51,7 +53,9 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     const isHomeActive = pathname === '/';
     const isOurStoryActive = pathname === '/our-story';
     const isJournalActive = pathname === '/journal';
-    const isChatActive = pathname === '/contact';
+    const whatsappHref = whatsappNumber
+        ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi! I'd like to know more about trekking with Yeti Expeditions.")}`
+        : '#enquire';
 
     // Primary red/brand color used generically as inline fallback if tailwind fails
     const ACTIVE_COLOR = '#ef4444'; 
@@ -116,9 +120,14 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                             </button>
                         </div>
 
-                        <button className="bg-primary text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-black transition-all cursor-pointer border-none outline-none">
+                        <a
+                            href={whatsappHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-primary text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-black transition-all cursor-pointer border-none outline-none inline-block"
+                        >
                             Enquire Now
-                        </button>
+                        </a>
                     </nav>
                 </div>
             </header>
@@ -173,10 +182,10 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                         </Link>
                         
                         {/* Chat */}
-                        <Link href="/contact" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
-                            <MessageCircle size={22} color={isChatActive ? ACTIVE_COLOR : '#10b981'} />
-                            <span style={{ color: isChatActive ? ACTIVE_COLOR : INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Chat</span>
-                        </Link>
+                        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
+                            <MessageCircle size={22} color="#10b981" />
+                            <span style={{ color: INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Chat</span>
+                        </a>
 
                     </div>
                 </div>

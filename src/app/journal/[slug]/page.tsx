@@ -8,6 +8,7 @@ import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { sharedMarks } from "@/lib/portableTextComponents";
 import { ArrowLeft, Clock, CalendarDays, Tag, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
+import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
 
 const BASE_URL = 'https://www.yetiexpeditions.com'
 
@@ -121,11 +122,10 @@ const articleBodyComponents: PortableTextComponents = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         image: ({ value }: any) => (
             <figure className="my-10 border border-zinc-border">
-                <img
+                <ScrollGrayscaleImage
                     src={value.imageUrl}
                     alt={value.alt ?? value.caption ?? ''}
-                    className="w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                    style={{ maxHeight: "420px" }}
+                    className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100"
                 />
                 {value.caption && (
                     <figcaption className="px-5 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 border-t border-zinc-border bg-slate-50">
@@ -214,9 +214,13 @@ export default async function ArticlePage({ params }: PageProps) {
 
             {/* ── Hero Image ── */}
             <section className="relative h-[55vh] w-full -mt-[88px]">
-                <div
-                    className="absolute inset-0 bg-cover bg-center grayscale brightness-75 hover:grayscale-0 transition-all duration-700"
-                    style={{ backgroundImage: `url(${article.image})` }}
+                <ScrollGrayscaleImage
+                    src={article.image}
+                    alt={article.title}
+                    mode="bg"
+                    className="absolute inset-0"
+                    scaleOnHover={false}
+                    extraFilter="brightness(0.75)"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 max-w-[1440px] mx-auto px-6 md:px-12 pb-10 flex flex-col gap-3">
@@ -397,10 +401,10 @@ export default async function ArticlePage({ params }: PageProps) {
                                     className="bg-white flex gap-0 group hover:bg-slate-50 transition-colors"
                                 >
                                     <div className="w-32 md:w-44 shrink-0 overflow-hidden">
-                                        <img
+                                        <ScrollGrayscaleImage
                                             src={rel.image}
                                             alt={rel.title}
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                                            className="w-full h-full"
                                         />
                                     </div>
                                     <div className="flex flex-col justify-between p-6 flex-1">
