@@ -70,13 +70,13 @@ function transformSanityTrek(raw: any) {
     (raw.packingList ?? []).map((p: any) => [p.category, p.items ?? []])
   )
 
-  // Gallery: Sanity image objects → URL strings
-  const gallery: string[] = (raw.gallery ?? []).map((img: any) =>
-    urlFor(img).width(1200).url()
-  )
+  // Gallery: Sanity image objects → URL strings (skip entries with no uploaded asset)
+  const gallery: string[] = (raw.gallery ?? [])
+    .filter((img: any) => img?.asset)
+    .map((img: any) => urlFor(img).width(1200).url())
 
   // Banner image → URL string (used in hero background)
-  const bannerImage: string = raw.bannerImage
+  const bannerImage: string = raw.bannerImage?.asset
     ? urlFor(raw.bannerImage).width(1920).quality(80).url()
     : ''
 
@@ -86,7 +86,7 @@ function transformSanityTrek(raw: any) {
   // Itinerary: resolve each day's image to a URL
   const itinerary = (raw.itinerary ?? []).map((step: any) => ({
     ...step,
-    imageUrl: step.image ? urlFor(step.image).width(1200).quality(80).url() : undefined,
+    imageUrl: step.image?.asset ? urlFor(step.image).width(1200).quality(80).url() : undefined,
   }))
 
   return {
