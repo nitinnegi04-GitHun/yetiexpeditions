@@ -29,7 +29,7 @@ export const guide = defineType({
       name: 'cert',
       title: 'Certification',
       type: 'string',
-      description: 'e.g. WFR Certified',
+      description: 'e.g. MOI Certified',
     }),
     defineField({
       name: 'summits',

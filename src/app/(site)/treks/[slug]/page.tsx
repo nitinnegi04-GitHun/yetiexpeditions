@@ -146,7 +146,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const seo = (raw as any).seo ?? {}
   const title = seo.metaTitle ?? `${trek.name} Trek — ${trek.duration}, ${trek.altitude} | Yeti Expeditions`
-  const description = seo.metaDescription ?? `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From $${trek.priceUSD?.toLocaleString('en-US') ?? '—'}. ${trek.groupSize} trekkers. WFR-certified guides. All permits, meals & accommodation included.`
+  const description = seo.metaDescription ?? `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From $${trek.priceUSD?.toLocaleString('en-US') ?? '—'}. ${trek.groupSize} trekkers. MOI or equivalent certified guides. All permits, meals & accommodation included.`
   const ogImage = seo.ogImageUrl ?? trek.bannerImage
 
   return {

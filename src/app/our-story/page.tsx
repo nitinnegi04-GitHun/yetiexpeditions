@@ -141,8 +141,8 @@ export default async function AboutPage() {
     const guidesHeading = d?.guides?.heading ?? 'Our Guides'
     const guides = d?.guides?.guidesList?.length ? d.guides.guidesList : [
         { _id: 'GUIDE-001', guideId: 'GUIDE-001', name: 'Lakpa Rita Sherpa', title: 'Lead Expedition Guide', cert: '', summits: 'Everest ×14', stats: ['VO2 MAX: 58 ml/kg/min', 'SpO2 @ 8000m: 88%', 'Active Since: 1998'] },
-        { _id: 'GUIDE-002', guideId: 'GUIDE-002', name: 'Dawa Gyalje Sherpa', title: 'High Altitude Specialist', cert: 'WFR Certified', summits: 'Everest ×9 / Lhotse ×6', stats: ['VO2 MAX: 61 ml/kg/min', 'SpO2 @ 8000m: 91%', 'Active Since: 2004'] },
-        { _id: 'GUIDE-003', guideId: 'GUIDE-003', name: 'Mingma Tshering', title: 'Route & Safety Director', cert: 'WFR Certified', summits: 'Annapurna ×12 / Manaslu ×8', stats: ['VO2 MAX: 59 ml/kg/min', 'SpO2 @ 8000m: 89%', 'Active Since: 2001'] },
+        { _id: 'GUIDE-002', guideId: 'GUIDE-002', name: 'Dawa Gyalje Sherpa', title: 'High Altitude Specialist', cert: 'MOI Certified', summits: 'Everest ×9 / Lhotse ×6', stats: ['VO2 MAX: 61 ml/kg/min', 'SpO2 @ 8000m: 91%', 'Active Since: 2004'] },
+        { _id: 'GUIDE-003', guideId: 'GUIDE-003', name: 'Mingma Tshering', title: 'Route & Safety Director', cert: 'MOI Certified', summits: 'Annapurna ×12 / Manaslu ×8', stats: ['VO2 MAX: 59 ml/kg/min', 'SpO2 @ 8000m: 89%', 'Active Since: 2001'] },
     ]
 
     // ── The Crew ─────────────────────────────────────────────────────────────

@@ -37,7 +37,7 @@ export const trek = defineType({
     defineField({ name: 'altitude',      title: 'Max Altitude',       type: 'string',  group: 'overview', description: 'e.g. 5,364m',  validation: Rule => Rule.required() }),
     defineField({ name: 'season',        title: 'Best Season',        type: 'string',  group: 'overview', description: 'e.g. MAR-MAY', validation: Rule => Rule.required() }),
     defineField({ name: 'accommodation', title: 'Accommodation Type', type: 'string',  group: 'overview', description: 'e.g. TEAHOUSE', validation: Rule => Rule.required() }),
-    defineField({ name: 'groupSize',     title: 'Group Size',         type: 'string',  group: 'overview', description: 'e.g. MAX 08',  validation: Rule => Rule.required() }),
+    defineField({ name: 'groupSize',     title: 'Group Size',         type: 'string',  group: 'overview', description: 'e.g. MAX 12',  validation: Rule => Rule.required() }),
     defineField({ name: 'priceUSD', title: 'Price (USD)', type: 'number', group: 'overview', description: 'Enter the numeric price in US Dollars e.g. 3400. Leave blank if not offering USD pricing.', validation: Rule => Rule.positive() }),
     defineField({ name: 'priceINR', title: 'Price (INR)', type: 'number', group: 'overview', description: 'Enter the numeric price in Indian Rupees e.g. 285000. Leave blank if not offering INR pricing.', validation: Rule => Rule.positive() }),
     defineField({
@@ -139,7 +139,7 @@ export const trek = defineType({
         {
           type: 'object',
           fields: [
-            defineField({ name: 'title', title: 'Title', type: 'string', description: 'e.g. WFR Certified Guides' }),
+            defineField({ name: 'title', title: 'Title', type: 'string', description: 'e.g. MOI Certified Guides' }),
             defineField({ name: 'description', title: 'Description', type: 'text', rows: 2 }),
           ],
           preview: {

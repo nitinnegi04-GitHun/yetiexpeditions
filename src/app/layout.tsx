@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     template: "%s | Yeti Expeditions",
   },
   description:
-    "Expert-guided treks to Everest Base Camp (14 days, $3,400), Annapurna Circuit (18 days, $3,100) and Markha Valley, Ladakh (12 days, $2,850). WFR-certified guides, max 8 trekkers, 1:4 guide ratio. Small-group Himalayan expeditions with Swiss-standard safety.",
+    "Expert-guided treks to Everest Base Camp (14 days, $3,400), Annapurna Circuit (18 days, $3,100) and Markha Valley, Ladakh (12 days, $2,850). MOI or equivalent certified guides, max 12 trekkers, 1:4 guide ratio. Small-group Himalayan expeditions with Swiss-standard safety.",
   keywords: [
     "Everest Base Camp trek",
     "Annapurna Circuit trek",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "small group Himalayan expeditions",
     "EBC trek operator",
     "high altitude trekking Nepal",
-    "WFR certified trekking guides",
+    "MOI certified trekking guides",
   ],
   authors: [{ name: "Yeti Expeditions" }],
   creator: "Yeti Expeditions",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "Yeti Expeditions",
     title: "Yeti Expeditions | Expert-Guided Himalayan Treks",
     description:
-      "WFR-certified guides. Max 8 trekkers. Everest Base Camp, Annapurna Circuit & Markha Valley Ladakh. From $2,850.",
+      "MOI or equivalent certified guides. Max 12 trekkers. Everest Base Camp, Annapurna Circuit & Markha Valley Ladakh. From $2,850.",
     images: [
       {
         url: "/og-image.jpg",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Yeti Expeditions | Expert-Guided Himalayan Treks",
     description:
-      "WFR-certified guides. Max 8 trekkers. Everest Base Camp, Annapurna Circuit & Markha Valley. From $2,850.",
+      "MOI or equivalent certified guides. Max 12 trekkers. Everest Base Camp, Annapurna Circuit & Markha Valley. From $2,850.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -98,7 +98,7 @@ export default async function RootLayout({
     url: BASE_URL,
     logo: `${BASE_URL}/logo.png`,
     description:
-      "Premium guided trekking operator specialising in Himalayan expeditions. WFR-certified guides, maximum 8 trekkers per group, 1:4 guide-to-trekker ratio.",
+      "Premium guided trekking operator specialising in Himalayan expeditions. MOI or equivalent certified guides, maximum 12 trekkers per group, 1:4 guide-to-trekker ratio.",
     foundingLocation: {
       "@type": "Place",
       name: "Kathmandu, Nepal",
@@ -109,7 +109,7 @@ export default async function RootLayout({
       "Everest Base Camp trek",
       "Annapurna Circuit trek",
       "High altitude safety",
-      "Wilderness First Response",
+      "MOI or equivalent high-altitude certification",
     ],
     contactPoint: [
       {

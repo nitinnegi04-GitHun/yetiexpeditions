@@ -33,7 +33,7 @@ const ebc = {
   altitude: '5,364m',
   season: 'MAR-MAY · SEP-NOV',
   accommodation: 'TEAHOUSE',
-  groupSize: 'MAX 08',
+  groupSize: 'MAX 12',
   investment: '$4,250',
 
   batches: [
@@ -51,7 +51,7 @@ const ebc = {
     { _key: 'day04', day: '04', title: 'Namche Bazaar — Acclimatisation Day', content: 'Rest day in the Sherpa capital. Optional hike to Everest View Hotel (3,880m) for panoramic views of Everest, Lhotse, and Ama Dablam. Explore the weekend market and Sherpa Culture Museum.' },
     { _key: 'day05', day: '05', title: 'Namche → Tengboche (3,867m)', content: 'The trail rises and falls dramatically, offering constant views of the Everest massif. Visit Tengboche Monastery — the largest Gompa in the Khumbu. Evening prayer ceremony.' },
     { _key: 'day06', day: '06', title: 'Tengboche → Dingboche (4,360m)', content: 'Descend through birch and juniper forest before crossing the Imja Khola river. The valley widens as vegetation thins and the high-altitude landscape takes over.' },
-    { _key: 'day07', day: '07', title: 'Dingboche — Acclimatisation Day', content: 'Hike to Nangkartshang Peak (5,090m) for a critical altitude push. Twice-daily oximetry checks by WFR-certified guide. Rest and rehydrate.' },
+    { _key: 'day07', day: '07', title: 'Dingboche — Acclimatisation Day', content: 'Hike to Nangkartshang Peak (5,090m) for a critical altitude push. Twice-daily oximetry checks by MOI or equivalent certified guide. Rest and rehydrate.' },
     { _key: 'day08', day: '08', title: 'Dingboche → Lobuche (4,940m)', content: 'Pass through Dugla, where memorial chortens honour climbers lost on Everest. The trail climbs onto the Khumbu glacier moraine before levelling into Lobuche.' },
     { _key: 'day09', day: '09', title: 'Lobuche → Gorak Shep (5,170m) → Everest Base Camp (5,364m)', content: 'Trek across rocky glacier to Gorak Shep, drop your bags, and push on to Everest Base Camp. Stand beside the Khumbu Icefall. Return to Gorak Shep for the night.' },
     { _key: 'day10', day: '10', title: 'Gorak Shep → Kala Patthar (5,545m) → Pheriche (4,280m)', content: 'Pre-dawn start for Kala Patthar — the ultimate Everest viewpoint. Watch the sunrise paint the summit gold. Descend all the way to Pheriche, losing 1,265m of altitude.' },
@@ -82,7 +82,7 @@ const ebc = {
     'Kathmandu–Lukla–Kathmandu flights (both legs)',
     'All accommodation: 3-star hotel in Kathmandu (2 nights), teahouses on trail (10 nights)',
     'All meals on trek: breakfast, lunch, and dinner',
-    'WFR-certified lead guide (1:4 guide-to-trekker ratio)',
+    'MOI or equivalent certified lead guide (1:4 guide-to-trekker ratio)',
     'Experienced Sherpa support team',
     'Licensed porter (1 per 2 trekkers, max 10kg per porter)',
     'Sagarmatha National Park entry permit',
@@ -151,7 +151,7 @@ const ebc = {
 
   faqs: [
     { _key: 'faq01', question: 'Do I need prior trekking experience for EBC?', answer: 'You don\'t need technical mountaineering skills, but you should be comfortable with 5–8 hours of walking per day. We recommend completing at least two full-day hikes of 20km+ before departure.' },
-    { _key: 'faq02', question: 'What happens if I get altitude sickness?', answer: 'Your safety is non-negotiable. Our WFR-certified guide monitors blood oxygen levels twice daily. At any sign of serious AMS, the protocol is immediate descent. Emergency helicopter evacuation can be arranged within hours.' },
+    { _key: 'faq02', question: 'What happens if I get altitude sickness?', answer: 'Your safety is non-negotiable. Our MOI or equivalent certified guide monitors blood oxygen levels twice daily. At any sign of serious AMS, the protocol is immediate descent. Emergency helicopter evacuation can be arranged within hours.' },
     { _key: 'faq03', question: 'What is the best time of year to do EBC?', answer: 'We run EBC in two windows: Spring (March–May) and Autumn (September–November). Spring offers rhododendrons in bloom. Autumn brings crystal-clear post-monsoon skies.' },
     { _key: 'faq04', question: 'Is WiFi available on the trail?', answer: 'Most teahouses offer WiFi for a fee ($2–5 USD per day) up to Namche Bazaar. Signal degrades at higher altitudes. We recommend a Ncell SIM card for 3G coverage up to approximately Dingboche.' },
     { _key: 'faq05', question: 'Can I do EBC if I\'m vegetarian?', answer: 'Absolutely. Teahouse menus feature excellent vegetarian options — dal bhat, vegetable curry, pasta, soups, and porridge. Please notify us of any dietary requirements during booking.' },
@@ -173,7 +173,7 @@ const annapurna = {
   altitude: '5,416m',
   season: 'MAR-MAY · OCT-DEC',
   accommodation: 'TEAHOUSE',
-  groupSize: 'MAX 08',
+  groupSize: 'MAX 12',
   investment: '$3,100',
 
   batches: [
@@ -229,7 +229,7 @@ const annapurna = {
   included: [
     'All accommodation: hotel in Kathmandu (1 night), guesthouses/teahouses on trek (16 nights), hotel in Pokhara (1 night)',
     'All meals on trek: breakfast, lunch, and dinner',
-    'WFR-certified lead guide (1:4 guide-to-trekker ratio)',
+    'MOI or equivalent certified lead guide (1:4 guide-to-trekker ratio)',
     'Experienced support team',
     'Licensed porter (1 per 2 trekkers, max 10kg per porter)',
     'Annapurna Conservation Area Permit (ACAP)',
@@ -316,7 +316,7 @@ const markha = {
   altitude: '5,100m',
   season: 'JUN-SEP',
   accommodation: 'HOMESTAY',
-  groupSize: 'MAX 08',
+  groupSize: 'MAX 12',
   investment: '$2,850',
 
   batches: [
@@ -359,7 +359,7 @@ const markha = {
   included: [
     'All accommodation: hotel in Leh (3 nights), village homestays on trek (6 nights), camp at Nimaling (1 night)',
     'All meals on trek: breakfast, lunch, and dinner',
-    'WFR-certified lead guide',
+    'MOI or equivalent certified lead guide',
     'Local Ladakhi support guide',
     'Licensed horse handler and horses for luggage',
     'Inner Line Permit for Markha Valley',

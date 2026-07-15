@@ -21,7 +21,7 @@ export const article = defineType({
 
     // ── Author ─────────────────────────────────────────────────
     defineField({ name: 'author',      title: 'Author Name',  type: 'string', group: 'content', validation: Rule => Rule.required() }),
-    defineField({ name: 'authorTitle', title: 'Author Title', type: 'string', group: 'content', description: 'e.g. Lead Expedition Guide · WFR Certified' }),
+    defineField({ name: 'authorTitle', title: 'Author Title', type: 'string', group: 'content', description: 'e.g. Lead Expedition Guide · MOI Certified' }),
 
     // ── Taxonomy & Meta ────────────────────────────────────────
     defineField({

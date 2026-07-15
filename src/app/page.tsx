@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const seo = settings?.seo ?? {}
 
   const title = seo.metaTitle ?? "Yeti Expeditions | Expert-Guided Himalayan Treks — EBC, Annapurna, Ladakh"
-  const description = seo.metaDescription ?? "Expert-guided treks to Everest Base Camp, Annapurna Circuit and Markha Valley. WFR-certified guides, max 8 trekkers, all permits included."
+  const description = seo.metaDescription ?? "Expert-guided treks to Everest Base Camp, Annapurna Circuit and Markha Valley. MOI or equivalent certified guides, max 12 trekkers, all permits included."
   const ogImage = seo.ogImageUrl ?? null
 
   return {

@@ -56,7 +56,7 @@ const trek = {
   altitude: '5,500m',
   season: 'MAR-APR, OCT-NOV',
   accommodation: 'TEAHOUSE',
-  groupSize: 'MAX 10',
+  groupSize: 'MAX 12',
   priceINR: 125500,
 
   // ── Itinerary ────────────────────────────────────────────────

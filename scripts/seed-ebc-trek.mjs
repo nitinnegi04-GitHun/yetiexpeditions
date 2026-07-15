@@ -26,7 +26,7 @@ const ebcTrek = {
   altitude: '5,364m',
   season: 'MAR-MAY · SEP-NOV',
   accommodation: 'TEAHOUSE',
-  groupSize: 'MAX 08',
+  groupSize: 'MAX 12',
   investment: '$3,400',
 
   // ── Itinerary ──────────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ const ebcTrek = {
       day: '07',
       title: 'Dingboche — Acclimatisation Day',
       content:
-        'Hike to Nangkartshang Peak (5,090m) for a critical altitude push. Twice-daily oximetry checks by WFR-certified guide. Rest, rehydrate, and acclimatise. Optional visit to the Chhukung valley.',
+        'Hike to Nangkartshang Peak (5,090m) for a critical altitude push. Twice-daily oximetry checks by MOI or equivalent certified guide. Rest, rehydrate, and acclimatise. Optional visit to the Chhukung valley.',
     },
     {
       _key: 'day08',
@@ -195,7 +195,7 @@ const ebcTrek = {
     'Kathmandu–Lukla–Kathmandu flights (both legs)',
     'All accommodation: 3-star hotel in Kathmandu (2 nights), teahouses on trail (10 nights)',
     'All meals on trek: breakfast, lunch, and dinner',
-    'WFR-certified lead guide (1:4 guide-to-trekker ratio)',
+    'MOI or equivalent certified lead guide (1:4 guide-to-trekker ratio)',
     'Experienced Sherpa support team',
     'Licensed porter (1 per 2 trekkers, max 10kg per porter)',
     'Sagarmatha National Park entry permit',
@@ -410,7 +410,7 @@ const ebcTrek = {
       _key: 'faq02',
       question: 'What happens if I get altitude sickness?',
       answer:
-        'Your safety is non-negotiable. Our WFR-certified guide monitors blood oxygen levels twice daily. At any sign of serious AMS (HACE/HAPE), the protocol is immediate descent — no debate. Emergency helicopter evacuation can be arranged within hours. This is why comprehensive travel insurance is mandatory. Diamox is recommended as a preventive measure; consult your doctor before the trek.',
+        'Your safety is non-negotiable. Our MOI or equivalent certified guide monitors blood oxygen levels twice daily. At any sign of serious AMS (HACE/HAPE), the protocol is immediate descent — no debate. Emergency helicopter evacuation can be arranged within hours. This is why comprehensive travel insurance is mandatory. Diamox is recommended as a preventive measure; consult your doctor before the trek.',
     },
     {
       _key: 'faq03',

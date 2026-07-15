@@ -116,7 +116,7 @@ const termsOfAscent = [
   bullet('All participants must be in good cardiovascular health and capable of sustained mountain hiking for multiple consecutive days.'),
   bullet('You are responsible for honestly disclosing any pre-existing medical conditions, medications, and physical limitations in your booking form.'),
   bullet('Yeti Expeditions reserves the right to refuse participation to any individual whose fitness or health poses a risk to themselves or the group, at any point before or during the trek.'),
-  bullet('Altitude sickness is a recognised risk at high elevation. Our WFR-certified trek leads follow strict acclimatisation protocols; however, individual physiological responses to altitude cannot be predicted or guaranteed.'),
+  bullet('Altitude sickness is a recognised risk at high elevation. Our MOI or equivalent certified trek leads follow strict acclimatisation protocols; however, individual physiological responses to altitude cannot be predicted or guaranteed.'),
 
   h2('4. Safety & Risk'),
   p('Himalayan trekking involves inherent and serious risks including but not limited to: altitude illness (AMS, HACE, HAPO), adverse weather, river crossings, trail hazards, landslides, wildlife encounters, and remoteness from medical facilities.'),

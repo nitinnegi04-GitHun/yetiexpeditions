@@ -8,9 +8,9 @@
 **Yeti Expeditions** is a Himalayan expedition company rooted in Kinnaur, India, active across Nepal, the Indian Himalaya, and Bhutan. We are not a travel agency. We are a guide-owned expedition operator — every trek lead on our roster is a partner, not a hire.
 
 **Founded by three people:**
-- **P.S. Negi** — Co-Founder & Expedition Director. Instructor at the High Altitude Warfare School (Gulmarg) and Siachen Battle School. 8 years as Mountaineering & Skiing Instructor at ABVIMAS, Manali. Felicitated by Defence Minister Rajnath Singh in 2022. President of the Kinnaur regional Mountaineering Association. He is not just a guide — he is the custodian of a tradition.
-- **Nitin Negi** — Co-Founder (operations & digital). Returned from corporate to build the structure that carries the team's expertise outward into the world.
-- **Gurdit** — Co-Founder. A trainer of trainers, forged in Nepal's trekking corridors. Brings operational fluency that only comes from having done the work at every level.
+- **P.S. Negi** — Co-Founder & Expedition Director. Instructor at the High Altitude Warfare School (Gulmarg) and Siachen Battle School. 8 years as Mountaineering & Skiing Instructor at ABVIMAS, Manali. Felicitated by Defence Minister Rajnath Singh in 2022 & 2026. President of the Kinnaur regional Mountaineering Association. He is not just a guide — he is the custodian of a tradition.
+- **Nitin Negi** — Co-Founder (operations & digital). Ex IIM, and DCE alumni. After spending around 14 years in the corporate world he left his successful corporate career to build the structure that carries the team's expertise outward into the world.
+- **Gurdit** — Co-Founder. An Ex Indian Hikes, and now a trainer of trainers, forged in Nepal's trekking corridors. Brings operational fluency that only comes from having done the work at every level.
 
 **The origin sentence:** *"What if the best guides in the Himalayas owned the platform, instead of just working for one?"*
 
@@ -142,7 +142,7 @@ We cite specifics: SpO2 readings, guide-to-trekker ratios, permit success rates,
 
 ### Pillar 1: The Guides (People)
 *Content about who leads our treks — credentials, experience, philosophy*
-- Guide spotlights: WFR certification, summits, years active
+- Guide spotlights: MOI or equivalent certification, summits, years active
 - "Your guide is your first contact" messaging
 - Behind-the-scenes of guide training and assessment
 - Quote cards from guides on the mountain
@@ -165,7 +165,7 @@ We cite specifics: SpO2 readings, guide-to-trekker ratios, permit success rates,
 ### Pillar 4: The Standard (Credibility)
 *Proof points that build trust*
 - Stats: 847 expeditions, 6,200+ trekkers, 16 years zero fatalities
-- Group cap: 8 — why this number matters
+- Group cap: 12 — why this number matters
 - Fitness vetting: we turn people down, here's why
 - Trekker testimonials and post-trip dispatches
 
@@ -213,7 +213,7 @@ We cite specifics: SpO2 readings, guide-to-trekker ratios, permit success rates,
 
 **Countries served:** Nepal, India (Uttarakhand, Himachal Pradesh, Kinnaur, Ladakh), Bhutan
 
-**Group cap:** 8 trekkers. Every expedition. Non-negotiable.
+**Group cap:** 12 trekkers. Every expedition. Non-negotiable.
 
 ---
 
@@ -281,7 +281,7 @@ Always cite specifics: altitude figures, certification codes, group caps, SpO2 d
 
 ## 12. BRAND IN ONE PARAGRAPH (use as an "About" block anywhere)
 
-Yeti Expeditions is a guide-owned expedition company rooted in Kinnaur, India — active across Nepal, the Indian Himalaya, and Bhutan. We were founded on a single question: what if the best guides in the Himalayas owned the platform, instead of just working for one? Every trek lead on our roster is a partner. Every group is capped at eight. Every departure above 4,500m includes supplemental oxygen and twice-daily SpO2 monitoring. We have led over 847 expeditions, guided more than 6,200 trekkers, and maintained a zero-fatality record across 16 years of operation. We don't sell adventures. We guide lives.
+Yeti Expeditions is a guide-owned expedition company rooted in Kinnaur, India — active across Nepal, the Indian Himalaya, and Bhutan. We were founded on a single question: what if the best guides in the Himalayas owned the platform, instead of just working for one? Every trek lead on our roster is a partner. Every group is capped at twelve. Every departure above 4,500m includes supplemental oxygen and twice-daily SpO2 monitoring. We have led over 847 expeditions, guided more than 6,200 trekkers, and maintained a zero-fatality record across 16 years of operation. We don't sell adventures. We guide lives.
 
 ---
 
