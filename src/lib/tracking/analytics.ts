@@ -1,5 +1,6 @@
 import type { AnalyticsEventName, AnalyticsEventPayload, AnalyticsProvider, DeviceType } from './types'
 import { sendToGA4 } from './providers/ga4'
+import { sendToMeta } from './providers/meta'
 
 const providers: AnalyticsProvider[] = []
 
@@ -31,4 +32,5 @@ export function trackEvent(eventName: AnalyticsEventName, parameters?: Analytics
 
   console.log(eventName, enrichedParameters)
   sendToGA4(eventName, enrichedParameters)
+  sendToMeta(eventName, enrichedParameters)
 }

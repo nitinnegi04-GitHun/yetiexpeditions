@@ -30,7 +30,7 @@ export function useSectionTracking<T extends HTMLElement = HTMLDivElement>(
           observer.disconnect()
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     )
 
     observer.observe(node)

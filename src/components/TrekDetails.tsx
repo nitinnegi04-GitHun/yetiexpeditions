@@ -20,6 +20,8 @@ import Link from "next/link";
 import PriceTooltip from "./PriceTooltip";
 import { trackEvent } from "@/lib/tracking/analytics";
 import { AnalyticsEvents } from "@/lib/tracking/events";
+import { useScrollTracking } from "@/lib/tracking/useScrollTracking";
+import { useSectionTracking } from "@/lib/tracking/useSectionTracking";
 
 const includedComponents = {
     block: {
@@ -151,6 +153,11 @@ interface TrekProps {
 export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
     const { currency, setCurrency, formatPrice, hasBothPrices } = useCurrency();
 
+    useScrollTracking();
+    const itineraryRef = useSectionTracking<HTMLElement>('itinerary');
+    const departureRef = useSectionTracking('departure');
+    const reviewsRef = useSectionTracking<HTMLElement>('reviews');
+
     return (
         <div className="bg-white">
 
@@ -203,7 +210,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
             {/* ── Itinerary + Sidebar ── */}
             <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row">
                 {/* Itinerary */}
-                <section id="itinerary" style={{ scrollMarginTop: '80px' }} className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
+                <section id="itinerary" ref={itineraryRef} style={{ scrollMarginTop: '80px' }} className="flex-1 p-8 md:p-16 xl:p-24 border-r border-zinc-border">
                     <div className="max-w-2xl">
                         {trek.overview && trek.overview.length > 0 && (
                             <div className="mb-12">
@@ -240,7 +247,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                         )}
 
                         {/* Upcoming Batches */}
-                        <div className="p-8 md:p-12">
+                        <div className="p-8 md:p-12" ref={departureRef}>
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Upcoming Batches</h3>
                             {(() => {
                                 const upcomingBatches = trek.batches.filter(batch => !batch.startDate || new Date(batch.startDate) >= new Date());
@@ -441,7 +448,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
 
             {/* ── Testimonials ── */}
             {trek.testimonials?.length > 0 && (
-                <section id="reviews" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border bg-slate-50">
+                <section id="reviews" ref={reviewsRef} style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border bg-slate-50">
                     <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Field Reports</span>
                         <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trekker Testimonials</h2>
