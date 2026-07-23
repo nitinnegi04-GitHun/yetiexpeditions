@@ -39,8 +39,8 @@ export default async function Footer() {
   const hasContact = s.contactPhone || s.contactEmail || s.whatsappNumber || s.officeAddress
 
   return (
-    <footer className="w-full border-t border-zinc-border bg-white pt-24 pb-12 px-6 md:px-12">
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8 border-b border-zinc-border pb-24">
+    <footer className="w-full border-t border-zinc-border bg-white pt-12 md:pt-24 pb-12 px-6 md:px-12">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8 border-b border-zinc-border pb-12 md:pb-24">
 
         {/* ── Col 1: Brand ── */}
         <div className="space-y-6">
@@ -169,7 +169,7 @@ export default async function Footer() {
       </div>
 
       {/* ── Bottom bar ── */}
-      <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center mt-12 gap-6">
+      <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center mt-6 md:mt-12 gap-6">
         <div className="flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
           <Link href="/privacy-protocol" className="hover:text-slate-900 transition-colors">Privacy Protocol</Link>
           <Link href="/terms-of-ascent" className="hover:text-slate-900 transition-colors">Terms of Ascent</Link>

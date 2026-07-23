@@ -7,6 +7,8 @@ import { usePathname } from "next/navigation";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
 import { useCurrency } from "@/lib/CurrencyContext";
+import { trackEvent } from "@/lib/tracking/analytics";
+import { AnalyticsEvents } from "@/lib/tracking/events";
 
 const sanity = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'qmj04x7n',
@@ -124,6 +126,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                             href={whatsappHref}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'inquire_now', location: 'navbar', channel: 'whatsapp' })}
                             className="bg-primary text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-black transition-all cursor-pointer border-none outline-none inline-block"
                         >
                             Enquire Now
@@ -182,7 +185,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                         </Link>
                         
                         {/* Chat */}
-                        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => setIsMenuOpen(false)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
+                        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => { trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'chat', location: 'sticky_bottom_bar', channel: 'whatsapp' }); setIsMenuOpen(false); }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
                             <MessageCircle size={22} color="#10b981" />
                             <span style={{ color: INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Chat</span>
                         </a>

@@ -4,6 +4,8 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import TrekDetails from '@/components/TrekDetails'
 import TrekHeroBanner from '@/components/TrekHeroBanner'
+import TrekHeroBookCTA from '@/components/TrekHeroBookCTA'
+import TrekAnalyticsContext from '@/components/TrekAnalyticsContext'
 import TrekSubNav from '@/components/TrekSubNav'
 import { client } from '@/sanity/client'
 import { urlFor } from '@/sanity/image'
@@ -39,6 +41,41 @@ function formatBatchDateRange(startDate: string, endDate: string): string {
   return `${fmt(startDate)} - ${fmt(endDate)} ${year}`
 }
 
+/** Format a Sanity date string "YYYY-MM-DD" → "24 Oct" */
+function formatShortDate(d: string): string {
+  const date = new Date(d + 'T00:00:00')
+  const day = date.getDate()
+  const month = date.toLocaleString('en-US', { month: 'short' })
+  return `${day} ${month}`
+}
+
+function remToDesktopNameClass(rem: number): string {
+  switch (rem) {
+    case 8: return 'md:text-[8rem]'
+    case 7: return 'md:text-[7rem]'
+    case 6: return 'md:text-[6rem]'
+    case 5: return 'md:text-[5rem]'
+    case 4: return 'md:text-[4rem]'
+    case 3.25: return 'md:text-[3.25rem]'
+    default: return 'md:text-[2.75rem]'
+  }
+}
+
+/**
+ * Desktop-only trek name size: sized off the first word's length so it fills the row,
+ * then capped by the full name's length so long names (more words to wrap) don't grow
+ * tall enough to push the CTA below the fold.
+ */
+function getDesktopNameSizeClass(name: string): string {
+  const firstWord = name.split(' ')[0].length
+  const firstWordRem = firstWord <= 6 ? 8 : firstWord <= 8 ? 7 : firstWord <= 10 ? 6 : firstWord <= 13 ? 5 : firstWord <= 17 ? 4 : 3.25
+
+  const totalLen = name.length
+  const totalCapRem = totalLen <= 10 ? 8 : totalLen <= 16 ? 6 : totalLen <= 22 ? 5 : totalLen <= 28 ? 4 : totalLen <= 36 ? 3.25 : 2.75
+
+  return remToDesktopNameClass(Math.min(firstWordRem, totalCapRem))
+}
+
 /** Map Sanity batch status + seat count → frontend status */
 function deriveBatchStatus(
   sanityStatus: string,
@@ -61,6 +98,8 @@ function transformSanityTrek(raw: any) {
       endDate: b.endDate,
       status: deriveBatchStatus(b.status, b.totalSeats, b.seatsBooked),
       remaining: b.totalSeats - b.seatsBooked,
+      totalSeats: b.totalSeats,
+      price: b.discountedPrice ?? b.price ?? null,
       trekLead: b.trekLead ?? null,
     })
   )
@@ -121,7 +160,6 @@ function transformSanityTrek(raw: any) {
     permits: raw.permits ?? [],
     faqs: raw.faqs ?? [],
     relatedTreks: raw.relatedTreks ?? [],
-    trekLead: raw.trekLead ?? null,
   }
 }
 
@@ -294,13 +332,24 @@ export default async function TrekPage({ params }: PageProps) {
 
   const trek = transformSanityTrek(raw)
   const schemas = buildTrekSchemas(trek, slug)
+
+  // Hero: max 2 upcoming batch dates + price from the nearest upcoming batch
+  const upcomingBatches = trek.batches.filter((b: { startDate: string }) => !b.startDate || new Date(b.startDate) >= new Date())
+  const heroDates = upcomingBatches.slice(0, 2).map((b: { startDate: string }) => formatShortDate(b.startDate))
+  const heroPrice = upcomingBatches[0]?.price ?? trek.priceINR ?? null
+  const heroPriceFormatted = heroPrice
+    ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(heroPrice)
+    : null
+  const maxTrekkersMatch = trek.groupSize.match(/\d+/)
+  const maxTrekkersLabel = maxTrekkersMatch ? `Max ${maxTrekkersMatch[0]} Trekkers` : trek.groupSize
+  const desktopNameSizeClass = getDesktopNameSizeClass(trek.name)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const logoUrl: string = settings?.logo ? urlFor((settings as any).logo).height(80).quality(90).url() : ''
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const whatsappNumber: string = (settings as any)?.whatsappNumber ?? ''
 
   return (
-    <main className="min-h-screen pb-20 md:pb-0">
+    <main className="min-h-screen">
       {schemas.map((schema, i) => (
         <script
           key={i}
@@ -309,6 +358,7 @@ export default async function TrekPage({ params }: PageProps) {
         />
       ))}
 
+      <TrekAnalyticsContext trekName={trek.name} />
       <Navbar />
       <TrekSubNav />
 
@@ -330,26 +380,70 @@ export default async function TrekPage({ params }: PageProps) {
 
         <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row md:min-h-[80vh]">
           {/* Left: Text */}
-          <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 pt-12 pb-8 md:pt-12 md:px-24 md:pb-24 border-b md:border-b-0 md:border-r border-zinc-border">
-            <div className="space-y-5 md:space-y-8">
+          <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 pt-8 pb-6 md:pt-10 md:px-24 md:pb-10 border-b md:border-b-0 md:border-r border-zinc-border">
+            <div className="space-y-3 md:space-y-4">
               <span className="inline-block bg-primary text-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] w-fit">
                 Expedition Dispatch
               </span>
-              <h1 className="text-[15vw] md:text-8xl font-black md:leading-[.88] leading-[1.1] tracking-tighter text-slate-900 uppercase">
+              <h1 className={`text-[15vw] ${desktopNameSizeClass} font-black md:leading-[.9] leading-[1.1] tracking-tighter text-slate-900 uppercase`}>
                 {trek.name}
-                <span className="block mt-3 md:mt-4 text-slate-300">{trek.country}</span>
+                <span className="block mt-3 md:mt-3 text-slate-300">{trek.country}</span>
               </h1>
-              <p className="text-[20px] italic md:text-lg text-slate-600 leading-relaxed">
-                {trek.difficulty} &middot; {trek.duration} &middot; {trek.altitude}
-              </p>
-              <a
+              {heroPriceFormatted && (
+                <p className="text-xl md:text-2xl font-black text-slate-900">
+                  {heroPriceFormatted}{' '}
+                  <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-slate-500">All Inclusive</span>
+                </p>
+              )}
+              <div className="space-y-1.5 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-1.5 md:space-y-0">
+                {heroDates.length > 0 && (
+                  <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
+                    <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3M4 11h16M5 5h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" />
+                    </svg>
+                    <span className="text-slate-400">Departs:</span>
+                    <span className="text-slate-900">{heroDates.join(' • ')}</span>
+                  </p>
+                )}
+                <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
+                  <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span className="text-slate-400">Difficulty:</span>
+                  <span className="text-slate-900">{trek.difficulty}</span>
+                </p>
+                <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
+                  <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
+                  </svg>
+                  <span className="text-slate-400">Duration:</span>
+                  <span className="text-slate-900">{trek.duration}</span>
+                </p>
+                <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
+                  <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 20l6-10 4 6 3-5 5 9H3z" />
+                  </svg>
+                  <span className="text-slate-400">Altitude:</span>
+                  <span className="text-slate-900">{trek.altitude}</span>
+                </p>
+              </div>
+              <ul className="space-y-1.5 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-1.5 md:space-y-0 border-t border-zinc-border pt-3 md:pt-4">
+                {[maxTrekkersLabel, 'Handpicked Premium Tea Houses', 'Experienced Trek Leaders', 'Personal Attention Throughout'].map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-[11px] md:text-xs font-bold uppercase tracking-wide text-slate-700">
+                    <span className="text-primary">&#10003;</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <TrekHeroBookCTA
                 href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to book the ${trek.name} Trek. Please share more details.`)}` : '#enquire'}
                 target={whatsappNumber ? '_blank' : undefined}
                 rel={whatsappNumber ? 'noopener noreferrer' : undefined}
-                className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors"
+                className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-3 md:px-10 md:py-3.5 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors"
               >
                 Book This Trek
-              </a>
+              </TrekHeroBookCTA>
             </div>
             <div />
           </div>
@@ -373,30 +467,6 @@ export default async function TrekPage({ params }: PageProps) {
       <TrekDetails trek={trek} whatsappNumber={whatsappNumber} />
 
       <Footer />
-
-      {/* ── Sticky mobile bottom bar ── */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-zinc-border">
-        <a
-          href="#enquire"
-          className="flex-1 flex items-center justify-center bg-white text-slate-900 py-4 text-[11px] font-black uppercase tracking-widest border-r border-zinc-border hover:bg-slate-50 transition-colors"
-        >
-          Book This Trek
-        </a>
-        <a
-          href={trek.trekLead?.whatsappNumber
-            ? `https://wa.me/${trek.trekLead.whatsappNumber}?text=${encodeURIComponent(`Hi ${trek.trekLead.name}! I'm interested in the ${trek.name} Trek. Can we chat?`)}`
-            : whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'm interested in the ${trek.name} Trek.`)}` : '#enquire'
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white py-4 text-[11px] font-black uppercase tracking-widest hover:brightness-95 transition-all"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          {trek.trekLead ? `Chat with ${trek.trekLead.name.split(' ')[0]}` : 'WhatsApp Us'}
-        </a>
-      </div>
 
       {/* Enables automatic revalidation when content changes in Sanity */}
     </main>
