@@ -560,7 +560,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                 <section className="border-t border-zinc-border bg-slate-900 text-white">
                     <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Explore More</span>
-                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Compare Expeditions</h2>
+                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Related Treks</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
                             {trek.relatedTreks.map((rt, i) => (
                                 <Link key={i} href={`/treks/${rt.slug}`} className="bg-slate-900 border border-white/10 -mt-px -ml-px p-8 md:p-10 hover:bg-slate-800 transition-colors group flex flex-col gap-4">

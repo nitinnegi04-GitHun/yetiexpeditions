@@ -35,12 +35,18 @@ const nextConfig: NextConfig = {
         ],
       },
       // Static assets — cache aggressively, Next.js hashes filenames
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
+      // (production only: dev chunk filenames aren't reliably content-hashed,
+      // so an immutable cache header here would serve stale JS across restarts)
+      ...(process.env.NODE_ENV === 'production'
+        ? [
+            {
+              source: '/_next/static/:path*',
+              headers: [
+                { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+              ],
+            },
+          ]
+        : []),
       // API routes — never cache
       {
         source: '/api/:path*',

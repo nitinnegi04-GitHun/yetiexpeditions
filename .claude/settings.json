@@ -25,7 +25,22 @@
       "Read(//Users/nitinnegi/.claude/**)",
       "WebFetch(domain:yetiexpeditions.com)",
       "Bash(node scripts/update-ebc-excluded.mjs)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(grep -rn 'href={`/' src --include=\"*.tsx\")",
+      "Bash(git check-ignore *)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -s http://localhost:3000/treks/annapurna-base-camp -o /tmp/abc.html)",
+      "Read(//tmp/**)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s http://localhost:3000/treks/annapurna-base-camp -o /tmp/abc6.html)",
+      "Bash(curl -s http://localhost:3000/treks/annapurna-base-camp -o /tmp/abc7.html)",
+      "Bash(curl -s http://localhost:3000/treks/annapurna-base-camp -o /tmp/heroCTA.html)",
+      "Bash(curl -s http://localhost:3000/treks/annapurna-base-camp -o /tmp/meta-check.html)",
+      "Bash(grep -n \"handleFileGetter\\\\|handleFolderChange\\\\|Unable to upload some items\\\\|filter\\(\\\\s*$\" node_modules/sanity-plugin-media/dist/index.js)",
+      "Bash(npx patch-package *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3001/studio/media)"
     ],
     "additionalDirectories": [
       "/Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/app/(site)/treks"

@@ -15,6 +15,7 @@ export const SITE_SETTINGS_QUERY = groq`
     facebook,
     youtube,
     x,
+    safetyProtocols,
     "seo": seo {
       metaTitle,
       metaDescription,

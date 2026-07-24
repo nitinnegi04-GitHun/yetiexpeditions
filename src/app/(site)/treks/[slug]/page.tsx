@@ -41,14 +41,6 @@ function formatBatchDateRange(startDate: string, endDate: string): string {
   return `${fmt(startDate)} - ${fmt(endDate)} ${year}`
 }
 
-/** Format a Sanity date string "YYYY-MM-DD" → "24 Oct" */
-function formatShortDate(d: string): string {
-  const date = new Date(d + 'T00:00:00')
-  const day = date.getDate()
-  const month = date.toLocaleString('en-US', { month: 'short' })
-  return `${day} ${month}`
-}
-
 function remToDesktopNameClass(rem: number): string {
   switch (rem) {
     case 8: return 'md:text-[8rem]'
@@ -89,7 +81,7 @@ function deriveBatchStatus(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function transformSanityTrek(raw: any) {
+function transformSanityTrek(raw: any, safetyProtocols: { title: string; description: string }[]) {
   // Batches: Sanity → TrekDetails format
   const batches = (raw.batches ?? []).map(
     (b: any) => ({
@@ -146,7 +138,7 @@ function transformSanityTrek(raw: any) {
     overview: raw.overview ?? [],
     itinerary,
     batches,
-    safetyProtocols: raw.safetyProtocols ?? [],
+    safetyProtocols,
     included: raw.included ?? [],
     excluded: raw.excluded ?? [],
     nonNegotiables: raw.nonNegotiables ?? [],
@@ -177,7 +169,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const raw = await client.fetch(TREK_BY_SLUG_QUERY, { slug })
   if (!raw) return {}
 
-  const trek = transformSanityTrek(raw)
+  const trek = transformSanityTrek(raw, [])
   const url = `${BASE_URL}/treks/${slug}`
 
   // Sanity SEO overrides take priority; fall back to auto-generated values
@@ -330,12 +322,12 @@ export default async function TrekPage({ params }: PageProps) {
 
   if (!raw) notFound()
 
-  const trek = transformSanityTrek(raw)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const trek = transformSanityTrek(raw, (settings as any)?.safetyProtocols ?? [])
   const schemas = buildTrekSchemas(trek, slug)
 
-  // Hero: max 2 upcoming batch dates + price from the nearest upcoming batch
+  // Hero: price from the nearest upcoming batch
   const upcomingBatches = trek.batches.filter((b: { startDate: string }) => !b.startDate || new Date(b.startDate) >= new Date())
-  const heroDates = upcomingBatches.slice(0, 2).map((b: { startDate: string }) => formatShortDate(b.startDate))
   const heroPrice = upcomingBatches[0]?.price ?? trek.priceINR ?? null
   const heroPriceFormatted = heroPrice
     ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(heroPrice)
@@ -395,39 +387,6 @@ export default async function TrekPage({ params }: PageProps) {
                   <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-slate-500">All Inclusive</span>
                 </p>
               )}
-              <div className="space-y-1.5 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-1.5 md:space-y-0">
-                {heroDates.length > 0 && (
-                  <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
-                    <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3M4 11h16M5 5h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" />
-                    </svg>
-                    <span className="text-slate-400">Departs:</span>
-                    <span className="text-slate-900">{heroDates.join(' • ')}</span>
-                  </p>
-                )}
-                <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
-                  <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  <span className="text-slate-400">Difficulty:</span>
-                  <span className="text-slate-900">{trek.difficulty}</span>
-                </p>
-                <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
-                  <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <circle cx="12" cy="12" r="9" strokeLinecap="round" strokeLinejoin="round" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 7v5l3 3" />
-                  </svg>
-                  <span className="text-slate-400">Duration:</span>
-                  <span className="text-slate-900">{trek.duration}</span>
-                </p>
-                <p className="flex items-center gap-1.5 text-xs md:text-sm font-bold uppercase tracking-widest">
-                  <svg className="w-3.5 h-3.5 text-primary shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 20l6-10 4 6 3-5 5 9H3z" />
-                  </svg>
-                  <span className="text-slate-400">Altitude:</span>
-                  <span className="text-slate-900">{trek.altitude}</span>
-                </p>
-              </div>
               <ul className="space-y-1.5 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-1.5 md:space-y-0 border-t border-zinc-border pt-3 md:pt-4">
                 {[maxTrekkersLabel, 'Handpicked Premium Tea Houses', 'Experienced Trek Leaders', 'Personal Attention Throughout'].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-[11px] md:text-xs font-bold uppercase tracking-wide text-slate-700">

@@ -13,6 +13,7 @@ export const siteSettings = defineType({
     { name: 'social',  title: '🔗  Social Media'                    },
     { name: 'seo',     title: '🔍  SEO'                             },
     { name: 'legal',   title: '⚖️  Legal Pages'                     },
+    { name: 'safety',  title: '🛡️  Safety Protocols'                },
   ],
 
   fields: [
@@ -125,6 +126,28 @@ export const siteSettings = defineType({
       title: 'SEO & Social Sharing',
       type: 'seoFields',
       group: 'seo',
+    }),
+
+    // ── SAFETY PROTOCOLS ──────────────────────────────────────
+    defineField({
+      name: 'safetyProtocols',
+      title: 'Safety Protocols',
+      type: 'array',
+      group: 'safety',
+      description: 'Shown in the sidebar on every trek page. Add each safety measure as a title + description.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string', description: 'e.g. MOI Certified Guides' }),
+            defineField({ name: 'description', title: 'Description', type: 'text', rows: 2 }),
+          ],
+          preview: {
+            select: { title: 'title', subtitle: 'description' },
+            prepare: ({ title, subtitle }) => ({ title, subtitle }),
+          },
+        },
+      ],
     }),
 
     // ── LEGAL PAGES ───────────────────────────────────────────

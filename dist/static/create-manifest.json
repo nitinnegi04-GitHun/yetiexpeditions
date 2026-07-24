@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "createdAt": "2026-04-07T08:14:40.875Z",
+  "createdAt": "2026-07-09T06:34:22.733Z",
   "workspaces": [
     {
       "name": "trekking-website",
@@ -13,8 +13,8 @@
         "enabled": false,
         "__internal": {}
       },
-      "schema": "4a9c9a45.create-schema.json",
-      "tools": "ba47da56.create-tools.json"
+      "schema": "be59a9b9.create-schema.json",
+      "tools": "0c8c6a17.create-tools.json"
     }
   ],
   "studioVersion": "5.14.1"

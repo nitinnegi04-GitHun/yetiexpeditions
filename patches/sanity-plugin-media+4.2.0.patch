@@ -1,0 +1,306 @@
+diff --git a/node_modules/sanity-plugin-media/dist/index.js b/node_modules/sanity-plugin-media/dist/index.js
+index 3c045df..8ebe245 100644
+--- a/node_modules/sanity-plugin-media/dist/index.js
++++ b/node_modules/sanity-plugin-media/dist/index.js
+@@ -4054,7 +4054,7 @@ const DialogAssetEdit = (props) => {
+   };
+   return renderDialogs(currentDialogs, 0);
+ }, DropzoneDispatchContext = react.createContext(void 0), DropzoneDispatchProvider = (props) => {
+-  const { children, open } = props, contextValue = { open };
++  const { children, open, openFolder } = props, contextValue = { open, openFolder };
+   return /* @__PURE__ */ jsxRuntime.jsx(DropzoneDispatchContext.Provider, { value: contextValue, children });
+ }, useDropzoneActions = () => {
+   const context = react.useContext(DropzoneDispatchContext);
+@@ -4062,7 +4062,7 @@ const DialogAssetEdit = (props) => {
+     throw new Error("useDropzoneActions must be used within an DropzoneDispatchProvider");
+   return context;
+ }, Header = (props) => {
+-  const { onClose } = props, { open } = useDropzoneActions(), { onSelect } = useAssetSourceActions(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), selectedDocument = useTypedSelector((state) => state.selected.document), { directUploads } = useToolOptions();
++  const { onClose } = props, { open, openFolder } = useDropzoneActions(), { onSelect } = useAssetSourceActions(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), selectedDocument = useTypedSelector((state) => state.selected.document), { directUploads } = useToolOptions();
+   return /* @__PURE__ */ jsxRuntime.jsx(ui.Box, { paddingY: 2, children: /* @__PURE__ */ jsxRuntime.jsxs(ui.Flex, { align: "center", justify: "space-between", children: [
+     /* @__PURE__ */ jsxRuntime.jsx(ui.Box, { flex: 1, marginX: 3, children: /* @__PURE__ */ jsxRuntime.jsxs(ui.Inline, { style: { whiteSpace: "nowrap" }, children: [
+       /* @__PURE__ */ jsxRuntime.jsx(ui.Text, { textOverflow: "ellipsis", weight: "semibold", children: /* @__PURE__ */ jsxRuntime.jsx("span", { children: onSelect ? `Insert ${assetTypes.join(" or ")}` : "Browse Assets" }) }),
+@@ -4082,6 +4082,17 @@ const DialogAssetEdit = (props) => {
+           text: `Upload ${assetTypes.length === 1 ? pluralize__default.default(assetTypes[0]) : "assets"}`
+         }
+       ),
++      directUploads && openFolder && !onSelect && /* @__PURE__ */ jsxRuntime.jsx(
++        ui.Button,
++        {
++          fontSize: 1,
++          icon: icons.UploadIcon,
++          mode: "bleed",
++          onClick: openFolder,
++          style: { marginLeft: "0.5em" },
++          text: "Upload folder"
++        }
++      ),
+       onClose && /* @__PURE__ */ jsxRuntime.jsx(ui.Box, { style: { flexShrink: 0 }, children: /* @__PURE__ */ jsxRuntime.jsx(
+         ui.Button,
+         {
+@@ -5551,11 +5562,24 @@ async function filterFiles(fileList) {
+     }
+   return filteredFiles;
+ }
++function isHeicFile(file) {
++  return /\.(heic|heif)$/i.test(file.name) || file.type === "image/heic" || file.type === "image/heif";
++}
++async function convertHeicIfNeeded(file) {
++  if (!isHeicFile(file))
++    return file;
++  try {
++    const heic2any = _interopDefaultCompat(require("heic2any")).default, converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 }), blob = Array.isArray(converted) ? converted[0] : converted;
++    return new File([blob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), { type: "image/jpeg" });
++  } catch {
++    return file;
++  }
++}
+ const UploadDropzone = (props) => {
+   const { children } = props, {
+     dropzone: { maxSize },
+     directUploads
+-  } = useToolOptions(), { onSelect } = useAssetSourceActions(), dispatch = reactRedux.useDispatch(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), isImageAssetType = assetTypes.length === 1 && assetTypes[0] === "image", handleDrop = async (acceptedFiles) => {
++  } = useToolOptions(), { onSelect } = useAssetSourceActions(), dispatch = reactRedux.useDispatch(), client = useVersionedClient(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), isImageAssetType = assetTypes.length === 1 && assetTypes[0] === "image", handleDrop = async (acceptedFiles) => {
+     acceptedFiles.forEach(
+       (file) => dispatch(
+         uploadsActions.uploadRequest({
+@@ -5580,12 +5604,13 @@ const UploadDropzone = (props) => {
+     if (!fileList)
+       return [];
+     const files = await filterFiles(fileList);
+-    return fileList?.length !== files.length && dispatch(
++    fileList?.length !== files.length && dispatch(
+       notificationsActions.add({
+         status: "error",
+         title: "Unable to upload some items (folders and packages aren't supported)"
+       })
+-    ), files;
++    );
++    return Promise.all(files.map(convertHeicIfNeeded));
+   }, { getRootProps, getInputProps, isDragActive, open } = reactDropzone.useDropzone({
+     accept: isImageAssetType ? "image/*" : "",
+     getFilesFromEvent: handleFileGetter,
+@@ -5597,9 +5622,68 @@ const UploadDropzone = (props) => {
+     maxSize,
+     onDropRejected: handleDropRejected,
+     disabled: !directUploads
+-  });
+-  return /* @__PURE__ */ jsxRuntime.jsx(DropzoneDispatchProvider, { open, children: /* @__PURE__ */ jsxRuntime.jsxs(UploadContainer, { ...getRootProps(), children: [
++  }), folderInputRef = react.useRef(null), openFolder = () => {
++    folderInputRef.current && (folderInputRef.current.value = "", folderInputRef.current.click());
++  }, handleFolderChange = async (event) => {
++    const fileList = event?.target?.files;
++    if (!fileList || fileList.length === 0)
++      return;
++    const files = (await filterFiles(fileList)).filter(
++      (file) => !isImageAssetType || file.type.startsWith("image/") || isHeicFile(file)
++    );
++    if (files.length === 0)
++      return;
++    const folderName = files[0].webkitRelativePath?.split("/")[0] || "folder";
++    try {
++      let tagId = await client.fetch(
++        groq__default.default`*[_type == "${TAG_DOCUMENT_NAME}" && name.current == $name][0]._id`,
++        { name: folderName }
++      );
++      tagId || (tagId = (await client.create({
++        _type: TAG_DOCUMENT_NAME,
++        name: { _type: "slug", current: folderName }
++      }))._id);
++      await Promise.all(
++        files.map(async (file) => {
++          const uploadFile = await convertHeicIfNeeded(file), asset = await client.assets.upload(
++            isImageAssetType ? "image" : "file",
++            uploadFile,
++            { filename: uploadFile.name }
++          );
++          await client.patch(asset._id).setIfMissing({ opt: {} }).setIfMissing({ "opt.media": {} }).setIfMissing({ "opt.media.tags": [] }).append("opt.media.tags", [
++            { _key: nanoid.nanoid(), _ref: tagId, _type: "reference", _weak: !0 }
++          ]).commit();
++        })
++      );
++      dispatch(
++        notificationsActions.add({
++          status: "success",
++          title: `Uploaded ${files.length} file(s) tagged "${folderName}"`
++        })
++      );
++    } catch (error) {
++      dispatch(
++        notificationsActions.add({
++          status: "error",
++          title: error?.message || "Folder upload failed"
++        })
++      );
++    }
++  };
++  return /* @__PURE__ */ jsxRuntime.jsx(DropzoneDispatchProvider, { open, openFolder: directUploads ? openFolder : void 0, children: /* @__PURE__ */ jsxRuntime.jsxs(UploadContainer, { ...getRootProps(), children: [
+     /* @__PURE__ */ jsxRuntime.jsx("input", { ...getInputProps() }),
++    /* @__PURE__ */ jsxRuntime.jsx(
++      "input",
++      {
++        ref: folderInputRef,
++        type: "file",
++        webkitdirectory: "",
++        directory: "",
++        multiple: !0,
++        style: { display: "none" },
++        onChange: handleFolderChange
++      }
++    ),
+     isDragActive && /* @__PURE__ */ jsxRuntime.jsx(DragActiveContainer, { children: /* @__PURE__ */ jsxRuntime.jsx(ui.Flex, { direction: "column", justify: "center", style: { color: color.white.hex }, children: /* @__PURE__ */ jsxRuntime.jsx(ui.Text, { size: 3, style: { color: "inherit" }, children: "Drop files to upload" }) }) }),
+     children
+   ] }) });
+diff --git a/node_modules/sanity-plugin-media/dist/index.mjs b/node_modules/sanity-plugin-media/dist/index.mjs
+index 008830f..851a814 100644
+--- a/node_modules/sanity-plugin-media/dist/index.mjs
++++ b/node_modules/sanity-plugin-media/dist/index.mjs
+@@ -4059,7 +4059,7 @@ const DialogAssetEdit = (props) => {
+   };
+   return renderDialogs(currentDialogs, 0);
+ }, DropzoneDispatchContext = createContext(void 0), DropzoneDispatchProvider = (props) => {
+-  const { children, open } = props, contextValue = { open };
++  const { children, open, openFolder } = props, contextValue = { open, openFolder };
+   return /* @__PURE__ */ jsx(DropzoneDispatchContext.Provider, { value: contextValue, children });
+ }, useDropzoneActions = () => {
+   const context = useContext(DropzoneDispatchContext);
+@@ -4067,7 +4067,7 @@ const DialogAssetEdit = (props) => {
+     throw new Error("useDropzoneActions must be used within an DropzoneDispatchProvider");
+   return context;
+ }, Header = (props) => {
+-  const { onClose } = props, { open } = useDropzoneActions(), { onSelect } = useAssetSourceActions(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), selectedDocument = useTypedSelector((state) => state.selected.document), { directUploads } = useToolOptions();
++  const { onClose } = props, { open, openFolder } = useDropzoneActions(), { onSelect } = useAssetSourceActions(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), selectedDocument = useTypedSelector((state) => state.selected.document), { directUploads } = useToolOptions();
+   return /* @__PURE__ */ jsx(Box, { paddingY: 2, children: /* @__PURE__ */ jsxs(Flex, { align: "center", justify: "space-between", children: [
+     /* @__PURE__ */ jsx(Box, { flex: 1, marginX: 3, children: /* @__PURE__ */ jsxs(Inline, { style: { whiteSpace: "nowrap" }, children: [
+       /* @__PURE__ */ jsx(Text, { textOverflow: "ellipsis", weight: "semibold", children: /* @__PURE__ */ jsx("span", { children: onSelect ? `Insert ${assetTypes.join(" or ")}` : "Browse Assets" }) }),
+@@ -4087,6 +4087,17 @@ const DialogAssetEdit = (props) => {
+           text: `Upload ${assetTypes.length === 1 ? pluralize(assetTypes[0]) : "assets"}`
+         }
+       ),
++      directUploads && openFolder && !onSelect && /* @__PURE__ */ jsx(
++        Button,
++        {
++          fontSize: 1,
++          icon: UploadIcon,
++          mode: "bleed",
++          onClick: openFolder,
++          style: { marginLeft: "0.5em" },
++          text: "Upload folder"
++        }
++      ),
+       onClose && /* @__PURE__ */ jsx(Box, { style: { flexShrink: 0 }, children: /* @__PURE__ */ jsx(
+         Button,
+         {
+@@ -5556,11 +5567,24 @@ async function filterFiles(fileList) {
+     }
+   return filteredFiles;
+ }
++function isHeicFile(file) {
++  return /\.(heic|heif)$/i.test(file.name) || file.type === "image/heic" || file.type === "image/heif";
++}
++async function convertHeicIfNeeded(file) {
++  if (!isHeicFile(file))
++    return file;
++  try {
++    const { default: heic2any } = await import("heic2any"), converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 }), blob = Array.isArray(converted) ? converted[0] : converted;
++    return new File([blob], file.name.replace(/\.(heic|heif)$/i, ".jpg"), { type: "image/jpeg" });
++  } catch {
++    return file;
++  }
++}
+ const UploadDropzone = (props) => {
+   const { children } = props, {
+     dropzone: { maxSize },
+     directUploads
+-  } = useToolOptions(), { onSelect } = useAssetSourceActions(), dispatch = useDispatch(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), isImageAssetType = assetTypes.length === 1 && assetTypes[0] === "image", handleDrop = async (acceptedFiles) => {
++  } = useToolOptions(), { onSelect } = useAssetSourceActions(), dispatch = useDispatch(), client = useVersionedClient(), assetTypes = useTypedSelector((state) => state.assets.assetTypes), isImageAssetType = assetTypes.length === 1 && assetTypes[0] === "image", handleDrop = async (acceptedFiles) => {
+     acceptedFiles.forEach(
+       (file) => dispatch(
+         uploadsActions.uploadRequest({
+@@ -5585,12 +5609,13 @@ const UploadDropzone = (props) => {
+     if (!fileList)
+       return [];
+     const files = await filterFiles(fileList);
+-    return fileList?.length !== files.length && dispatch(
++    fileList?.length !== files.length && dispatch(
+       notificationsActions.add({
+         status: "error",
+         title: "Unable to upload some items (folders and packages aren't supported)"
+       })
+-    ), files;
++    );
++    return Promise.all(files.map(convertHeicIfNeeded));
+   }, { getRootProps, getInputProps, isDragActive, open } = useDropzone({
+     accept: isImageAssetType ? "image/*" : "",
+     getFilesFromEvent: handleFileGetter,
+@@ -5602,9 +5627,68 @@ const UploadDropzone = (props) => {
+     maxSize,
+     onDropRejected: handleDropRejected,
+     disabled: !directUploads
+-  });
+-  return /* @__PURE__ */ jsx(DropzoneDispatchProvider, { open, children: /* @__PURE__ */ jsxs(UploadContainer, { ...getRootProps(), children: [
++  }), folderInputRef = useRef(null), openFolder = () => {
++    folderInputRef.current && (folderInputRef.current.value = "", folderInputRef.current.click());
++  }, handleFolderChange = async (event) => {
++    const fileList = event?.target?.files;
++    if (!fileList || fileList.length === 0)
++      return;
++    const files = (await filterFiles(fileList)).filter(
++      (file) => !isImageAssetType || file.type.startsWith("image/") || isHeicFile(file)
++    );
++    if (files.length === 0)
++      return;
++    const folderName = files[0].webkitRelativePath?.split("/")[0] || "folder";
++    try {
++      let tagId = await client.fetch(
++        groq`*[_type == "${TAG_DOCUMENT_NAME}" && name.current == $name][0]._id`,
++        { name: folderName }
++      );
++      tagId || (tagId = (await client.create({
++        _type: TAG_DOCUMENT_NAME,
++        name: { _type: "slug", current: folderName }
++      }))._id);
++      await Promise.all(
++        files.map(async (file) => {
++          const uploadFile = await convertHeicIfNeeded(file), asset = await client.assets.upload(
++            isImageAssetType ? "image" : "file",
++            uploadFile,
++            { filename: uploadFile.name }
++          );
++          await client.patch(asset._id).setIfMissing({ opt: {} }).setIfMissing({ "opt.media": {} }).setIfMissing({ "opt.media.tags": [] }).append("opt.media.tags", [
++            { _key: nanoid(), _ref: tagId, _type: "reference", _weak: !0 }
++          ]).commit();
++        })
++      );
++      dispatch(
++        notificationsActions.add({
++          status: "success",
++          title: `Uploaded ${files.length} file(s) tagged "${folderName}"`
++        })
++      );
++    } catch (error) {
++      dispatch(
++        notificationsActions.add({
++          status: "error",
++          title: error?.message || "Folder upload failed"
++        })
++      );
++    }
++  };
++  return /* @__PURE__ */ jsx(DropzoneDispatchProvider, { open, openFolder: directUploads ? openFolder : void 0, children: /* @__PURE__ */ jsxs(UploadContainer, { ...getRootProps(), children: [
+     /* @__PURE__ */ jsx("input", { ...getInputProps() }),
++    /* @__PURE__ */ jsx(
++      "input",
++      {
++        ref: folderInputRef,
++        type: "file",
++        webkitdirectory: "",
++        directory: "",
++        multiple: !0,
++        style: { display: "none" },
++        onChange: handleFolderChange
++      }
++    ),
+     isDragActive && /* @__PURE__ */ jsx(DragActiveContainer, { children: /* @__PURE__ */ jsx(Flex, { direction: "column", justify: "center", style: { color: white.hex }, children: /* @__PURE__ */ jsx(Text, { size: 3, style: { color: "inherit" }, children: "Drop files to upload" }) }) }),
+     children
+   ] }) });
