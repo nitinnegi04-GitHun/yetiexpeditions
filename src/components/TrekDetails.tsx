@@ -2,7 +2,7 @@
 
 import {
     Shield, Check, X, Mountain, Compass,
-    BedDouble, HelpCircle, ArrowRight, AlertTriangle
+    BedDouble, HelpCircle, ArrowRight, AlertTriangle, Download
 } from "lucide-react";
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { sharedMarks } from "@/lib/portableTextComponents";
@@ -119,6 +119,7 @@ interface TrekProps {
         groupSize: string;
         overview: PortableTextBlock[];
         itinerary: { day: string; title: string; content: PortableTextBlock[]; imageUrl?: string }[];
+        itineraryPdfUrl?: string;
         batches: { date: string; startDate?: string; status: "Open" | "Limited" | "Full"; remaining: number; totalSeats: number; trekLead?: { name: string; summits?: string; imageUrl?: string } | null }[];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         included: any[];
@@ -127,7 +128,7 @@ interface TrekProps {
         altitudeProfile: { day: number; label: string; altitude: number }[];
         packingList: Record<string, string[]>;
         physicalPrep: { weeks: string; focus: string; description: string }[];
-        testimonials: { name: string; location: string; rating: number; text: string; batch: string; imageUrl?: string }[];
+        testimonials: { name: string; location: string; rating: number; text: PortableTextBlock[]; batch: string; imageUrl?: string }[];
         gallery: string[];
         gettingThere: { arrival: string; visa: string; domesticFlight: string };
         accommodationDetails: { location: string; type: string; nights: number; notes: string }[];
@@ -218,8 +219,29 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                                 <PortableText value={trek.overview} components={overviewComponents} />
                             </div>
                         )}
-                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Timeline</span>
-                        <h2 className="text-5xl font-black uppercase tracking-tighter mb-12">The Vertical Itinerary</h2>
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
+                            <div>
+                                <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Timeline</span>
+                                <h2 className="text-5xl font-black uppercase tracking-tighter">The Vertical Itinerary</h2>
+                            </div>
+                            {trek.itineraryPdfUrl && (
+                                <div className="shrink-0 border-2 border-primary bg-primary/5 p-5 flex items-center gap-5 md:max-w-[320px]">
+                                    <p className="text-[12px] text-black font-medium leading-relaxed flex-1">
+                                        Planning with your group? Download the full day-by-day breakdown as a PDF.
+                                    </p>
+                                    <a
+                                        href={trek.itineraryPdfUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        download
+                                        className="shrink-0 flex items-center justify-center gap-2 bg-primary text-white px-4 py-2.5 text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                                    >
+                                        <Download className="w-3.5 h-3.5" />
+                                        Download
+                                    </a>
+                                </div>
+                            )}
+                        </div>
                         <ItineraryAccordion steps={trek.itinerary} />
                     </div>
                 </section>
@@ -227,6 +249,26 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                 {/* Sidebar */}
                 <aside className="w-full xl:w-[480px] bg-slate-50">
                     <div className="xl:sticky xl:top-[112px] z-[0]">
+
+                        {/* Download Itinerary */}
+                        {trek.itineraryPdfUrl && (
+                            <div className="p-8 md:p-12 border-b-2 border-primary bg-primary/5">
+                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Trip Itinerary</h3>
+                                <p className="text-xs text-black font-medium leading-relaxed mb-6">
+                                    Get the full day-by-day breakdown as a PDF — handy for sharing with your travel companions or reading offline.
+                                </p>
+                                <a
+                                    href={trek.itineraryPdfUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    download
+                                    className="w-full flex items-center justify-center gap-2.5 bg-primary text-white py-3.5 text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                                >
+                                    <Download className="w-3.5 h-3.5 shrink-0" />
+                                    Download Itinerary
+                                </a>
+                            </div>
+                        )}
 
                         {/* Safety Protocols */}
                         {trek.safetyProtocols && trek.safetyProtocols.length > 0 && (
@@ -322,6 +364,19 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                    )}
+                                                    {trek.itineraryPdfUrl && (
+                                                        <a
+                                                            href={trek.itineraryPdfUrl}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            download
+                                                            onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'download_itinerary', location: 'departure_section', departure: batch.date })}
+                                                            className="w-full flex items-center justify-center gap-2 border border-primary text-primary py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-colors"
+                                                        >
+                                                            <Download className="w-3.5 h-3.5" />
+                                                            Download Itinerary
+                                                        </a>
                                                     )}
                                                     <a
                                                         href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to secure a spot for the ${trek.name} Trek — ${batch.date}. Please confirm availability.`)}` : '#enquire'}

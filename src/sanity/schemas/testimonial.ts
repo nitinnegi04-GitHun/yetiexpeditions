@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { simpleRichTextBlock } from './richTextBlock'
 
 export const testimonial = defineType({
   name: 'testimonial',
@@ -34,8 +35,8 @@ export const testimonial = defineType({
     defineField({
       name: 'text',
       title: 'Review Text',
-      type: 'text',
-      rows: 4,
+      type: 'array',
+      of: [simpleRichTextBlock],
       validation: Rule => Rule.required(),
     }),
     defineField({

@@ -137,6 +137,7 @@ function transformSanityTrek(raw: any, safetyProtocols: { title: string; descrip
     bannerVideo,
     overview: raw.overview ?? [],
     itinerary,
+    itineraryPdfUrl: raw.itineraryPdfUrl ?? '',
     batches,
     safetyProtocols,
     included: raw.included ?? [],

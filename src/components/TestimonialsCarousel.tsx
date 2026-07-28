@@ -2,14 +2,24 @@
 
 import { useState, useRef } from 'react';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { PortableText, type PortableTextBlock } from '@portabletext/react';
+import { sharedMarks } from '@/lib/portableTextComponents';
 
 type Testimonial = {
     name: string;
     location: string;
     rating: number;
-    text: string;
+    text: PortableTextBlock[];
     batch: string;
     imageUrl?: string;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const testimonialTextComponents = {
+    block: {
+        normal: ({ children }: any) => <p className="mb-2 last:mb-0">{children}</p>,
+    },
+    marks: sharedMarks,
 };
 
 function TestimonialCard({ t }: { t: Testimonial }) {
@@ -21,14 +31,14 @@ function TestimonialCard({ t }: { t: Testimonial }) {
                 ))}
             </div>
             <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
-                &ldquo;{t.text}&rdquo;
+                <PortableText value={t.text} components={testimonialTextComponents} />
             </blockquote>
             <div className="border-t border-zinc-border pt-6 flex items-center gap-4">
                 {t.imageUrl ? (
                     <img
                         src={t.imageUrl}
                         alt={t.name}
-                        className="w-12 h-12 rounded-full object-cover object-top grayscale shrink-0 border border-zinc-200"
+                        className="w-18 h-18 rounded-full object-cover object-top shrink-0 border border-zinc-200"
                     />
                 ) : (
                     <div className="w-12 h-12 rounded-full bg-slate-200 shrink-0 flex items-center justify-center">
@@ -37,8 +47,8 @@ function TestimonialCard({ t }: { t: Testimonial }) {
                 )}
                 <div>
                     <p className="font-black uppercase text-sm tracking-tight">{t.name}</p>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">{t.location}</p>
-                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{t.batch}</p>
+                    <p className="text-[10px] text-primary font-bold uppercase tracking-widest mt-1">{t.location} | {t.batch} </p>
+
                 </div>
             </div>
         </div>

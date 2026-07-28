@@ -71,6 +71,14 @@ export const trek = defineType({
 
     // ── Itinerary ──────────────────────────────────────────────
     defineField({
+      name: 'itineraryPdf',
+      title: 'Downloadable Itinerary (PDF)',
+      type: 'file',
+      group: 'itinerary',
+      options: { accept: 'application/pdf' },
+      description: 'Shown as a "Download Itinerary" button above the itinerary and in the sidebar.',
+    }),
+    defineField({
       name: 'overview',
       title: 'Trip Overview',
       type: 'array',

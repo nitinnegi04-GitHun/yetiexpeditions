@@ -57,6 +57,7 @@ export const TREK_BY_SLUG_QUERY = groq`
     country,
     overview,
     itinerary,
+    "itineraryPdfUrl": itineraryPdf.asset->url,
     altitudeProfile,
     included,
     excluded,
