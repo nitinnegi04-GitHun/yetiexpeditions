@@ -9,6 +9,7 @@ import { sharedMarks } from "@/lib/portableTextComponents";
 import { ArrowLeft, Clock, CalendarDays, Tag, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
+import FAQAccordion from "@/components/FAQAccordion";
 
 const BASE_URL = 'https://www.yetiexpeditions.com'
 
@@ -71,6 +72,46 @@ function getH2Headings(body: any[]) {
             return { text, id: slugify(text) }
         })
         .filter(h => h.text)
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function blockText(block: any): string {
+    return (block.children ?? []).map((c: any) => c.text ?? '').join('')
+}
+
+// Derives HowTo schema from articles already written as numbered H2 steps (e.g. "1. Choosing the Right Trek"),
+// instead of requiring a separate manually-authored field.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildHowToSchema(body: any[], name: string, url: string) {
+    const h2Indices = (body ?? []).reduce<number[]>((acc, b, i) => {
+        if (b._type === 'block' && b.style === 'h2') acc.push(i)
+        return acc
+    }, [])
+    if (h2Indices.length < 2) return null
+
+    const headings = h2Indices.map(i => blockText(body[i]).trim())
+    if (!headings.every(h => /^\d+[.)]\s/.test(h))) return null
+
+    const step = h2Indices.map((startIdx, idx) => {
+        const endIdx = idx + 1 < h2Indices.length ? h2Indices[idx + 1] : body.length
+        return {
+            '@type': 'HowToStep',
+            name: headings[idx].replace(/^\d+[.)]\s*/, ''),
+            text: body.slice(startIdx + 1, endIdx)
+                .filter((b: any) => b._type === 'block')
+                .map(blockText)
+                .join(' ')
+                .trim(),
+        }
+    })
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name,
+        url,
+        step,
+    }
 }
 
 const articleBodyComponents: PortableTextComponents = {
@@ -200,6 +241,21 @@ export default async function ArticlePage({ params }: PageProps) {
         ],
     }
 
+    const faqJsonLd = article.faqs?.length
+        ? {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            mainEntity: article.faqs.map((f: any) => ({
+                '@type': 'Question',
+                name: f.question,
+                acceptedAnswer: { '@type': 'Answer', text: f.answer },
+            })),
+        }
+        : null
+
+    const howToJsonLd = buildHowToSchema(article.body, article.title, `${BASE_URL}/journal/${slug}`)
+
     return (
         <div className="min-h-screen bg-white">
             <script
@@ -210,6 +266,18 @@ export default async function ArticlePage({ params }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
             />
+            {faqJsonLd && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+                />
+            )}
+            {howToJsonLd && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+                />
+            )}
             <Navbar />
 
             {/* ── Hero Image ── */}
@@ -376,6 +444,19 @@ export default async function ArticlePage({ params }: PageProps) {
 
                 </article>
             </div>
+
+            {/* ── FAQ ── */}
+            {article.faqs?.length > 0 && (
+                <section className="border-t border-zinc-border bg-slate-50">
+                    <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-16">
+                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-2">Common Questions</span>
+                        <h2 className="text-3xl font-black uppercase tracking-tighter mb-10">FAQ</h2>
+                        <div className="max-w-3xl bg-white border border-zinc-border">
+                            <FAQAccordion faqs={article.faqs} />
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* ── Related Articles ── */}
             {others.length > 0 && (

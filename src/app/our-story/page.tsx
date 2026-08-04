@@ -16,33 +16,33 @@ export const revalidate = 86400
 const BASE_URL = 'https://www.yetiexpeditions.com'
 
 export async function generateMetadata(): Promise<Metadata> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const d: any = await client.fetch(ABOUT_PAGE_QUERY)
-  const seo = d?.seo ?? {}
-  const title = seo.metaTitle ?? 'Our Story — Yeti Expeditions | Born in the Himalayas'
-  const description = seo.metaDescription ?? 'How Yeti Expeditions was founded — by a mountaineering expert, a corporate organiser, and a trek trainer. Rooted in Kinnaur. Active across Nepal and the Indian Himalaya.'
-  const url = `${BASE_URL}/our-story`
-  const ogImage = seo.ogImageUrl ?? null
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const d: any = await client.fetch(ABOUT_PAGE_QUERY)
+    const seo = d?.seo ?? {}
+    const title = seo.metaTitle ?? 'Our Story — Yeti Expeditions | Born in the Himalayas'
+    const description = seo.metaDescription ?? 'How Yeti Expeditions was founded — by a mountaineering expert, a corporate organiser, and a trek trainer. Rooted in Kinnaur. Active across Nepal and the Indian Himalaya.'
+    const url = `${BASE_URL}/our-story`
+    const ogImage = seo.ogImageUrl ?? null
 
-  return {
-    title,
-    description,
-    alternates: { canonical: url },
-    robots: seo.noIndex ? { index: false, follow: false } : undefined,
-    openGraph: {
-      type: 'website',
-      url,
-      title,
-      description,
-      images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: title }] : [],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ogImage ? [ogImage] : [],
-    },
-  }
+    return {
+        title,
+        description,
+        alternates: { canonical: url },
+        robots: seo.noIndex ? { index: false, follow: false } : undefined,
+        openGraph: {
+            type: 'website',
+            url,
+            title,
+            description,
+            images: ogImage ? [{ url: ogImage, width: 1200, height: 630, alt: title }] : [],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: ogImage ? [ogImage] : [],
+        },
+    }
 }
 
 const FALLBACK_LEFT_IMAGE = "https://lh3.googleusercontent.com/aida-public/AB6AXuDiHbmYyYGaTh5ARUWejOA5l9Z7E5DgvlQurzssXYqn0QWZD3Vmnp0Cj5WP12qOqtqJU1vQ6mvGfuEpwLkmf2pow3oQBcKucJRSfaCc7L-shf9FL_gTbJ9TQJ2sV5dburhHwpyRWJv1vnefycut3Af6X2nvKG074F1q0eFM4If8D1zhCPLyAfuGfMcZbbkWtXDhizuVVPZEu6taWsO_X0iyCFOt3sgaH4WkSYb4YBgc8Zb3niHk_MC3ZJ1spQ1bTh2dvQbNEUX9oq4"
@@ -162,7 +162,7 @@ export default async function AboutPage() {
     const differentiators = d?.whyYeti?.differentiators?.length ? d.whyYeti.differentiators : [
         { title: 'Group Cap: 8', body: 'Every expedition. Non-negotiable. Quality of experience and safety both degrade past this number at altitude.' },
         { title: 'Fitness Vetting', body: 'Every trekker is assessed before confirmation. We turn people down. It protects them and the group.' },
-        { title: '2× Daily SpO2', body: 'Morning and evening oxygen saturation checks from Namche onwards. Data, not guesswork.' },
+        { title: '2× Daily SpO2', body: 'Twice-daily SpO2 monitoring. Data, not guesswork.' },
         { title: 'Evacuation Protocol', body: 'Helicopter rescue pre-authorised. Bottled O2 on all trips above 4,500m. No improvising in an emergency.' },
     ]
 
@@ -176,8 +176,39 @@ export default async function AboutPage() {
         { text: 'Annapurna Circuit', url: '/treks/annapurna-circuit' },
     ]
 
+    const peopleJsonLd = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Person',
+                name: coFounder.name,
+                jobTitle: coFounder.role,
+                worksFor: { '@type': 'Organization', name: 'Yeti Expeditions', url: BASE_URL },
+                description: coFounder.credentials.map((c: { label: string }) => c.label).join('; '),
+            },
+            ...guides.map((g: { name: string; title: string; cert: string; summits: string; stats: string[] }) => ({
+                '@type': 'Person',
+                name: g.name,
+                jobTitle: g.title,
+                worksFor: { '@type': 'Organization', name: 'Yeti Expeditions', url: BASE_URL },
+                description: [g.cert, g.summits, ...(g.stats ?? [])].filter(Boolean).join('; '),
+            })),
+            ...crew.map((m: { name: string; role: string; domain: string; note: string }) => ({
+                '@type': 'Person',
+                name: m.name,
+                jobTitle: m.role,
+                worksFor: { '@type': 'Organization', name: 'Yeti Expeditions', url: BASE_URL },
+                description: [m.domain, m.note].filter(Boolean).join('; '),
+            })),
+        ],
+    }
+
     return (
         <div className="bg-white">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(peopleJsonLd) }}
+            />
             <Navbar />
 
             {/* ── Hero — same 50/50 split structure as home & trek pages ── */}
@@ -280,11 +311,10 @@ export default async function AboutPage() {
                         {stats.map((s: { value: string; label: string }, i: number) => (
                             <div
                                 key={i}
-                                className={`p-8 md:p-12 flex flex-col gap-3 hover:bg-white transition-colors border-zinc-border ${
-                                    i === 0 ? 'border-r border-b md:border-b-0' :
-                                    i === 1 ? 'border-b md:border-b-0 md:border-r' :
-                                    i === 2 ? 'border-r' : ''
-                                }`}
+                                className={`p-8 md:p-12 flex flex-col gap-3 hover:bg-white transition-colors border-zinc-border ${i === 0 ? 'border-r border-b md:border-b-0' :
+                                        i === 1 ? 'border-b md:border-b-0 md:border-r' :
+                                            i === 2 ? 'border-r' : ''
+                                    }`}
                             >
                                 <span className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900">{s.value}</span>
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{s.label}</span>
@@ -430,29 +460,29 @@ export default async function AboutPage() {
                                 ? urlFor(member.image).width(600).url()
                                 : FALLBACK_GUIDE_IMAGE
                             return (
-                            <div key={member._key ?? i} className="bg-white hover:bg-slate-50 transition-colors flex flex-col group">
-                                {/* Image — square aspect ratio, distinct from guides */}
-                                <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1/1' }}>
-                                    <img
-                                        src={memberImageUrl}
-                                        alt={member.name}
-                                        className="w-full h-full object-cover object-top grayscale brightness-90 contrast-110 group-hover:grayscale-0 transition-all duration-700"
-                                    />
-                                    <div className="absolute bottom-4 left-4">
-                                        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">{member.memberId}</p>
+                                <div key={member._key ?? i} className="bg-white hover:bg-slate-50 transition-colors flex flex-col group">
+                                    {/* Image — square aspect ratio, distinct from guides */}
+                                    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1/1' }}>
+                                        <img
+                                            src={memberImageUrl}
+                                            alt={member.name}
+                                            className="w-full h-full object-cover object-top grayscale brightness-90 contrast-110 group-hover:grayscale-0 transition-all duration-700"
+                                        />
+                                        <div className="absolute bottom-4 left-4">
+                                            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-primary">{member.memberId}</p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Info */}
-                                <div className="p-6 flex flex-col gap-3">
-                                    <div>
-                                        <h3 className="text-base font-black uppercase tracking-tight text-slate-900">{member.name}</h3>
-                                        <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mt-1">{member.role}</p>
+                                    {/* Info */}
+                                    <div className="p-6 flex flex-col gap-3">
+                                        <div>
+                                            <h3 className="text-base font-black uppercase tracking-tight text-slate-900">{member.name}</h3>
+                                            <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mt-1">{member.role}</p>
+                                        </div>
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">{member.domain}</p>
+                                        <p className="text-xs text-slate-500 leading-relaxed border-l-2 border-primary/30 pl-3">{member.note}</p>
                                     </div>
-                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">{member.domain}</p>
-                                    <p className="text-xs text-slate-500 leading-relaxed border-l-2 border-primary/30 pl-3">{member.note}</p>
                                 </div>
-                            </div>
                             )
                         })}
                     </div>

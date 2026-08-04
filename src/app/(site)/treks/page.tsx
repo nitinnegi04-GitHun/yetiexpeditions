@@ -31,10 +31,29 @@ export const metadata: Metadata = {
 export const revalidate = 86400
 
 export default async function TreksPage() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const treks = await client.fetch(ALL_TREKS_QUERY)
+
+  const itemListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Yeti Expeditions — All Treks',
+    url: `${BASE_URL}/treks`,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    itemListElement: treks.map((t: any, i: number) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: t.name,
+      url: `${BASE_URL}/treks/${t.slug?.current}`,
+    })),
+  }
 
   return (
     <main className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       <Navbar />
 
       {/* Page Header */}

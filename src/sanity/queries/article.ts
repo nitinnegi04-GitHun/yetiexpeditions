@@ -38,7 +38,8 @@ export const ARTICLE_BY_SLUG_QUERY = groq`
         caption,
         alt
       }
-    }
+    },
+    faqs
   }
 `
 

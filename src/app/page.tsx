@@ -146,8 +146,20 @@ export default async function Home() {
     } : null,
   }))
 
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Yeti Expeditions',
+    url: BASE_URL,
+    publisher: { '@type': 'Organization', name: 'Yeti Expeditions', url: BASE_URL },
+  }
+
   return (
     <main className="min-h-screen bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       <Navbar />
       <Hero data={data?.hero} heroImageUrl={heroImageUrl} />
       <TrustMatrix data={data?.trustMatrix} />

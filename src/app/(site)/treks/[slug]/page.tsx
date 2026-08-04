@@ -139,6 +139,7 @@ function transformSanityTrek(raw: any, safetyProtocols: { title: string; descrip
     itinerary,
     itineraryPdfUrl: raw.itineraryPdfUrl ?? '',
     batches,
+    trekLead: raw.trekLead ?? null,
     safetyProtocols,
     included: raw.included ?? [],
     excluded: raw.excluded ?? [],
@@ -306,7 +307,35 @@ function buildTrekSchemas(trek: ReturnType<typeof transformSanityTrek>, slug: st
     }
     : null
 
-  return [touristTripSchema, breadcrumbSchema, faqSchema, reviewSchema].filter(Boolean)
+  const leads = new Map<string, any>()
+  if (trek.trekLead?.name) leads.set(trek.trekLead.name, trek.trekLead)
+  trek.batches.forEach((b: any) => { if (b.trekLead?.name) leads.set(b.trekLead.name, b.trekLead) })
+
+  const personSchemas = Array.from(leads.values()).map((lead: any) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: lead.name,
+    jobTitle: lead.title,
+    description: [lead.cert, lead.summits].filter(Boolean).join('; '),
+    image: lead.imageUrl,
+    worksFor: { '@type': 'TravelAgency', name: 'Yeti Expeditions', url: BASE_URL },
+  }))
+
+  const howToSchema = trek.physicalPrep.length
+    ? {
+      '@context': 'https://schema.org',
+      '@type': 'HowTo',
+      name: `How to Train for the ${trek.name} Trek`,
+      description: `Physical preparation timeline for the ${trek.name} trek.`,
+      step: trek.physicalPrep.map((p: any) => ({
+        '@type': 'HowToStep',
+        name: `${p.weeks}: ${p.focus}`,
+        text: p.description,
+      })),
+    }
+    : null
+
+  return [touristTripSchema, breadcrumbSchema, faqSchema, reviewSchema, howToSchema, ...personSchemas].filter(Boolean)
 }
 
 // ── Page ─────────────────────────────────────────────────────────────────────

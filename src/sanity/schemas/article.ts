@@ -8,6 +8,7 @@ export const article = defineType({
 
   groups: [
     { name: 'content', title: '✏️  Content', default: true },
+    { name: 'faqs',    title: '❓  FAQs'                    },
     { name: 'seo',     title: '🔍  SEO'                    },
   ],
 
@@ -63,6 +64,27 @@ export const article = defineType({
         },
       ],
       validation: Rule => Rule.required().min(1),
+    }),
+
+    // ── FAQs ───────────────────────────────────────────────────
+    defineField({
+      name: 'faqs',
+      group: 'faqs',
+      title: 'FAQs',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'question', title: 'Question', type: 'string' }),
+            defineField({ name: 'answer', title: 'Answer', type: 'text', rows: 3 }),
+          ],
+          preview: {
+            select: { question: 'question' },
+            prepare: ({ question }) => ({ title: question }),
+          },
+        },
+      ],
     }),
   ],
 
