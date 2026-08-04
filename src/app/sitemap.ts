@@ -1,10 +1,11 @@
 import { client } from '@/sanity/client'
 import { TREK_SLUGS_QUERY } from '@/sanity/queries/trek'
-import { ARTICLES } from '@/app/journal/articles'
+import { ARTICLE_SLUGS_QUERY } from '@/sanity/queries/article'
 import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const treks: { slug: string; updatedAt: string }[] = await client.fetch(TREK_SLUGS_QUERY)
+  const articles: { slug: string; date: string }[] = await client.fetch(ARTICLE_SLUGS_QUERY)
   const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.yetiexpeditions.com').replace(/\/+$/, '')
 
   const trekUrls = treks.map(t => ({
@@ -14,7 +15,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  const journalUrls = ARTICLES.map(a => ({
+  const journalUrls = articles.map(a => ({
     url: `${baseUrl}/journal/${a.slug}`,
     lastModified: a.date ? new Date(a.date) : new Date('2025-01-01'),
     changeFrequency: 'monthly' as const,

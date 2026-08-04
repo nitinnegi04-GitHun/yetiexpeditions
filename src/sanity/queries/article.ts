@@ -43,5 +43,5 @@ export const ARTICLE_BY_SLUG_QUERY = groq`
 `
 
 export const ARTICLE_SLUGS_QUERY = groq`
-  *[_type == "article"] { "slug": slug.current }
+  *[_type == "article"] { "slug": slug.current, date }
 `
