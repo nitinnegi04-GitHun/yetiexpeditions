@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import { PortableText, type PortableTextBlock } from "@portabletext/react";
 import { sharedMarks } from "@/lib/portableTextComponents";
-import { useCurrency } from "@/lib/CurrencyContext";
 import TestimonialsCarousel from "./TestimonialsCarousel";
 import PackingListCarousel from "./PackingListCarousel";
 import PhysicalPrepCarousel from "./PhysicalPrepCarousel";
@@ -152,8 +151,6 @@ interface TrekProps {
 
 
 export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
-    const { currency, setCurrency, formatPrice, hasBothPrices } = useCurrency();
-
     useScrollTracking();
     const itineraryRef = useSectionTracking<HTMLElement>('itinerary');
     const departureRef = useSectionTracking('departure');
@@ -173,31 +170,25 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                         <div
                             key={stat.label}
                             className={`p-6 md:p-12 flex flex-col gap-3 group hover:bg-white transition-colors border-zinc-border ${index === 0 ? 'border-r border-b md:border-b-0' :
-                                index === 1 ? 'border-b md:border-b-0 md:border-r' : 'border-b md:border-b-0 md:border-r'
+                                index === 1 ? 'border-b md:border-b-0 md:border-r' : 'border-r'
                                 }`}
                         >
                             <span className="text-primary font-bold uppercase text-[10px] md:text-xs tracking-widest">{stat.label}</span>
                             <span className="text-2xl md:text-5xl font-black tracking-tighter uppercase break-words md:break-normal">{stat.value}</span>
                         </div>
                     ))}
-                    {/* Investment stat — currency-aware */}
+                    {/* Investment stat — shows INR and USD together */}
                     <div className="p-6 md:p-12 flex flex-col gap-3 group hover:bg-white transition-colors border-zinc-border">
-                        <div className="flex items-center gap-2">
-                            <span className="text-primary font-bold uppercase text-[10px] md:text-xs tracking-widest">Investment</span>
-                            {/* Mobile inline currency toggle — only shown when both prices exist */}
-                            {hasBothPrices(trek.priceUSD, trek.priceINR) && (
-                                <button
-                                    onClick={() => setCurrency(currency === 'USD' ? 'INR' : 'USD')}
-                                    className="md:hidden text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 border border-zinc-300 text-slate-400 hover:border-slate-900 hover:text-slate-900 transition-colors"
-                                >
-                                    {currency === 'USD' ? '₹' : '$'}
-                                </button>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
+                        <span className="text-primary font-bold uppercase text-[10px] md:text-xs tracking-widest">Investment</span>
+                        <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-2xl md:text-5xl font-black tracking-tighter uppercase break-words md:break-normal">
-                                {formatPrice(trek.priceUSD, trek.priceINR)}
+                                {trek.priceINR ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(trek.priceINR) : '—'}
                             </span>
+                            {trek.priceUSD && (
+                                <span className="text-sm md:text-lg font-bold text-slate-500">
+                                    ({new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(trek.priceUSD)})
+                                </span>
+                            )}
                             <PriceTooltip note={trek.batchPricingNote} />
                         </div>
                     </div>
@@ -249,26 +240,6 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                 {/* Sidebar */}
                 <aside className="w-full xl:w-[480px] bg-slate-50">
                     <div className="xl:sticky xl:top-[112px] z-[0]">
-
-                        {/* Download Itinerary */}
-                        {trek.itineraryPdfUrl && (
-                            <div className="p-8 md:p-12 border-b-2 border-primary bg-primary/5">
-                                <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Trip Itinerary</h3>
-                                <p className="text-xs text-black font-medium leading-relaxed mb-6">
-                                    Get the full day-by-day breakdown as a PDF — handy for sharing with your travel companions or reading offline.
-                                </p>
-                                <a
-                                    href={trek.itineraryPdfUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    download
-                                    className="w-full flex items-center justify-center gap-2.5 bg-primary text-white py-3.5 text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
-                                >
-                                    <Download className="w-3.5 h-3.5 shrink-0" />
-                                    Download Itinerary
-                                </a>
-                            </div>
-                        )}
 
                         {/* Safety Protocols */}
                         {trek.safetyProtocols && trek.safetyProtocols.length > 0 && (
@@ -364,19 +335,6 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    )}
-                                                    {trek.itineraryPdfUrl && (
-                                                        <a
-                                                            href={trek.itineraryPdfUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            download
-                                                            onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'download_itinerary', location: 'departure_section', departure: batch.date })}
-                                                            className="w-full flex items-center justify-center gap-2 border border-primary text-primary py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-colors"
-                                                        >
-                                                            <Download className="w-3.5 h-3.5" />
-                                                            Download Itinerary
-                                                        </a>
                                                     )}
                                                     <a
                                                         href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to secure a spot for the ${trek.name} Trek — ${batch.date}. Please confirm availability.`)}` : '#enquire'}

@@ -40,7 +40,21 @@
       "Bash(curl -s http://localhost:3000/treks/annapurna-base-camp -o /tmp/meta-check.html)",
       "Bash(grep -n \"handleFileGetter\\\\|handleFolderChange\\\\|Unable to upload some items\\\\|filter\\(\\\\s*$\" node_modules/sanity-plugin-media/dist/index.js)",
       "Bash(npx patch-package *)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3001/studio/media)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3001/studio/media)",
+      "Bash(curl -s -o /dev/null -w \"yetiexpeditions.com/our-story -> HTTP %{http_code}, redirect to: %{redirect_url}\\\\n\" https://yetiexpeditions.com/our-story)",
+      "Bash(curl -s -o /dev/null -w \"yetiexpeditions.com/treks -> HTTP %{http_code}, redirect to: %{redirect_url}\\\\n\" https://yetiexpeditions.com/treks)",
+      "Bash(curl -s -o /dev/null -w \"www.yetiexpeditions.com/our-story -> HTTP %{http_code}\\\\n\" https://www.yetiexpeditions.com/our-story)",
+      "Bash(curl --version)",
+      "Bash(/usr/bin/curl -s -o /dev/null -D - \"https://yetiexpeditions.com/journal\" -w \"FINAL:%{http_code}\\\\n\")",
+      "Bash(/usr/bin/curl -s \"https://qmj04x7n.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%20%3D%3D%20%22trek%22%5D%7B%22slug%22%3Aslug.current%2C%20name%7D\")",
+      "Bash(python3 -m json.tool)",
+      "WebSearch",
+      "Bash(xargs -I{} sh -c 'echo ==={}===; cat -n {}')",
+      "Bash(/usr/bin/curl -s \"https://qmj04x7n.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%20%3D%3D%20%22trek%22%5D%7B%22slug%22%3Aslug.current%2C%20%22faqCount%22%3Acount\\(faqs\\)%7D\")",
+      "Bash(/usr/bin/curl -s \"https://qmj04x7n.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%20%3D%3D%20%22trek%22%20%26%26%20slug.current%20%3D%3D%20%22khopra-danda-ridge%22%5D%5B0%5D%7Bname%2Cregion%2Ccountry%2Cdifficulty%2Cduration%2Caltitude%2Cseason%2Caccommodation%2CgroupSize%2CpriceUSD%2CpriceINR%2Coverview%2Cgettingthere%2CnonNegotiables%2Cincluded%2Cexcluded%2CphysicalPrep%7D\")",
+      "Bash(/usr/bin/curl -s \"https://qmj04x7n.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%20%3D%3D%20%22article%22%5D%7B%22slug%22%3Aslug.current%2Ctitle%2Ccategory%2Cexcerpt%7D\")",
+      "Bash(/usr/bin/curl -s \"https://qmj04x7n.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%20%3D%3D%20%22article%22%20%26%26%20slug.current%20%3D%3D%20%22how-to-plan-and-execute-self-supported-multi-day-treks%22%5D%5B0%5D%7Bbody%5B%5D%7Bstyle%2C%20children%5B%5D.text%7D%7D\")",
+      "Bash(/usr/bin/curl -s \"https://qmj04x7n.apicdn.sanity.io/v2024-01-01/data/query/production?query=*%5B_type%20%3D%3D%20%22article%22%5D%7B%22slug%22%3Aslug.current%2C%22faqCount%22%3Acount\\(faqs\\)%7D\")"
     ],
     "additionalDirectories": [
       "/Users/nitinnegi/Documents/Latest/Yeti-Expeditions/yeti-expeditions/src/app/(site)/treks"

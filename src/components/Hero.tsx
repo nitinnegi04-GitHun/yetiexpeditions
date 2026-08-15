@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
+import VideoMuteToggle from "@/components/VideoMuteToggle";
 
 const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'qmj04x7n',
@@ -40,6 +41,8 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [mobileGrayscale, setMobileGrayscale] = useState(100);
   const mobileVideoRef = useRef<HTMLDivElement>(null);
+  const mobileVideoElRef = useRef<HTMLVideoElement>(null);
+  const desktopVideoElRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     sanity
@@ -80,15 +83,19 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
       {/* Mobile-only image/video — appears ABOVE text on mobile */}
       <div ref={mobileVideoRef} className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: '160vw', minHeight: '350px' }}>
         {videoUrl ? (
-          <video
-            src={videoUrl}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
-            style={{ filter: `grayscale(${mobileGrayscale}%) contrast(1.25)` }}
-          />
+          <>
+            <video
+              ref={mobileVideoElRef}
+              src={videoUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
+              style={{ filter: `grayscale(${mobileGrayscale}%) contrast(1.25)` }}
+            />
+            <VideoMuteToggle videoRef={mobileVideoElRef} className="absolute bottom-4 right-4" />
+          </>
         ) : (
           <div
             className="absolute inset-0 bg-cover bg-center grayscale contrast-125"
@@ -137,14 +144,18 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
           {/* Right Image/Video — desktop only */}
           <div className="hidden md:block md:w-1/2 bg-slate-100 relative overflow-hidden group">
             {videoUrl ? (
-              <video
-                src={videoUrl}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
-              />
+              <>
+                <video
+                  ref={desktopVideoElRef}
+                  src={videoUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
+                />
+                <VideoMuteToggle videoRef={desktopVideoElRef} className="absolute bottom-6 right-6" />
+              </>
             ) : (
               <div
                 className="absolute inset-0 bg-cover bg-center grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"

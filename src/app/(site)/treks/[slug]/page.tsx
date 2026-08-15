@@ -356,12 +356,6 @@ export default async function TrekPage({ params }: PageProps) {
   const trek = transformSanityTrek(raw, (settings as any)?.safetyProtocols ?? [])
   const schemas = buildTrekSchemas(trek, slug)
 
-  // Hero: price from the nearest upcoming batch
-  const upcomingBatches = trek.batches.filter((b: { startDate: string }) => !b.startDate || new Date(b.startDate) >= new Date())
-  const heroPrice = upcomingBatches[0]?.price ?? trek.priceINR ?? null
-  const heroPriceFormatted = heroPrice
-    ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(heroPrice)
-    : null
   const maxTrekkersMatch = trek.groupSize.match(/\d+/)
   const maxTrekkersLabel = maxTrekkersMatch ? `Max ${maxTrekkersMatch[0]} Trekkers` : trek.groupSize
   const desktopNameSizeClass = getDesktopNameSizeClass(trek.name)
@@ -411,12 +405,6 @@ export default async function TrekPage({ params }: PageProps) {
                 {trek.name}
                 <span className="block mt-3 md:mt-3 text-slate-300">{trek.country}</span>
               </h1>
-              {heroPriceFormatted && (
-                <p className="text-xl md:text-2xl font-black text-slate-900">
-                  {heroPriceFormatted}{' '}
-                  <span className="text-xs md:text-sm font-bold uppercase tracking-widest text-slate-500">All Inclusive</span>
-                </p>
-              )}
               <ul className="space-y-1.5 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-1.5 md:space-y-0 border-t border-zinc-border pt-3 md:pt-4">
                 {[maxTrekkersLabel, 'Handpicked Premium Tea Houses', 'Experienced Trek Leaders', 'Personal Attention Throughout'].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-[11px] md:text-xs font-bold uppercase tracking-wide text-slate-700">

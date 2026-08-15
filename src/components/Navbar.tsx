@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
-import { useCurrency } from "@/lib/CurrencyContext";
 import { trackEvent } from "@/lib/tracking/analytics";
 import { AnalyticsEvents } from "@/lib/tracking/events";
 
@@ -29,7 +28,6 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     const [logoUrl, setLogoUrl] = useState<string | null>(initialLogoUrl ?? null);
     const [siteName, setSiteName] = useState(initialSiteName ?? 'Yeti Expeditions');
     const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
-    const { currency, setCurrency } = useCurrency();
     useEffect(() => {
         sanity
             .fetch(`*[_type == "siteSettings"][0]{ logo, siteName, whatsappNumber }`)
@@ -103,24 +101,6 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                         <Link className="hover:text-primary transition-colors" href="/#treks">Treks</Link>
                         <Link className="hover:text-primary transition-colors" href="/our-story">Our Story</Link>
                         <Link className="hover:text-primary transition-colors" href="/journal">Journal</Link>
-
-                        {/* Currency Toggle — desktop only */}
-                        <div className="flex items-center border border-zinc-200 overflow-hidden">
-                            <button
-                                onClick={() => setCurrency('USD')}
-                                className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest transition-colors cursor-pointer border-none outline-none"
-                                style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#475569' }}
-                            >
-                                $ USD
-                            </button>
-                            <button
-                                onClick={() => setCurrency('INR')}
-                                className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest transition-colors cursor-pointer border-none outline-none border-l border-zinc-200"
-                                style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#475569' }}
-                            >
-                                ₹ INR
-                            </button>
-                        </div>
 
                         <a
                             href={whatsappHref}

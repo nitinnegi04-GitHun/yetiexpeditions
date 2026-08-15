@@ -451,9 +451,7 @@ export default async function ArticlePage({ params }: PageProps) {
                     <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-16">
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-2">Common Questions</span>
                         <h2 className="text-3xl font-black uppercase tracking-tighter mb-10">FAQ</h2>
-                        <div className="max-w-3xl bg-white border border-zinc-border">
-                            <FAQAccordion faqs={article.faqs} />
-                        </div>
+                        <FAQAccordion faqs={article.faqs} />
                     </div>
                 </section>
             )}
