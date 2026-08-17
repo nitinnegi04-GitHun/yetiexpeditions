@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import TrustMatrix from "@/components/TrustMatrix";
+import WhyWeTrek from "@/components/WhyWeTrek";
 import TrekIndex from "@/components/TrekIndex";
 import TrekCalendar from "@/components/TrekCalendar";
 import SpecialProjects from "@/components/SpecialProjects";
@@ -51,11 +52,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [data, treksRaw, testimonialsRaw] = await Promise.all([
+  const [data, treksRaw, testimonialsRaw, settings] = await Promise.all([
     client.fetch(HOMEPAGE_QUERY),
     client.fetch(ALL_TREKS_QUERY),
     client.fetch(ALL_TESTIMONIALS_QUERY),
+    client.fetch(SITE_SETTINGS_QUERY),
   ])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const whatsappNumber: string = (settings as any)?.whatsappNumber ?? ''
 
   // Resolve hero image URL if set in Sanity, otherwise leave undefined
   const heroImageUrl = data?.hero?.heroImage
@@ -163,13 +167,16 @@ export default async function Home() {
       <Navbar />
       <Hero data={data?.hero} heroImageUrl={heroImageUrl} />
       <TrustMatrix data={data?.trustMatrix} />
+      <WhyWeTrek data={data?.whyWeTrek} whatsappNumber={whatsappNumber} />
       <TrekIndex treks={treks} />
       <TrekCalendar treks={calendarTreks} />
       {testimonialsRaw?.length > 0 && (
         <section className="border-t border-zinc-border bg-slate-50">
           <div className="max-w-[1440px] mx-auto p-8 md:p-16">
-            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Field Reports</span>
-            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trekker Testimonials</h2>
+            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-3 block">Field Reports</span>
+            <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
+              Trekker<br /><span className="text-slate-300">Testimonials</span>
+            </h2>
             <TestimonialsCarousel testimonials={testimonialsRaw} />
           </div>
         </section>

@@ -15,6 +15,8 @@ import EnquiryForm from "./EnquiryForm";
 import AltitudeChart from "./AltitudeChart";
 import ItineraryAccordion from "./ItineraryAccordion";
 import TrekGallery from "./TrekGallery";
+import TrekJourneyOptionsV2 from "./TrekJourneyOptionsV2";
+import TrekFloatingCTAV2 from "./TrekFloatingCTAV2";
 import Link from "next/link";
 import PriceTooltip from "./PriceTooltip";
 import { trackEvent } from "@/lib/tracking/analytics";
@@ -153,7 +155,7 @@ interface TrekProps {
 }
 
 
-export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
+export default function TrekDetailsV2({ trek, whatsappNumber = '' }: TrekProps) {
     useScrollTracking();
     const itineraryRef = useSectionTracking<HTMLElement>('itinerary');
     const departureRef = useSectionTracking('departure');
@@ -204,6 +206,8 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                     <p className="text-[11px] text-primary font-bold uppercase tracking-widest  italic">* {trek.batchPricingNote}</p>
                 </div>
             </section>
+
+            <TrekJourneyOptionsV2 trekName={trek.name} />
 
             {/* ── Itinerary + Sidebar ── */}
             <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row">
@@ -266,7 +270,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                         )}
 
                         {/* Upcoming Batches */}
-                        <div className="p-8 md:p-12" ref={departureRef}>
+                        <div id="departure-batches" className="p-8 md:p-12 scroll-mt-20 md:scroll-mt-[112px]" ref={departureRef}>
                             <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-8">Upcoming Batches</h3>
                             {(() => {
                                 const upcomingBatches = trek.batches.filter(batch => !batch.startDate || new Date(batch.startDate) >= new Date());
@@ -354,7 +358,20 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                                                 </div>
                                             ))}
                                         </div>
-                                        <p className="mt-2 text-[10px] text-primary font-bold uppercase leading-relaxed italic">
+                                        <div className="mt-6 pt-5 border-t border-zinc-border">
+                                            <p className="text-xs font-bold text-slate-700 mb-3">None of these dates work for you?</p>
+                                            <a
+                                                href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! None of the listed departure dates for the ${trek.name} Trek work for me. Can I speak with a trek lead about other options?`)}` : '#enquire'}
+                                                target={whatsappNumber ? '_blank' : undefined}
+                                                rel={whatsappNumber ? 'noopener noreferrer' : undefined}
+                                                onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'talk_to_trek_lead', location: 'departure_section', channel: 'whatsapp' })}
+                                                className="w-full flex items-center justify-center gap-2.5 bg-[#25D366] text-white py-3.5 text-[11px] font-black uppercase tracking-widest hover:brightness-110 transition-all"
+                                            >
+                                                <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                                                Talk to a Trek Lead
+                                            </a>
+                                        </div>
+                                        <p className="mt-4 text-[10px] text-primary font-bold uppercase leading-relaxed italic">
                                             * {trek.batchPricingNote}
                                         </p>
                                     </>
@@ -375,12 +392,12 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                     <div className="grid grid-cols-1 md:grid-cols-2">
                         {/* Included */}
                         <div className="p-8 md:p-16 border-r border-zinc-border">
-                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-green-600 mb-8">Covered in Your Fee</h3>
+                            <h3 className="text-md font-black uppercase tracking-[0.2em] text-green-600 mb-8">WHAT WE TAKE CARE OF</h3>
                             <PortableText value={trek.included} components={includedComponents} />
                         </div>
                         {/* Excluded */}
                         <div className="p-8 md:p-16 bg-slate-50">
-                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-8">Not Covered</h3>
+                            <h3 className="text-md font-black uppercase tracking-[0.2em] text-slate-400 mb-8">WHAT YOU TAKE CARE OF</h3>
                             <PortableText value={trek.excluded} components={excludedComponents} />
                         </div>
                     </div>
@@ -392,8 +409,7 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                 <section id="non-negotiables" style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border">
                     <div className="max-w-[1440px] mx-auto p-8 md:p-16">
                         <div className="flex items-center gap-3 mb-4">
-                            <AlertTriangle className="w-4 h-4 text-primary shrink-0" />
-                            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px]">Expedition Protocol</span>
+                            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px]">TREK ESSENTIALS</span>
                         </div>
                         <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Important Points</h2>
                         <div>
@@ -404,8 +420,8 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
             )}
 
             {/* ── Direct Line ── */}
-            <section className="border-t border-zinc-border bg-slate-900 text-white">
-                <div className="max-w-[1440px] mx-auto px-8 py-16 md:py-24 flex flex-col items-center text-center">
+            <section id="direct-line" className="border-t border-zinc-border bg-slate-900 text-white">
+                <div className="max-w-[1440px] mx-auto px-8 py-16 md:py-20 flex flex-col items-center text-center">
 
                     <span className="text-primary font-black uppercase tracking-[0.3em] text-[16px] mb-5 block">Direct Line</span>
                     <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-tight mb-6 max-w-2xl">
@@ -609,6 +625,8 @@ export default function TrekDetails({ trek, whatsappNumber = '' }: TrekProps) {
                     <EnquiryForm trekName={trek.name} whatsappNumber={whatsappNumber} />
                 </div>
             </section>
+
+            <TrekFloatingCTAV2 />
 
         </div>
     );

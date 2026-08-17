@@ -33,7 +33,6 @@ interface SpecialProjectsData {
   sectionTagline?: string
   sectionHeading?: string
   sectionDescription?: string
-  footerNote?: string
   projects?: Project[]
 }
 
@@ -83,7 +82,6 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
   const tagline = data?.sectionTagline ?? 'Beyond The Trek'
   const heading = data?.sectionHeading ?? 'Our Special Projects'
   const description = data?.sectionDescription ?? 'We believe the mountains demand more than technical skill. They demand responsibility — to the land, the communities, and the people who live among them.'
-  const footerNote = data?.footerNote ?? '1% of every expedition fee is directed to our special projects fund.'
   const allProjects = data?.projects?.length ? data.projects : FALLBACK_PROJECTS
   const projects = allProjects.filter(p => p.visible !== false)
 
@@ -150,11 +148,6 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
               </div>
             )
           })}
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t border-zinc-border px-6 md:px-12 py-6">
-          <p className="text-[10px] text-slate-400 uppercase tracking-widest">{footerNote}</p>
         </div>
 
       </div>

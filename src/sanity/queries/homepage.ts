@@ -25,12 +25,23 @@ export const HOMEPAGE_QUERY = groq`
       value,
       description
     },
+    whyWeTrek {
+      eyebrow,
+      headline,
+      openingCopy,
+      pullQuote,
+      explanationCopy,
+      closingStatement,
+      ctaIntro,
+      viewTreksText,
+      ctaText,
+      image
+    },
     specialProjects {
       visible,
       sectionTagline,
       sectionHeading,
       sectionDescription,
-      footerNote,
       projects[] {
         _key,
         visible,
@@ -48,7 +59,10 @@ export const HOMEPAGE_QUERY = groq`
     quoteSection {
       quote,
       author,
-      authorTitle
+      authorTitle,
+      authorPhoto,
+      linkText,
+      linkUrl
     }
   }
 `

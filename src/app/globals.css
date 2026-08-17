@@ -5,6 +5,8 @@
   --foreground: #09090b;
   --primary: #ff4500;
   --zinc-border: #e4e4e7;
+  /* Height of the fixed mobile bottom nav bar (Navbar.tsx) — used to offset anything else fixed to the bottom on mobile. */
+  --mobile-bottom-bar-height: 65px;
 }
 
 @theme inline {
@@ -133,6 +135,20 @@ body {
   }
 }
 
+@keyframes underline-draw-sweep {
+  0% {
+    background-size: 0% 2px;
+  }
+
+  60% {
+    background-size: 105% 2px;
+  }
+
+  100% {
+    background-size: 105% 2px;
+  }
+}
+
 /* Trek Calendar card — 3-column grid on desktop */
 .trek-card-row {
   display: grid;
@@ -182,6 +198,6 @@ body {
 .article-text-underline {
   background: linear-gradient(var(--primary), var(--primary)) no-repeat left bottom;
   background-size: 0% 2px;
-  animation: headline-bg-sweep 600ms ease 300ms 1 forwards;
+  animation: underline-draw-sweep 600ms ease 300ms 1 forwards;
   padding-bottom: 2px;
 }

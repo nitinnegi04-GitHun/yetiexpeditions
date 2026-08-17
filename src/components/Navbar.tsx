@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Mountain, Menu, X, Users, Brain, MessageCircle, Home } from "lucide-react";
+import { Mountain, Menu, X, Users, Brain, MessageCircle, Home, Instagram } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@sanity/client";
@@ -28,13 +28,15 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
     const [logoUrl, setLogoUrl] = useState<string | null>(initialLogoUrl ?? null);
     const [siteName, setSiteName] = useState(initialSiteName ?? 'Yeti Expeditions');
     const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
+    const [instagramUrl, setInstagramUrl] = useState<string | null>(null);
     useEffect(() => {
         sanity
-            .fetch(`*[_type == "siteSettings"][0]{ logo, siteName, whatsappNumber }`)
+            .fetch(`*[_type == "siteSettings"][0]{ logo, siteName, whatsappNumber, instagram }`)
             .then((s: any) => {
                 if (s?.siteName) setSiteName(s.siteName);
                 if (s?.logo) setLogoUrl(urlFor(s.logo).height(64).quality(90).url());
                 if (s?.whatsappNumber) setWhatsappNumber(s.whatsappNumber);
+                if (s?.instagram) setInstagramUrl(s.instagram);
             })
             .catch(() => {});
     }, []);
@@ -103,13 +105,14 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                         <Link className="hover:text-primary transition-colors" href="/journal">Journal</Link>
 
                         <a
-                            href={whatsappHref}
+                            href={instagramUrl ?? 'https://instagram.com/yeti.expeditions'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'inquire_now', location: 'navbar', channel: 'whatsapp' })}
-                            className="bg-primary text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-black transition-all cursor-pointer border-none outline-none inline-block"
+                            onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'follow_instagram', location: 'navbar', channel: 'instagram' })}
+                            className="flex items-center gap-2 hover:text-primary transition-colors"
                         >
-                            Enquire Now
+                            <Instagram className="w-4 h-4" />
+                            Follow Us
                         </a>
                     </nav>
                 </div>
@@ -118,7 +121,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
             {/* Bottom Mobile Navigation Bar */}
             <div
                 className="md:hidden"
-                style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '65px', zIndex: 99999, pointerEvents: 'none' }}
+                style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: 'var(--mobile-bottom-bar-height)', zIndex: 99999, pointerEvents: 'none' }}
             >
                 {/* 1. The Main Rectangular White Bar - non-interactive, let touches fall through */}
                 <div

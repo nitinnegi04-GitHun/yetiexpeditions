@@ -170,41 +170,52 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
 
                                     {/* Bottom — single info row */}
                                     <div className="bg-white border-t border-zinc-border px-4 py-3 flex items-center justify-between gap-2">
-                                        <div className="flex items-center gap-4">
-                                            <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Next Batch</p>
-                                                <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.nextBatchRange || 'TBA'}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Booked</p>
-                                                <p className="text-xs font-black uppercase tracking-tight text-slate-900">
-                                                    {trek.seatsBooked != null && trek.totalSeats != null ? `${trek.seatsBooked} / ${trek.totalSeats}` : '—'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-2 shrink-0">
-                                            <span className="text-xs font-bold tracking-tight text-slate-900">
-                                                {formatPrice(trek.priceUSD, trek.priceINR)}
-                                            </span>
-                                            <PriceTooltip />
-                                            {/* Inline currency toggle — only shown when both prices exist */}
-                                            {hasBothPrices(trek.priceUSD, trek.priceINR) && (
-                                                <div className="flex items-center border border-zinc-200 overflow-hidden shrink-0" onClick={(e) => e.preventDefault()}>
-                                                    <button
-                                                        onClick={(e) => { e.preventDefault(); setCurrency('USD'); }}
-                                                        className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none transition-colors cursor-pointer"
-                                                        style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#94a3b8' }}
-                                                    >
-                                                        $ USD
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => { e.preventDefault(); setCurrency('INR'); }}
-                                                        className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none border-l border-zinc-200 transition-colors cursor-pointer"
-                                                        style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#94a3b8' }}
-                                                    >
-                                                        ₹ INR
-                                                    </button>
+                                        {trek.nextBatchRange ? (
+                                            <div className="flex items-center gap-4">
+                                                <div>
+                                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Next Batch</p>
+                                                    <p className="text-xs font-black uppercase tracking-tight text-slate-900">{trek.nextBatchRange}</p>
                                                 </div>
+                                                <div>
+                                                    <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Booked</p>
+                                                    <p className="text-xs font-black uppercase tracking-tight text-slate-900">
+                                                        {trek.seatsBooked != null && trek.totalSeats != null ? `${trek.seatsBooked} / ${trek.totalSeats}` : '—'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-primary">Custom Treks Only</p>
+                                                <p className="text-xs font-bold text-slate-500">No fixed departures — plan your own dates</p>
+                                            </div>
+                                        )}
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            {trek.nextBatchRange && (
+                                                <>
+                                                    <span className="text-xs font-bold tracking-tight text-slate-900">
+                                                        {formatPrice(trek.priceUSD, trek.priceINR)}
+                                                    </span>
+                                                    <PriceTooltip />
+                                                    {/* Inline currency toggle — only shown when both prices exist */}
+                                                    {hasBothPrices(trek.priceUSD, trek.priceINR) && (
+                                                        <div className="flex items-center border border-zinc-200 overflow-hidden shrink-0" onClick={(e) => e.preventDefault()}>
+                                                            <button
+                                                                onClick={(e) => { e.preventDefault(); setCurrency('USD'); }}
+                                                                className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none transition-colors cursor-pointer"
+                                                                style={{ background: currency === 'USD' ? '#0f172a' : 'transparent', color: currency === 'USD' ? '#ffffff' : '#94a3b8' }}
+                                                            >
+                                                                $ USD
+                                                            </button>
+                                                            <button
+                                                                onClick={(e) => { e.preventDefault(); setCurrency('INR'); }}
+                                                                className="px-1.5 py-1 text-[8px] font-black uppercase tracking-widest border-none outline-none border-l border-zinc-200 transition-colors cursor-pointer"
+                                                                style={{ background: currency === 'INR' ? '#0f172a' : 'transparent', color: currency === 'INR' ? '#ffffff' : '#94a3b8' }}
+                                                            >
+                                                                ₹ INR
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </>
                                             )}
                                             <ArrowRight className="text-primary w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                         </div>

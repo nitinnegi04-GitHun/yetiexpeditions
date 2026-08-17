@@ -24,7 +24,7 @@ const testimonialTextComponents = {
 
 function TestimonialCard({ t }: { t: Testimonial }) {
     return (
-        <div className="bg-white p-8 md:p-10 flex flex-col gap-6 h-full">
+        <div className="bg-white px-5 py-8 md:p-10 flex flex-col gap-6 h-full">
             <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, s) => (
                     <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? 'text-primary fill-primary' : 'text-slate-200 fill-slate-200'}`} />
@@ -86,7 +86,7 @@ export default function TestimonialsCarousel({ testimonials }: { testimonials: T
             {/* Mobile — swipeable single card */}
             <div className="md:hidden relative">
                 <div
-                    className="bg-white p-8 flex flex-col gap-6 border border-zinc-border"
+                    className="bg-white border border-zinc-border"
                     onTouchStart={onTouchStart}
                     onTouchEnd={onTouchEnd}
                 >

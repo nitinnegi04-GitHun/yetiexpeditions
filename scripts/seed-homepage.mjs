@@ -25,7 +25,7 @@ const homepage = {
 
   // ── Hero (from Hero.tsx) ───────────────────────────────────────────────────
   hero: {
-    badge: 'High Altitude Logistics',
+    badge: 'THE RIGHT JOURNEY',
     headlineLine1: 'Safety.',
     headlineLine2: 'Comfort.',
     headlineLine3: 'The Himalayas.',
@@ -39,10 +39,10 @@ const homepage = {
 
   // ── Trust Matrix (from TrustMatrix.tsx) ───────────────────────────────────
   trustMatrix: [
-    { _key: 'tm01', label: 'Guide Ratio',  value: '1:4',   description: 'Industry leading safety supervision for every trekker.' },
-    { _key: 'tm02', label: 'Certification', value: 'MOI',   description: 'MOI or equivalent certified lead guides.' },
-    { _key: 'tm03', label: 'Group Limit',  value: 'MAX 12', description: 'Small groups ensure personalized care and flexibility.' },
-    { _key: 'tm04', label: 'Experience',   value: '15YR+', description: 'Decades of navigating the world\'s most difficult terrain.' },
+    { _key: 'tm01', label: 'Guide Ratio', value: '1:4', description: 'Industry leading safety supervision for every trekker.' },
+    { _key: 'tm02', label: 'Certification', value: 'MOI', description: 'MOI or equivalent certified lead guides.' },
+    { _key: 'tm03', label: 'Group Limit', value: 'MAX 12', description: 'Small groups ensure personalized care and flexibility.' },
+    { _key: 'tm04', label: 'Experience', value: '15YR+', description: 'Decades of navigating the world\'s most difficult terrain.' },
   ],
 
   // ── Special Projects (from SpecialProjects.tsx) ───────────────────────────

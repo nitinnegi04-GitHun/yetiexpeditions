@@ -13,6 +13,7 @@ export const homepage = defineType({
   groups: [
     { name: 'hero',            title: '🏔  Hero'              },
     { name: 'trustMatrix',     title: '📊  Trust Matrix'      },
+    { name: 'whyWeTrek',       title: '🧭  Why We Trek'       },
     { name: 'specialProjects', title: '🌱  Special Projects'  },
     { name: 'quoteSection',    title: '💬  Quote'             },
   ],
@@ -64,6 +65,49 @@ export const homepage = defineType({
       validation: Rule => Rule.length(4).error('Must have exactly 4 trust stats'),
     }),
 
+    // ── WHY WE TREK ────────────────────────────────────────────────────────────
+    defineField({
+      name: 'whyWeTrek',
+      title: 'Why We Trek Section',
+      type: 'object',
+      group: 'whyWeTrek',
+      description: 'Brand/philosophy section shown between Trust Matrix and the trek listing. An editorial narrative, not a sales block.',
+      fields: [
+        defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string', initialValue: 'Why We Trek' }),
+        defineField({ name: 'headline', title: 'Headline', type: 'string', initialValue: 'Everyone comes to the mountains for a different reason.' }),
+        defineField({
+          name: 'openingCopy',
+          title: 'Opening Copy',
+          type: 'text',
+          rows: 8,
+          description: 'Paragraphs separated by a blank line. Rendered above the pull quote.',
+          initialValue:
+            'Some come looking for a challenge. Some for time with friends. Some want to step away from routine, while others are drawn by the quiet, the landscape, or simply the idea of seeing what lies beyond the next ridge.\n\nWhat we’ve learnt over the years is that a trek can become much more than the trail itself. What you take back from it is deeply personal.\n\nThat’s also why we don’t believe there is one trek that is right for everyone.',
+        }),
+        defineField({ name: 'pullQuote', title: 'Pull Quote', type: 'string', description: 'Shown as a large standalone statement — do not repeat this line in the Opening or Explanation copy.', initialValue: 'The mountains are the medium, not the destination. What you carry back with you is the real reason you came.' }),
+        defineField({
+          name: 'explanationCopy',
+          title: 'Explanation Copy',
+          type: 'text',
+          rows: 10,
+          description: 'Paragraphs separated by a blank line. Rendered below the subheading.',
+          initialValue:
+            'We run fixed departures on a selection of Himalayan journeys we know deeply — our Signature Treks, listed just below. For many people, one of these will be exactly what they are looking for.\n\nBut sometimes it won’t be.\n\nYour experience, fitness, time, interests and even what you’re looking for from the mountains can point towards a very different journey.\n\nTalk to us. Tell us what you have in mind. We’ll help you think it through.\n\nSometimes that might mean joining one of our Signature Treks. Sometimes it might mean designing something around you. And sometimes, the right answer may be a trek we don’t even operate.\n\nWe’re okay with that.',
+        }),
+        defineField({ name: 'closingStatement', title: 'Closing Statement', type: 'string', description: 'Given visual emphasis at the end of the narrative.', initialValue: 'We’d rather help you find the right journey than sell you the wrong one.' }),
+        defineField({ name: 'ctaIntro', title: 'CTA Intro Line', type: 'string', description: 'Bridging sentence introducing the two paths below (browse treks vs. talk to someone).', initialValue: 'From here, you can browse our Signature Treks below, or talk to a trek lead about your own journey.' }),
+        defineField({ name: 'viewTreksText', title: '"View Treks" Link Text', type: 'string', description: 'Scrolls down to the Signature Treks listing on this page.', initialValue: 'View Our Treks' }),
+        defineField({ name: 'ctaText', title: 'WhatsApp CTA Text', type: 'string', initialValue: 'Speak with a Trek Lead' }),
+        defineField({
+          name: 'image',
+          title: 'Image',
+          type: 'image',
+          options: { hotspot: true },
+          description: 'A real human Himalayan moment (people on trail, guides, rest stops) — not a landscape hero shot. Optional: the section reads as a centered editorial narrative when left empty, or an asymmetric text/image split when set.',
+        }),
+      ],
+    }),
+
     // ── SPECIAL PROJECTS ──────────────────────────────────────────────────────
     defineField({
       name: 'specialProjects',
@@ -74,7 +118,6 @@ export const homepage = defineType({
         defineField({ name: 'sectionTagline', title: 'Section Tagline', type: 'string', initialValue: 'Beyond The Trek' }),
         defineField({ name: 'sectionHeading', title: 'Section Heading', type: 'string', initialValue: 'Our Special Projects' }),
         defineField({ name: 'sectionDescription', title: 'Section Description', type: 'text', rows: 2, initialValue: 'We believe the mountains demand more than technical skill. They demand responsibility — to the land, the communities, and the people who live among them.' }),
-        defineField({ name: 'footerNote', title: 'Footer Note', type: 'string', initialValue: '1% of every expedition fee is directed to our special projects fund.' }),
         defineField({
           name: 'projects',
           title: 'Projects',
@@ -112,9 +155,12 @@ export const homepage = defineType({
       type: 'object',
       group: 'quoteSection',
       fields: [
-        defineField({ name: 'quote', title: 'Quote', type: 'text', rows: 3, initialValue: 'The mountains are not a place to conquer, but a place to rediscover what it means to be human under the strict guidance of nature.' }),
-        defineField({ name: 'author', title: 'Author Name', type: 'string', initialValue: 'Reinhold Messner' }),
-        defineField({ name: 'authorTitle', title: 'Author Title', type: 'string', initialValue: 'Alpine Legend' }),
+        defineField({ name: 'quote', title: 'Quote', type: 'text', rows: 3, initialValue: 'There isn’t one right way to do a trek. My job — and Yeti’s — is to help you find the one that’s actually right for you.' }),
+        defineField({ name: 'author', title: 'Author Name', type: 'string', initialValue: 'Pradhuman Singh Negi' }),
+        defineField({ name: 'authorTitle', title: 'Author Title', type: 'string', initialValue: 'Co-Founder, Yeti Expeditions' }),
+        defineField({ name: 'authorPhoto', title: 'Author Photo', type: 'image', options: { hotspot: true } }),
+        defineField({ name: 'linkText', title: 'Link Text', type: 'string', initialValue: 'More About Me' }),
+        defineField({ name: 'linkUrl', title: 'Link URL', type: 'string', initialValue: '/our-story' }),
       ],
     }),
 

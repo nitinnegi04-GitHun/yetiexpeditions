@@ -25,10 +25,10 @@ export default function EnquiryForm({ trekName, whatsappNumber = '' }: { trekNam
                 ``,
                 `*Name:* ${form.name}`,
                 `*Email:* ${form.email}`,
-                form.phone       ? `*Phone:* ${form.phone}`                         : null,
-                form.preferredDate ? `*Preferred Date:* ${form.preferredDate}`       : null,
+                form.phone ? `*Phone:* ${form.phone}` : null,
+                form.preferredDate ? `*Preferred Date:* ${form.preferredDate}` : null,
                 `*Group Size:* ${form.groupSize} ${form.groupSize === '1' ? 'person (solo)' : 'people'}`,
-                form.message     ? `*Message:* ${form.message}`                      : null,
+                form.message ? `*Message:* ${form.message}` : null,
             ].filter(Boolean).join('\n');
 
             window.open(
@@ -114,7 +114,6 @@ export default function EnquiryForm({ trekName, whatsappNumber = '' }: { trekNam
                     <Send className="w-3.5 h-3.5" />
                     Submit Enquiry
                 </button>
-                <p className="text-[10px] text-slate-400 uppercase">All participants undergo fitness vetting before confirmation.</p>
             </div>
         </form>
     );
