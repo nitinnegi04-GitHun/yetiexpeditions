@@ -36,7 +36,10 @@ interface Trek {
     nextBatchRange?: string | null;
     seatsBooked?: number | null;
     totalSeats?: number | null;
+    availableMonths?: string[];
 }
+
+const MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const FALLBACK_TREKS: Trek[] = [
     { id: "01", name: "Everest Base Camp", slug: "everest-base-camp", region: "Khumbu Region", country: "Nepal", difficulty: "Difficult", priceUSD: 4250, priceINR: 355000 },
@@ -50,15 +53,22 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
 
     const REGIONS = ["All", ...Array.from(new Set(allTreks.map(t => t.country)))];
     const DIFFICULTIES = ["All", ...Array.from(new Set(allTreks.map(t => t.difficulty)))];
+    const MONTHS = [
+        "All",
+        ...Array.from(new Set(allTreks.flatMap(t => t.availableMonths ?? [])))
+            .sort((a, b) => MONTH_ORDER.indexOf(a) - MONTH_ORDER.indexOf(b)),
+    ];
 
     const [activeRegion, setActiveRegion] = useState("All");
     const [activeDifficulty, setActiveDifficulty] = useState("All");
+    const [activeMonth, setActiveMonth] = useState("All");
 
     const filtered = allTreks
         .filter(t => {
             const regionMatch = activeRegion === "All" || t.country === activeRegion;
             const difficultyMatch = activeDifficulty === "All" || t.difficulty === activeDifficulty;
-            return regionMatch && difficultyMatch;
+            const monthMatch = activeMonth === "All" || (t.availableMonths ?? []).includes(activeMonth);
+            return regionMatch && difficultyMatch && monthMatch;
         })
         .sort((a, b) => Number(!a.nextBatchRange) - Number(!b.nextBatchRange));
 
@@ -70,22 +80,22 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                 : "text-white border-emerald-700/30 bg-emerald-700/70";
 
 
-    const filterBtnActiveClass = (type: "region" | "difficulty", value: string) => {
-        if (type === "region") return "bg-primary text-white border-primary";
+    const filterBtnActiveClass = (type: "region" | "difficulty" | "month", value: string) => {
+        if (type === "region" || type === "month") return "bg-primary text-white border-primary";
         if (value === "Difficult") return "bg-primary text-white border-primary";
         if (value === "Moderate") return "bg-amber-600 text-white border-amber-600";
         return "bg-slate-900 text-white border-slate-900";
     };
 
     return (
-        <section id="treks" className="w-full py-6 md:py-12 px-6 md:px-12 bg-white">
+        <section id="treks" className="w-full py-6 md:py-12 px-6 md:px-12 bg-white border-t border-b border-zinc-border">
             <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-start mb-4 md:mb-8 flex-wrap gap-4 md:gap-8">
                     <div>
                         <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-1 md:mb-3">
-                            Explore Routes
+                            Explore Our Journies
                         </span>
-                        <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Trek Index</h3>
+                        <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">Find Your Trek</h3>
                         <p className="text-slate-500 uppercase text-xs tracking-[0.3em] mt-1 md:mt-2">Current Seasonal Expeditions</p>
                     </div>
 
@@ -123,6 +133,24 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                         }`}
                                 >
                                     {difficulty}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Month filter */}
+                        <div className="flex items-center gap-3 flex-wrap">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28">By Month:</span>
+                            {MONTHS.map((month) => (
+                                <button
+                                    key={month}
+                                    onClick={() => setActiveMonth(month)}
+                                    className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors
+                                        ${activeMonth === month
+                                            ? filterBtnActiveClass("month", month)
+                                            : "border-zinc-border text-slate-500 hover:border-slate-900 hover:text-slate-900"
+                                        }`}
+                                >
+                                    {month}
                                 </button>
                             ))}
                         </div>
@@ -185,7 +213,7 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                             </div>
                                         ) : (
                                             <div>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-primary">Custom Treks Only</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-primary">Available as Custom Treks</p>
                                                 <p className="text-xs font-bold text-slate-500">No fixed departures — plan your own dates</p>
                                             </div>
                                         )}
@@ -227,15 +255,16 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                 </div>
 
                 {/* Active filter indicator */}
-                {(activeRegion !== "All" || activeDifficulty !== "All") && (
+                {(activeRegion !== "All" || activeDifficulty !== "All" || activeMonth !== "All") && (
                     <div className="mt-6 flex items-center gap-4 flex-wrap">
                         <p className="text-[10px] text-slate-400 uppercase tracking-widest">
                             Showing <span className="text-slate-900 font-black">{filtered.length}</span> expedition{filtered.length !== 1 ? "s" : ""}
                             {activeRegion !== "All" && <> in <span className="text-slate-900 font-black">{activeRegion}</span></>}
                             {activeDifficulty !== "All" && <> · <span className="text-slate-900 font-black">{activeDifficulty}</span></>}
+                            {activeMonth !== "All" && <> · <span className="text-slate-900 font-black">{activeMonth}</span></>}
                         </p>
                         <button
-                            onClick={() => { setActiveRegion("All"); setActiveDifficulty("All"); }}
+                            onClick={() => { setActiveRegion("All"); setActiveDifficulty("All"); setActiveMonth("All"); }}
                             className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-slate-900 transition-colors border-b border-primary hover:border-slate-900 pb-0.5"
                         >
                             Clear All

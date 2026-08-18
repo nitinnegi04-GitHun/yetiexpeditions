@@ -122,7 +122,7 @@ interface TrekProps {
         accommodation: string;
         groupSize: string;
         overview: PortableTextBlock[];
-        itinerary: { day: string; title: string; content: PortableTextBlock[]; imageUrl?: string }[];
+        itinerary: { day: string; title: string; content: PortableTextBlock[]; imageUrl?: string; walkTime?: string; highlight?: string }[];
         itineraryPdfUrl?: string;
         batches: { date: string; startDate?: string; status: "Open" | "Limited" | "Full"; remaining: number; totalSeats: number; trekLead?: { name: string; summits?: string; imageUrl?: string } | null }[];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,7 +132,7 @@ interface TrekProps {
         altitudeProfile: { day: number; label: string; altitude: number }[];
         packingList: Record<string, string[]>;
         physicalPrep: { weeks: string; focus: string; description: string }[];
-        testimonials: { name: string; location: string; rating: number; text: PortableTextBlock[]; batch: string; imageUrl?: string }[];
+        testimonials: { name: string; location: string; rating: number; text: PortableTextBlock[]; batch: string; imageUrl?: string; highlight?: string }[];
         gallery: string[];
         gettingThere: { arrival: string; visa: string; domesticFlight: string };
         accommodationDetails: { location: string; type: string; nights: number; notes: string }[];
@@ -485,7 +485,7 @@ export default function TrekDetailsV2({ trek, whatsappNumber = '' }: TrekProps) 
             {trek.testimonials?.length > 0 && (
                 <section id="reviews" ref={reviewsRef} style={{ scrollMarginTop: '80px' }} className="border-t border-zinc-border bg-slate-50">
                     <div className="max-w-[1440px] mx-auto p-8 md:p-16">
-                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Field Reports</span>
+                        <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-4 block">Real Journeys, Real Words</span>
                         <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-12">Trekker Testimonials</h2>
                         <TestimonialsCarousel testimonials={trek.testimonials} />
                     </div>

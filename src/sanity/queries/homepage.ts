@@ -30,12 +30,31 @@ export const HOMEPAGE_QUERY = groq`
       headline,
       openingCopy,
       pullQuote,
-      explanationCopy,
+      image,
+      principlesHeading,
+      principles[] {
+        title,
+        description,
+        ctaLabel,
+        ctaTarget
+      },
       closingStatement,
-      ctaIntro,
-      viewTreksText,
-      ctaText,
-      image
+      primaryCtaText,
+      whatsappCtaText
+    },
+    whyUs {
+      eyebrow,
+      headline,
+      image,
+      openingCopy,
+      principlesHeading,
+      principles[] {
+        title,
+        description,
+        label
+      },
+      closingStatement,
+      ctaText
     },
     specialProjects {
       visible,
@@ -57,9 +76,16 @@ export const HOMEPAGE_QUERY = groq`
       }
     },
     quoteSection {
+      eyebrow,
+      headline,
       quote,
       author,
       authorTitle,
+      timeline[] {
+        phase,
+        text,
+        tags
+      },
       authorPhoto,
       linkText,
       linkUrl

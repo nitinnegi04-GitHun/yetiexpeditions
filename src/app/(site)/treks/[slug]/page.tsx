@@ -2,9 +2,9 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import TrekDetails from '@/components/TrekDetails'
-import TrekHeroBanner from '@/components/TrekHeroBanner'
-import TrekHeroBookCTA from '@/components/TrekHeroBookCTA'
+import TrekDetailsV2 from '@/components/TrekDetailsV2'
+import TrekHeroBannerV2 from '@/components/TrekHeroBannerV2'
+import TrekHeroCTAV2 from '@/components/TrekHeroCTAV2'
 import TrekAnalyticsContext from '@/components/TrekAnalyticsContext'
 import TrekSubNav from '@/components/TrekSubNav'
 import { client } from '@/sanity/client'
@@ -385,7 +385,7 @@ export default async function TrekPage({ params }: PageProps) {
       <section className="w-full border-b border-zinc-border">
         {/* Mobile: banner stacked above text */}
         <div className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: '160vw', minHeight: '350px' }}>
-          <TrekHeroBanner src={trek.bannerImage} videoSrc={trek.bannerVideo} />
+          <TrekHeroBannerV2 src={trek.bannerImage} videoSrc={trek.bannerVideo} />
           <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '40px', left: '24px' }}>
             <p className="text-white text-xs font-bold uppercase tracking-widest">{trek.region}</p>
             <p className="text-white/80 text-[10px] uppercase">{trek.country}</p>
@@ -399,8 +399,8 @@ export default async function TrekPage({ params }: PageProps) {
 
         <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row md:min-h-[80vh]">
           {/* Left: Text */}
-          <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 pt-8 pb-6 md:pt-10 md:px-24 md:pb-10 border-b md:border-b-0 md:border-r border-zinc-border">
-            <div className="space-y-3 md:space-y-4">
+          <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center md:min-h-0 px-6 pt-8 pb-6 md:pt-12 md:px-24 md:pb-24 border-b md:border-b-0 md:border-r border-zinc-border" style={{ minHeight: 0 }}>
+            <div className="space-y-5 md:space-y-8">
               <span className="inline-block bg-primary text-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] w-fit">
                 Expedition Dispatch
               </span>
@@ -408,29 +408,22 @@ export default async function TrekPage({ params }: PageProps) {
                 {trek.name}
                 <span className="block mt-3 md:mt-3 text-slate-300">{trek.country}</span>
               </h1>
-              <ul className="space-y-1.5 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-1.5 md:space-y-0 border-t border-zinc-border pt-3 md:pt-4">
+              <ul className="space-y-2 md:grid md:grid-cols-2 md:gap-x-6 md:gap-y-2 md:space-y-0 border-t border-zinc-border pt-4 md:pt-5">
                 {[maxTrekkersLabel, 'Handpicked Premium Tea Houses', 'Experienced Trek Leaders', 'Personal Attention Throughout'].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-[11px] md:text-xs font-bold uppercase tracking-wide text-slate-700">
+                  <li key={item} className="flex items-center gap-2 text-sm md:text-base font-bold uppercase tracking-wide text-slate-700">
                     <span className="text-primary">&#10003;</span>
                     {item}
                   </li>
                 ))}
               </ul>
-              <TrekHeroBookCTA
-                href={whatsappNumber ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to book the ${trek.name} Trek. Please share more details.`)}` : '#enquire'}
-                target={whatsappNumber ? '_blank' : undefined}
-                rel={whatsappNumber ? 'noopener noreferrer' : undefined}
-                className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-3 md:px-10 md:py-3.5 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors"
-              >
-                Book This Trek
-              </TrekHeroBookCTA>
+              <TrekHeroCTAV2 />
             </div>
             <div />
           </div>
 
           {/* Right: Image / Video — desktop only */}
           <div className="hidden md:block md:w-1/2 bg-slate-100 relative overflow-hidden group">
-            <TrekHeroBanner src={trek.bannerImage} videoSrc={trek.bannerVideo} />
+            <TrekHeroBannerV2 src={trek.bannerImage} videoSrc={trek.bannerVideo} />
             <div className="absolute border-l-4 border-primary pl-4 z-10" style={{ top: '64px', left: '40px' }}>
               <p className="text-white text-xs font-bold uppercase tracking-widest">{trek.region}</p>
               <p className="text-white/80 text-[10px] uppercase">{trek.country}</p>
@@ -444,7 +437,7 @@ export default async function TrekPage({ params }: PageProps) {
         </div>
       </section>
 
-      <TrekDetails trek={trek} whatsappNumber={whatsappNumber} />
+      <TrekDetailsV2 trek={trek} whatsappNumber={whatsappNumber} />
 
       <Footer />
 

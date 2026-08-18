@@ -1,6 +1,6 @@
 import { groq } from 'next-sanity'
 
-// All treks — used by TrekIndex and TrekCalendar components
+// All treks — used by TrekIndex
 export const ALL_TREKS_QUERY = groq`
   *[_type == "trek"] | order(name asc) {
     _id,
@@ -77,7 +77,7 @@ export const TREK_BY_SLUG_QUERY = groq`
       quote
     },
     "testimonials": *[_type == "testimonial" && trek._ref == ^._id] | order(_createdAt desc) {
-      name, location, rating, text, batch, "imageUrl": photo.asset->url
+      name, location, rating, text, highlight, batch, "imageUrl": photo.asset->url
     },
     gettingThere,
     accommodationDetails,
@@ -125,7 +125,7 @@ export const FEATURED_TREKS_QUERY = groq`
 // All testimonials — used by homepage testimonials section
 export const ALL_TESTIMONIALS_QUERY = groq`
   *[_type == "testimonial"] | order(_createdAt desc) {
-    name, location, rating, text, batch, "imageUrl": photo.asset->url
+    name, location, rating, text, highlight, batch, "imageUrl": photo.asset->url
   }
 `
 

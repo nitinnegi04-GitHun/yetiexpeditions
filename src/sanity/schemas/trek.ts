@@ -100,6 +100,8 @@ export const trek = defineType({
           fields: [
             defineField({ name: 'day', title: 'Day', type: 'string', description: 'e.g. 01' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'walkTime', title: 'Walk Time', type: 'string', description: 'e.g. "5–6 Hours". Leave blank for non-trekking days (arrival, departure).' }),
+            defineField({ name: 'highlight', title: 'Highlight of the Day', type: 'string', description: 'Optional — reserve for standout days (e.g. reaching base camp, an acclimatization day). Leave blank for regular days.' }),
             defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true }, description: 'Shown above the description for this day.' }),
             defineField({ name: 'content', title: 'Description', type: 'array', of: [simpleRichTextBlock] }),
           ],

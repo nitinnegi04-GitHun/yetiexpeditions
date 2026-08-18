@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Sparkles } from 'lucide-react';
 import { PortableText, type PortableTextBlock } from '@portabletext/react';
 import { sharedMarks } from '@/lib/portableTextComponents';
 import { useScrollGrayscale } from '@/hooks/useScrollGrayscale';
@@ -11,6 +11,8 @@ interface Step {
     title: string;
     content: PortableTextBlock[];
     imageUrl?: string;
+    walkTime?: string;
+    highlight?: string;
 }
 
 function ItineraryImage({ src, alt }: { src: string; alt: string }) {
@@ -71,12 +73,20 @@ export default function ItineraryAccordion({ steps }: { steps: Step[] }) {
                             </span>
 
                             {/* Title */}
-                            <span className={`flex-1 text-base font-black uppercase tracking-tight transition-colors ${isOpen ? 'text-slate-900' : 'text-slate-700'}`}>
+                            <span className={`flex-1 flex items-center gap-2 text-base font-black uppercase tracking-tight transition-colors ${isOpen ? 'text-slate-900' : 'text-slate-700'}`}>
                                 {step.title}
+                                {step.highlight && (
+                                    <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" aria-label="Highlight day" />
+                                )}
                             </span>
 
-                            {/* Day label + chevron */}
+                            {/* Walk time + day label + chevron */}
                             <div className="flex items-center gap-4 shrink-0">
+                                {step.walkTime && (
+                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hidden md:block">
+                                        {step.walkTime} Walk
+                                    </span>
+                                )}
                                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hidden sm:block">
                                     Day {step.day}
                                 </span>
@@ -91,6 +101,17 @@ export default function ItineraryAccordion({ steps }: { steps: Step[] }) {
                             <div className="flex gap-6 md:gap-8 pb-6">
                                 <div className="w-12 shrink-0" />
                                 <div className="flex-1 border-l-2 border-primary/20 pl-5">
+                                    {step.walkTime && (
+                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 md:hidden">
+                                            {step.walkTime} Walk
+                                        </p>
+                                    )}
+                                    {step.highlight && (
+                                        <div className="bg-primary/5 border-l-2 border-primary pl-4 py-3 mb-4">
+                                            <p className="text-primary text-[9px] font-black uppercase tracking-[0.2em] mb-1">Highlight of the Day</p>
+                                            <p className="text-slate-700 text-sm leading-relaxed">{step.highlight}</p>
+                                        </div>
+                                    )}
                                     {step.imageUrl && (
                                         <ItineraryImage src={step.imageUrl} alt={`Day ${step.day}: ${step.title}`} />
                                     )}

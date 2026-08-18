@@ -3,7 +3,7 @@ import Hero from "@/components/Hero";
 import TrustMatrix from "@/components/TrustMatrix";
 import WhyWeTrek from "@/components/WhyWeTrek";
 import TrekIndex from "@/components/TrekIndex";
-import TrekCalendar from "@/components/TrekCalendar";
+import WhyUs from "@/components/WhyUs";
 import SpecialProjects from "@/components/SpecialProjects";
 import QuoteSection from "@/components/QuoteSection";
 import Footer from "@/components/Footer";
@@ -77,13 +77,6 @@ export default async function Home() {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function mapBatchStatus(sanityStatus: string, booked: number, total: number): 'Open' | 'Limited' | 'Full' {
-    if (sanityStatus === 'full') return 'Full'
-    if ((total - booked) <= 2) return 'Limited'
-    return 'Open'
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const treks = (treksRaw ?? []).map((t: any, i: number) => {
     const nextBatch = t.upcomingBatches?.[0] ?? null
     return {
@@ -105,50 +98,11 @@ export default async function Home() {
         : null,
       seatsBooked: nextBatch?.seatsBooked ?? null,
       totalSeats: nextBatch?.totalSeats ?? null,
+      availableMonths: Array.from(
+        new Set((t.upcomingBatches ?? []).map((b: any) => getMonthAbbr(b.startDate)))
+      ),
     }
   })
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const calendarTreks = (treksRaw ?? []).map((t: any) => ({
-    slug: t.slug?.current ?? '',
-    name: t.name ?? '',
-    region: t.region ?? '',
-    difficulty: t.difficulty ?? '',
-    duration: t.duration ?? '',
-    altitude: t.altitude ?? '',
-    priceUSD: t.priceUSD ?? null,
-    priceINR: t.priceINR ?? null,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    batches: (t.upcomingBatches ?? []).map((b: any) => ({
-      month: getMonthAbbr(b.startDate),
-      dates: `${fmtBatchDate(b.startDate)} – ${fmtBatchDate(b.endDate)}`,
-      status: mapBatchStatus(b.status, b.seatsBooked ?? 0, b.totalSeats ?? 8),
-      booked: b.seatsBooked ?? 0,
-      capacity: b.totalSeats ?? 8,
-      trekLead: b.trekLead ? {
-        name: b.trekLead.name ?? '',
-        title: b.trekLead.title ?? '',
-        cert: b.trekLead.cert ?? '',
-        summits: b.trekLead.summits ?? '',
-        stats: b.trekLead.stats ?? [],
-        imageUrl: b.trekLead.image ? urlFor(b.trekLead.image).width(200).quality(80).url() : '',
-        whatsappNumber: b.trekLead.whatsappNumber ?? '',
-        instagramHandle: b.trekLead.instagramHandle ?? '',
-        quote: b.trekLead.quote || "I've done this route more times than I can count. Message me — any question is a good question.",
-      } : null,
-    })),
-    trekLead: t.trekLead ? {
-      name: t.trekLead.name ?? '',
-      title: t.trekLead.title ?? '',
-      cert: t.trekLead.cert ?? '',
-      summits: t.trekLead.summits ?? '',
-      stats: t.trekLead.stats ?? [],
-      imageUrl: t.trekLead.image ? urlFor(t.trekLead.image).width(200).quality(80).url() : '',
-      whatsappNumber: t.trekLead.whatsappNumber ?? '',
-      instagramHandle: t.trekLead.instagramHandle ?? '',
-      quote: t.trekLead.quote || "I've done this route more times than I can count. Message me — any question is a good question.",
-    } : null,
-  }))
 
   const websiteJsonLd = {
     '@context': 'https://schema.org',
@@ -169,11 +123,11 @@ export default async function Home() {
       <TrustMatrix data={data?.trustMatrix} />
       <WhyWeTrek data={data?.whyWeTrek} whatsappNumber={whatsappNumber} />
       <TrekIndex treks={treks} />
-      <TrekCalendar treks={calendarTreks} />
+      <WhyUs data={data?.whyUs} />
       {testimonialsRaw?.length > 0 && (
         <section className="border-t border-zinc-border bg-slate-50">
           <div className="max-w-[1440px] mx-auto p-8 md:p-16">
-            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-3 block">Field Reports</span>
+            <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] mb-3 block">Real Journeys, Real Words</span>
             <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-12">
               Trekker<br /><span className="text-slate-300">Testimonials</span>
             </h2>

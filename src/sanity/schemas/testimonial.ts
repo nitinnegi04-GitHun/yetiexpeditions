@@ -40,6 +40,12 @@ export const testimonial = defineType({
       validation: Rule => Rule.required(),
     }),
     defineField({
+      name: 'highlight',
+      title: 'Highlight',
+      type: 'string',
+      description: 'The single best line from the review, copy-pasted from the text above. Shown at the top of the card so readers see the best part first.',
+    }),
+    defineField({
       name: 'batch',
       title: 'Batch Reference',
       type: 'string',

@@ -37,9 +37,9 @@ export default function TrekListClient({ treks }: Props) {
         <div className="flex justify-between items-start mb-8 flex-wrap gap-8">
           <div>
             <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-3">
-              Explore Routes
+              Explore Our Journies
             </span>
-            <h3 className="text-5xl font-black uppercase tracking-tighter">Trek Index</h3>
+            <h3 className="text-5xl font-black uppercase tracking-tighter">Find Your Trek</h3>
             <p className="text-slate-500 uppercase text-xs tracking-[0.3em] mt-2">Current Seasonal Expeditions</p>
           </div>
 

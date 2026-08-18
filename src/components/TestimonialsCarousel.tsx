@@ -12,28 +12,59 @@ type Testimonial = {
     text: PortableTextBlock[];
     batch: string;
     imageUrl?: string;
+    highlight?: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const testimonialTextComponents = {
-    block: {
-        normal: ({ children }: any) => <p className="mb-2 last:mb-0">{children}</p>,
-    },
-    marks: sharedMarks,
-};
+// Placeholder — shown until each testimonial has its own copy-pasted highlight line in Sanity.
+const FALLBACK_HIGHLIGHT = 'Some Text'
+
+function getPlainText(block: PortableTextBlock): string {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return ((block as any).children ?? []).map((c: any) => c.text ?? '').join('')
+}
+
+// Underlines the portion of a paragraph that matches the card's highlight line, so
+// readers can see exactly where the highlight was pulled from within the full review.
+function makeTestimonialTextComponents(highlight: string | undefined) {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        block: {
+            normal: ({ value, children }: any) => {
+                const plain = getPlainText(value)
+                const idx = highlight ? plain.toLowerCase().indexOf(highlight.toLowerCase()) : -1
+                if (idx === -1) return <p className="mb-2 last:mb-0">{children}</p>
+
+                const before = plain.slice(0, idx)
+                const match = plain.slice(idx, idx + highlight!.length)
+                const after = plain.slice(idx + highlight!.length)
+                return (
+                    <p className="mb-2 last:mb-0">
+                        {before}
+                        <span className="underline decoration-primary decoration-2 underline-offset-2">{match}</span>
+                        {after}
+                    </p>
+                )
+            },
+        },
+        marks: sharedMarks,
+    }
+}
 
 function TestimonialCard({ t }: { t: Testimonial }) {
     return (
-        <div className="bg-white px-5 py-8 md:p-10 flex flex-col gap-6 h-full">
+        <div className="bg-white px-5 py-6 md:p-7 flex flex-col gap-3.5 h-full">
+            <p className="text-md font-normal leading-relaxed ">
+                “{t.highlight || FALLBACK_HIGHLIGHT}......”
+            </p>
             <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, s) => (
                     <Star key={s} className={`w-3.5 h-3.5 ${s < t.rating ? 'text-primary fill-primary' : 'text-slate-200 fill-slate-200'}`} />
                 ))}
             </div>
             <blockquote className="text-sm text-slate-700 leading-relaxed flex-1">
-                <PortableText value={t.text} components={testimonialTextComponents} />
+                <PortableText value={t.text} components={makeTestimonialTextComponents(t.highlight)} />
             </blockquote>
-            <div className="border-t border-zinc-border pt-6 flex items-center gap-4">
+            <div className="border-t border-zinc-border pt-4 flex items-center gap-4">
                 {t.imageUrl ? (
                     <img
                         src={t.imageUrl}

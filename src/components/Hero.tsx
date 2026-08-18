@@ -1,10 +1,8 @@
 'use client';
 
-import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
-import VideoMuteToggle from "@/components/VideoMuteToggle";
 
 const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'qmj04x7n',
@@ -41,8 +39,6 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [mobileGrayscale, setMobileGrayscale] = useState(100);
   const mobileVideoRef = useRef<HTMLDivElement>(null);
-  const mobileVideoElRef = useRef<HTMLVideoElement>(null);
-  const desktopVideoElRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     sanity
@@ -71,8 +67,8 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
   const line2 = data?.headlineLine2 ?? 'Comfort.'
   const line3 = data?.headlineLine3 ?? 'The Himalayas.'
   const subheading = data?.subheading ?? "Experience the world's highest peaks with highly qualified guides and unmatched safety standards."
-  const ctaText = data?.ctaText ?? 'View Expeditions'
-  const ctaUrl = data?.ctaUrl ?? '/treks'
+  const ctaText = 'Find Your Trek'
+  const ctaUrl = '#treks'
   const imageCaption = data?.imageCaption ?? 'Mount Everest Base Camp'
   const imageCoords = data?.imageCoordinates ?? '28.0026° N, 86.8528° E'
   const imageUrl = heroImageUrl ?? FALLBACK_IMAGE
@@ -83,19 +79,15 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
       {/* Mobile-only image/video — appears ABOVE text on mobile */}
       <div ref={mobileVideoRef} className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: '160vw', minHeight: '350px' }}>
         {videoUrl ? (
-          <>
-            <video
-              ref={mobileVideoElRef}
-              src={videoUrl}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
-              style={{ filter: `grayscale(${mobileGrayscale}%) contrast(1.25)` }}
-            />
-            <VideoMuteToggle videoRef={mobileVideoElRef} className="absolute bottom-4 right-4" />
-          </>
+          <video
+            src={videoUrl}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
+            style={{ filter: `grayscale(${mobileGrayscale}%) contrast(1.25)` }}
+          />
         ) : (
           <div
             className="absolute inset-0 bg-cover bg-center grayscale contrast-125"
@@ -134,9 +126,9 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
               <p className="text-[20px] italic md:text-lg text-slate-600 leading-relaxed">
                 {subheading}
               </p>
-              <Link href={ctaUrl} className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors">
+              <a href={ctaUrl} className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors">
                 {ctaText}
-              </Link>
+              </a>
             </div>
             <div />
           </div>
@@ -144,18 +136,14 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
           {/* Right Image/Video — desktop only */}
           <div className="hidden md:block md:w-1/2 bg-slate-100 relative overflow-hidden group">
             {videoUrl ? (
-              <>
-                <video
-                  ref={desktopVideoElRef}
-                  src={videoUrl}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
-                />
-                <VideoMuteToggle videoRef={desktopVideoElRef} className="absolute bottom-6 right-6" />
-              </>
+              <video
+                src={videoUrl}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
+              />
             ) : (
               <div
                 className="absolute inset-0 bg-cover bg-center grayscale-[55%] brightness-95 contrast-110 group-hover:grayscale-0 transition-all duration-700"
