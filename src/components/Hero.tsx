@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 const sanity = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'qmj04x7n',
@@ -126,7 +127,7 @@ export default function Hero({ data, heroImageUrl }: HeroProps) {
               <p className="text-[20px] italic md:text-lg text-slate-600 leading-relaxed">
                 {subheading}
               </p>
-              <a href={ctaUrl} className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors">
+              <a href={ctaUrl} onClick={() => trackCTA({ cta_name: 'browse_treks', location: 'hero' })} className="inline-block md:w-auto text-center bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors">
                 {ctaText}
               </a>
             </div>

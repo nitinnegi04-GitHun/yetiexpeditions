@@ -1,8 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Send } from 'lucide-react';
-import { trackEvent } from '@/lib/tracking/analytics';
-import { AnalyticsEvents } from '@/lib/tracking/events';
+import { trackCTA } from '@/lib/tracking/analytics';
 
 export default function EnquiryForm({ trekName, whatsappNumber = '' }: { trekName: string; whatsappNumber?: string }) {
     const [form, setForm] = useState({
@@ -17,7 +16,7 @@ export default function EnquiryForm({ trekName, whatsappNumber = '' }: { trekNam
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'submit_query', location: 'footer_form', channel: 'whatsapp' });
+        trackCTA({ cta_name: 'submit_query', location: 'footer_form', channel: 'whatsapp' });
 
         if (whatsappNumber) {
             const lines = [

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useScrollGrayscale } from "@/hooks/useScrollGrayscale";
 import { useCurrency } from "@/lib/CurrencyContext";
 import PriceTooltip from "./PriceTooltip";
+import { trackCTA, trackFilterApply } from "@/lib/tracking/analytics";
 
 function TrekCardBg({ src }: { src: string }) {
     const { ref, filter } = useScrollGrayscale(55);
@@ -40,6 +41,8 @@ interface Trek {
 }
 
 const MONTH_ORDER = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DIFFICULTY_ORDER = ["Easy", "Moderate", "Difficult"];
+const DIFFICULTY_MOBILE_LABEL: Record<string, string> = { Moderate: "Mod", Difficult: "Diff" };
 
 const FALLBACK_TREKS: Trek[] = [
     { id: "01", name: "Everest Base Camp", slug: "everest-base-camp", region: "Khumbu Region", country: "Nepal", difficulty: "Difficult", priceUSD: 4250, priceINR: 355000 },
@@ -52,7 +55,10 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
     const { currency, setCurrency, formatPrice, hasBothPrices } = useCurrency();
 
     const REGIONS = ["All", ...Array.from(new Set(allTreks.map(t => t.country)))];
-    const DIFFICULTIES = ["All", ...Array.from(new Set(allTreks.map(t => t.difficulty)))];
+    const DIFFICULTIES = [
+        "All",
+        ...DIFFICULTY_ORDER.filter(d => allTreks.some(t => t.difficulty === d)),
+    ];
     const MONTHS = [
         "All",
         ...Array.from(new Set(allTreks.flatMap(t => t.availableMonths ?? [])))
@@ -107,7 +113,7 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                             {REGIONS.map((region) => (
                                 <button
                                     key={region}
-                                    onClick={() => setActiveRegion(region)}
+                                    onClick={() => { setActiveRegion(region); if (region !== "All") trackFilterApply({ filter_type: 'region', filter_value: region }); }}
                                     className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors
                                         ${activeRegion === region
                                             ? filterBtnActiveClass("region", region)
@@ -120,21 +126,24 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                         </div>
 
                         {/* Difficulty filter */}
-                        <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28">By Difficulty:</span>
-                            {DIFFICULTIES.map((difficulty) => (
-                                <button
-                                    key={difficulty}
-                                    onClick={() => setActiveDifficulty(difficulty)}
-                                    className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors
-                                        ${activeDifficulty === difficulty
-                                            ? filterBtnActiveClass("difficulty", difficulty)
-                                            : "border-zinc-border text-slate-500 hover:border-slate-900 hover:text-slate-900"
-                                        }`}
-                                >
-                                    {difficulty}
-                                </button>
-                            ))}
+                        <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 w-28 shrink-0">By Difficulty:</span>
+                            <div className="flex items-center gap-3 overflow-x-auto md:flex-wrap [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
+                                {DIFFICULTIES.map((difficulty) => (
+                                    <button
+                                        key={difficulty}
+                                        onClick={() => { setActiveDifficulty(difficulty); if (difficulty !== "All") trackFilterApply({ filter_type: 'difficulty', filter_value: difficulty }); }}
+                                        className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors shrink-0
+                                            ${activeDifficulty === difficulty
+                                                ? filterBtnActiveClass("difficulty", difficulty)
+                                                : "border-zinc-border text-slate-500 hover:border-slate-900 hover:text-slate-900"
+                                            }`}
+                                    >
+                                        <span className="md:hidden">{DIFFICULTY_MOBILE_LABEL[difficulty] ?? difficulty}</span>
+                                        <span className="hidden md:inline">{difficulty}</span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
                         {/* Month filter */}
@@ -143,7 +152,7 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                             {MONTHS.map((month) => (
                                 <button
                                     key={month}
-                                    onClick={() => setActiveMonth(month)}
+                                    onClick={() => { setActiveMonth(month); if (month !== "All") trackFilterApply({ filter_type: 'month', filter_value: month }); }}
                                     className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 md:px-4 md:py-2 border transition-colors
                                         ${activeMonth === month
                                             ? filterBtnActiveClass("month", month)
@@ -169,6 +178,7 @@ export default function TrekIndex({ treks: treksProp }: { treks?: Trek[] }) {
                                 <Link
                                     key={trek.id}
                                     href={`/treks/${trek.slug}`}
+                                    onClick={() => trackCTA({ cta_name: 'view_trek', location: 'find_your_trek_grid', trek_name: trek.name })}
                                     className="block border border-zinc-border group hover:shadow-lg transition-shadow"
                                 >
                                     {/* Top — banner image */}

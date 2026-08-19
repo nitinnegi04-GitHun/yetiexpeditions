@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { trackEvent } from "@/lib/tracking/analytics";
-import { AnalyticsEvents } from "@/lib/tracking/events";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 // Sticky/floating conversion bar for the trek page (v2 comparison flow only).
 // Shows once the reader has scrolled past the Investment Breakdown section,
@@ -50,11 +49,11 @@ export default function TrekFloatingCTAV2() {
     const visible = pastInvestment && !overlapsOtherCTA && !nearPageEnd;
 
     function handleDepartures() {
-        trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'see_upcoming_departures', location: 'floating_bar' });
+        trackCTA({ cta_name: 'join_fixed_departure', location: 'floating_bar' });
     }
 
     function handleCustom() {
-        trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'make_trek_your_own', location: 'floating_bar' });
+        trackCTA({ cta_name: 'plan_private_custom_trek', location: 'floating_bar' });
     }
 
     const buttonClass = "flex-1 md:flex-initial text-center bg-slate-900 text-white px-4 md:px-8 py-3 text-[11px] md:text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors";

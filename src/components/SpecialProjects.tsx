@@ -36,6 +36,39 @@ interface SpecialProjectsData {
   projects?: Project[]
 }
 
+function ProjectCard({ project, index, imageUrl }: { project: Project; index: number; imageUrl: string }) {
+  return (
+    <div className="flex flex-col group hover:bg-slate-50 transition-colors h-full">
+      {/* Image */}
+      <div className="relative">
+        <ProjectImage src={imageUrl} alt={project.name} />
+        <span className="absolute bottom-4 left-4 text-[9px] font-black uppercase tracking-[0.3em] text-white/70 pointer-events-none">
+          {project.category}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-slate-200 text-4xl font-black tracking-tighter transition-colors group-hover:text-primary/20">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary border border-primary/30 px-3 py-1">
+            {project.category}
+          </span>
+        </div>
+        <h3 className="text-xl font-black uppercase tracking-tighter leading-tight mb-1 group-hover:text-primary transition-colors">{project.name}</h3>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{project.tagline}</p>
+        <p className="text-sm text-slate-600 leading-relaxed flex-1 mb-4">{project.description}</p>
+        <div className="border-t border-zinc-border pt-4">
+          <p className="text-xl font-black tracking-tighter" style={{ color: '#f4632eff' }}>{project.stat}</p>
+          <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">{project.statSub}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const FALLBACK_PROJECTS: Project[] = [
   {
     _key: 'sp01',
@@ -110,42 +143,30 @@ export default function SpecialProjects({ data }: { data?: SpecialProjectsData }
           </p>
         </div>
 
-        {/* 3-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-zinc-border">
+        {/* Mobile — horizontal scroll */}
+        <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory divide-x divide-zinc-border [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
           {projects.map((project, i) => {
             const imageUrl = project.image
               ? urlFor(project.image).width(800).url()
               : FALLBACK_IMAGES[i] ?? FALLBACK_IMAGES[0]
 
             return (
-              <div key={project._key} className="flex flex-col group hover:bg-slate-50 transition-colors">
-                {/* Image */}
-                <div className="relative">
-                  <ProjectImage src={imageUrl} alt={project.name} />
-                  <span className="absolute bottom-4 left-4 text-[9px] font-black uppercase tracking-[0.3em] text-white/70 pointer-events-none">
-                    {project.category}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="flex flex-col flex-1 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-slate-200 text-4xl font-black tracking-tighter transition-colors group-hover:text-primary/20">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary border border-primary/30 px-3 py-1">
-                      {project.category}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-black uppercase tracking-tighter leading-tight mb-1 group-hover:text-primary transition-colors">{project.name}</h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{project.tagline}</p>
-                  <p className="text-sm text-slate-600 leading-relaxed flex-1 mb-4">{project.description}</p>
-                  <div className="border-t border-zinc-border pt-4">
-                    <p className="text-xl font-black tracking-tighter" style={{ color: '#f4632eff' }}>{project.stat}</p>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-0.5">{project.statSub}</p>
-                  </div>
-                </div>
+              <div key={project._key} className="shrink-0 w-[85vw] snap-start">
+                <ProjectCard project={project} index={i} imageUrl={imageUrl} />
               </div>
+            )
+          })}
+        </div>
+
+        {/* Desktop — 3-column grid */}
+        <div className="hidden md:grid md:grid-cols-3 md:divide-x divide-zinc-border">
+          {projects.map((project, i) => {
+            const imageUrl = project.image
+              ? urlFor(project.image).width(800).url()
+              : FALLBACK_IMAGES[i] ?? FALLBACK_IMAGES[0]
+
+            return (
+              <ProjectCard key={project._key} project={project} index={i} imageUrl={imageUrl} />
             )
           })}
         </div>

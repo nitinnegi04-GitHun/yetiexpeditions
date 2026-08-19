@@ -1,7 +1,6 @@
 'use client';
 
-import { trackEvent } from "@/lib/tracking/analytics";
-import { AnalyticsEvents } from "@/lib/tracking/events";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 interface TrekJourneyOptionsV2Props {
     trekName: string;
@@ -64,7 +63,7 @@ export default function TrekJourneyOptionsV2({ trekName }: TrekJourneyOptionsV2P
                             </div>
                             <a
                                 href="#departure-batches"
-                                onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'join_fixed_departure', location: 'journey_options_section' })}
+                                onClick={() => trackCTA({ cta_name: 'join_fixed_departure', location: 'journey_options_section' })}
                                 className="inline-block bg-primary text-white px-6 py-2.5 text-sm font-bold uppercase tracking-widest hover:bg-black transition-all"
                             >
                                 Join a Fixed Departure
@@ -100,7 +99,7 @@ export default function TrekJourneyOptionsV2({ trekName }: TrekJourneyOptionsV2P
                             {/* TODO: click behavior pending — placeholder scrolls to the enquiry form for now */}
                             <a
                                 href="#enquire"
-                                onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'plan_private_custom_trek', location: 'journey_options_section' })}
+                                onClick={() => trackCTA({ cta_name: 'plan_private_custom_trek', location: 'journey_options_section' })}
                                 className="inline-block bg-primary text-white px-6 py-2.5 text-sm  font-bold uppercase tracking-widest hover:bg-black transition-all"
                             >
                                 Plan a Private / Custom Trek

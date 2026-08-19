@@ -1,5 +1,8 @@
+'use client';
+
 import { urlFor } from "@/sanity/image";
 import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 // Placeholder — shown until a real Yeti photo (guides + trekkers together, not a
 // landscape shot) is uploaded in Studio (Homepage → Why Us → Image).
@@ -140,6 +143,7 @@ export default function WhyUs({ data }: { data?: WhyUsData }) {
 
           <a
             href="/our-story"
+            onClick={() => trackCTA({ cta_name: 'view_our_story', location: 'why_us' })}
             className="inline-flex items-center gap-1.5 text-primary font-black text-xs uppercase tracking-widest hover:text-slate-900 transition-colors"
           >
             {ctaText} →

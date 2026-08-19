@@ -1,4 +1,5 @@
-import type { AnalyticsEventName, AnalyticsEventPayload, AnalyticsProvider, DeviceType } from './types'
+import type { AnalyticsEventName, AnalyticsEventPayload, AnalyticsProvider, DeviceType, CTAName, EventLocation, Channel, FilterType } from './types'
+import { AnalyticsEvents } from './events'
 import { sendToGA4 } from './providers/ga4'
 import { sendToMeta } from './providers/meta'
 
@@ -33,4 +34,27 @@ export function trackEvent(eventName: AnalyticsEventName, parameters?: Analytics
   console.log(eventName, enrichedParameters)
   sendToGA4(eventName, enrichedParameters)
   sendToMeta(eventName, enrichedParameters)
+}
+
+/**
+ * Typed wrapper for CTA_CLICK — cta_name/location are restricted to the
+ * shared taxonomy in ./types so a new or misspelled value fails to compile
+ * instead of silently drifting out of sync with what's registered in GA4.
+ */
+export function trackCTA(params: {
+  cta_name: CTAName
+  location: EventLocation
+  channel?: Channel
+  departure?: string
+  trek_name?: string
+}): void {
+  trackEvent(AnalyticsEvents.CTA_CLICK, params)
+}
+
+/** Typed wrapper for FILTER_APPLY — Find Your Trek's Region/Difficulty/Month filters. */
+export function trackFilterApply(params: {
+  filter_type: FilterType
+  filter_value: string
+}): void {
+  trackEvent(AnalyticsEvents.FILTER_APPLY, params)
 }

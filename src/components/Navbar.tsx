@@ -6,8 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createClient } from "@sanity/client";
 import { urlFor } from "@/sanity/image";
-import { trackEvent } from "@/lib/tracking/analytics";
-import { AnalyticsEvents } from "@/lib/tracking/events";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 const sanity = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'qmj04x7n',
@@ -108,7 +107,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                             href={instagramUrl ?? 'https://instagram.com/yeti.expeditions'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'follow_instagram', location: 'navbar', channel: 'instagram' })}
+                            onClick={() => trackCTA({ cta_name: 'follow_instagram', location: 'navbar', channel: 'instagram' })}
                             className="flex items-center gap-2 hover:text-primary transition-colors"
                         >
                             <Instagram className="w-4 h-4" />
@@ -168,7 +167,7 @@ export default function Navbar({ logoUrl: initialLogoUrl, siteName: initialSiteN
                         </Link>
                         
                         {/* Chat */}
-                        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => { trackEvent(AnalyticsEvents.CTA_CLICK, { cta_name: 'chat', location: 'sticky_bottom_bar', channel: 'whatsapp' }); setIsMenuOpen(false); }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
+                        <a href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => { trackCTA({ cta_name: 'chat', location: 'sticky_bottom_bar', channel: 'whatsapp' }); setIsMenuOpen(false); }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', width: '54px', paddingBottom: '4px', cursor: 'pointer', outline: 'none', textDecoration: 'none' }}>
                             <MessageCircle size={22} color="#10b981" />
                             <span style={{ color: INACTIVE_COLOR, fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Chat</span>
                         </a>

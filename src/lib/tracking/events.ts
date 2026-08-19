@@ -9,6 +9,7 @@ export const AnalyticsEvents = {
   DEPARTURE_VIEW: 'departure_view',
   REVIEWS_VIEW: 'reviews_view',
   CTA_CLICK: 'cta_click',
+  FILTER_APPLY: 'filter_apply',
 } as const satisfies Record<string, AnalyticsEventName>
 
 export type AnalyticsEvent = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents]

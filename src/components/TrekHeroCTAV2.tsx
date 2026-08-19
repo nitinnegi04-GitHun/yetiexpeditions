@@ -1,7 +1,6 @@
 'use client'
 
-import { trackEvent } from '@/lib/tracking/analytics'
-import { AnalyticsEvents } from '@/lib/tracking/events'
+import { trackCTA } from '@/lib/tracking/analytics'
 
 interface TrekHeroCTAV2Props {
   className?: string
@@ -10,17 +9,11 @@ interface TrekHeroCTAV2Props {
 // Primary/secondary hero CTA pair for the trek-page flow redesign (v2 only).
 export default function TrekHeroCTAV2({ className = '' }: TrekHeroCTAV2Props) {
   function handlePrimaryClick() {
-    trackEvent(AnalyticsEvents.CTA_CLICK, {
-      cta_name: 'join_fixed_departure',
-      location: 'hero',
-    })
+    trackCTA({ cta_name: 'join_fixed_departure', location: 'hero' })
   }
 
   function handleSecondaryClick() {
-    trackEvent(AnalyticsEvents.CTA_CLICK, {
-      cta_name: 'plan_private_custom_trek',
-      location: 'hero',
-    })
+    trackCTA({ cta_name: 'plan_private_custom_trek', location: 'hero' })
   }
 
   return (

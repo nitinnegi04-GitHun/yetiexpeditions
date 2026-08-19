@@ -11,22 +11,40 @@ export interface AnalyticsProvider {
 }
 
 export type CTAName =
-  | 'inquire_now'
-  | 'book_trek'
+  | 'join_fixed_departure'
+  | 'plan_private_custom_trek'
   | 'secure_spot'
   | 'message_trek_team'
+  | 'write_enquiry'
   | 'submit_query'
+  | 'download_itinerary'
+  | 'browse_treks'
+  | 'view_our_story'
+  | 'view_trek'
+  | 'newsletter_signup'
+  | 'follow_instagram'
   | 'chat'
 
 export type EventLocation =
   | 'navbar'
   | 'hero'
+  | 'journey_options_section'
+  | 'floating_bar'
   | 'departure_section'
+  | 'no_departures_card'
   | 'trek_team_section'
+  | 'itinerary_section'
   | 'footer_form'
   | 'sticky_bottom_bar'
+  | 'why_we_trek'
+  | 'why_us'
+  | 'quote_section'
+  | 'find_your_trek_grid'
+  | 'footer'
 
-export type Channel = 'whatsapp'
+export type Channel = 'whatsapp' | 'instagram'
+
+export type FilterType = 'region' | 'difficulty' | 'month'
 
 export interface BaseEvent {
   name: AnalyticsEventName

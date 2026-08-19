@@ -1,8 +1,11 @@
+'use client';
+
 import { Fragment } from "react";
 import { Quote, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { urlFor } from "@/sanity/image";
 import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 interface TimelinePhase {
   phase?: string
@@ -140,6 +143,7 @@ export default function QuoteSection({ data }: { data?: QuoteData }) {
           </div>
           <Link
             href={linkUrl}
+            onClick={() => trackCTA({ cta_name: 'view_our_story', location: 'quote_section' })}
             className="inline-flex items-center gap-2 text-white/80 text-xs font-black uppercase tracking-widest hover:text-primary hover:gap-3 transition-all group mt-6"
           >
             {linkText}

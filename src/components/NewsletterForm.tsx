@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export default function NewsletterForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
+    trackCTA({ cta_name: 'newsletter_signup', location: 'footer' });
     setSubmitted(true);
   };
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { client } from "@/sanity/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
 import NewsletterForm from "./NewsletterForm";
+import TrackedLink from "./TrackedLink";
 
 const NAV_LINKS = [
   { label: "The Treks",   href: "/treks"   },
@@ -113,17 +114,20 @@ export default async function Footer() {
               )}
               {s.whatsappNumber && (
                 <li>
-                  <a
+                  <TrackedLink
                     href={`https://wa.me/${s.whatsappNumber}?text=${encodeURIComponent("Hi! I'd like to know more about trekking with Yeti Expeditions.")}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    ctaName="message_trek_team"
+                    location="footer"
+                    channel="whatsapp"
                     className="flex items-start gap-3 group"
                   >
                     <MessageCircle className="w-3 h-3 text-primary mt-0.5 shrink-0" />
                     <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-primary transition-colors leading-relaxed">
                       WhatsApp Us
                     </span>
-                  </a>
+                  </TrackedLink>
                 </li>
               )}
               {s.contactEmail && (

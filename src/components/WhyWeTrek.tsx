@@ -1,6 +1,9 @@
+'use client';
+
 import { Quote } from "lucide-react";
 import { urlFor } from "@/sanity/image";
 import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
+import { trackCTA } from "@/lib/tracking/analytics";
 
 interface Principle {
   title?: string
@@ -122,6 +125,9 @@ export default function WhyWeTrek({ data, whatsappNumber = '' }: { data?: WhyWeT
                   href={p.ctaTarget === 'treks' ? '#treks' : whatsappHref}
                   target={p.ctaTarget !== 'treks' && whatsappNumber ? '_blank' : undefined}
                   rel={p.ctaTarget !== 'treks' && whatsappNumber ? 'noopener noreferrer' : undefined}
+                  onClick={() => trackCTA(p.ctaTarget === 'treks'
+                    ? { cta_name: 'browse_treks', location: 'why_we_trek' }
+                    : { cta_name: 'message_trek_team', location: 'why_we_trek', channel: 'whatsapp' })}
                   className="text-primary font-semibold underline underline-offset-2 decoration-primary/40 hover:decoration-primary transition-colors whitespace-nowrap"
                 >
                   {p.ctaLabel} →
@@ -139,6 +145,7 @@ export default function WhyWeTrek({ data, whatsappNumber = '' }: { data?: WhyWeT
       <div className="flex flex-wrap items-center gap-3">
         <a
           href="#treks"
+          onClick={() => trackCTA({ cta_name: 'browse_treks', location: 'why_we_trek' })}
           className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-primary transition-colors"
         >
           {primaryCtaText} ↓
@@ -148,6 +155,7 @@ export default function WhyWeTrek({ data, whatsappNumber = '' }: { data?: WhyWeT
           href={whatsappHref}
           target={whatsappNumber ? '_blank' : undefined}
           rel={whatsappNumber ? 'noopener noreferrer' : undefined}
+          onClick={() => trackCTA({ cta_name: 'message_trek_team', location: 'why_we_trek', channel: 'whatsapp' })}
           className="inline-flex flex-col items-start gap-0.5 bg-[#25D366] text-white px-6 py-3 hover:brightness-110 transition-all"
         >
           <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest">
