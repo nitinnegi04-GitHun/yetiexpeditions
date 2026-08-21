@@ -1,84 +1,104 @@
 # Yeti Expeditions
 
-> Premium guided trekking operator specialising in Himalayan expeditions. Swiss-precision logistics, MOI or equivalent certified guides, maximum 12 trekkers per group.
+> Small-group Himalayan trekking operator across Nepal and the Indian Himalaya (Uttarakhand, Himachal/Kinnaur, Ladakh, West Bengal). Founded and led by working mountain professionals — not a booking platform reselling other operators' trips. Philosophy: help each trekker find the right journey for them, rather than sell a fixed itinerary to everyone.
 
 ## About
 
-Yeti Expeditions is a high-altitude trekking company offering expert-guided expeditions across Nepal and Ladakh, India. Founded on the principles of safety, small group sizes, and sustainability, we operate with a 1:4 guide-to-trekker ratio and MOI or equivalent certified lead guides. Our approach combines Swiss-standard logistics with deep local knowledge built over 15+ years.
+Yeti Expeditions is a Himalayan trekking company built by the guides who lead the treks, not around them. It was founded by Pradhuman Singh Negi — an ex-Indian Army commando and instructor at the High Altitude Warfare School and Siachen Battle School — together with Nitin (returning from a corporate career) and Gurdit (a trainer of trainers from Nepal's trekking corridors). Every lead guide on the roster is a partner in the business, not a hire.
 
-Headquarters: Kathmandu, Nepal
-Regional offices: Leh (Ladakh, India), Zurich (Switzerland)
+Headquarters: Space Jam, Third Floor, Sector 34, Chandigarh 160022, India
+Operating regions: Nepal (Khumbu, Annapurna, Manaslu) and the Indian Himalaya (Uttarakhand, Kinnaur/Himachal Pradesh, Ladakh, West Bengal)
+
+## Founder
+
+**Pradhuman Singh Negi** — Expedition Director & Co-Founder
+- Ex-Indian Army commando; instructor at the High Altitude Warfare School (HAWS), Gulmarg — instructors there are known as "White Devils"
+- Instructor at the Siachen Battle School (SBS), the highest battlefield on Earth
+- Mountain skiing instructor at the Atal Bihari Vajpayee Institute of Mountaineering and Allied Sports (ABVIMAS), Manali — trained over 10,000 students across 8 years
+- Avalanche rescue-trained and certified at the Air Zermatt Training Center, Switzerland
+- Currently leads a ~40-person rescue team with Tiranga Mountain Rescue (TMR), training Indian Army posts in avalanche detection and avoidance through winter
+- Officially recognised by India's Defence Minister, Rajnath Singh, in 2022 for snow and avalanche rescue efforts in Arunachal Pradesh
+- President of the Kinnaur Mountaineering Association
 
 ## Treks Offered
 
-### Everest Base Camp Trek
-- Duration: 14 days
-- Maximum altitude: 5,364m (Everest Base Camp) / 5,545m (Kala Patthar)
-- Region: Khumbu, Nepal
-- Difficulty: Moderate–Difficult
-- Price: From $3,400 USD
-- Group size: Maximum 12 trekkers
-- Season: March–May, October–November
-- Includes: All accommodation, meals, permits (Sagarmatha NP, TIMS, Khumbu fee), domestic flights (KTM–Lukla), MOI or equivalent certified guide, emergency evacuation insurance
-- Start/End: Kathmandu, Nepal
+### Everest Base Camp (Premium)
+- Duration: 15 days | Max altitude: 5,364m | Region: Khumbu, Nepal
+- Difficulty: Difficult | Group size: Max 12 | Season: Mar–May, Oct–Nov
+- From $1,500 USD | Accommodation: Teahouse
 
-### Annapurna Circuit Trek
-- Duration: 18 days
-- Maximum altitude: 5,416m (Thorong La Pass)
-- Region: Gandaki Province, Nepal
-- Difficulty: Moderate
-- Price: From $3,100 USD
-- Group size: Maximum 12 trekkers
-- Season: October–December, March–May
-- Includes: All accommodation, meals, ACAP permit, TIMS card, MOI or equivalent certified guide, emergency evacuation insurance
-- Start/End: Kathmandu, Nepal
+### Everest Base Camp — Helicopter Return
+- Duration: 13 days | Max altitude: 5,140m | Region: Nepal
+- Difficulty: Difficult | Group size: Max 10 | Season: Mar–Apr, Oct–Nov
+- Accommodation: Teahouse
 
-### Markha Valley Trek
-- Duration: 12 days
-- Maximum altitude: 5,100m (Kongmaru La Pass)
-- Region: Ladakh, India
-- Difficulty: Moderate
-- Price: From $2,850 USD
-- Group size: Maximum 12 trekkers
-- Season: June–September
-- Includes: All accommodation, meals, inner line permits, MOI or equivalent certified guide, emergency evacuation insurance
-- Start/End: Leh, Ladakh
+### Everest Base Camp via Gokyo Lakes
+- Duration: 18 days | Max altitude: 5,500m | Region: Nepal
+- Difficulty: Difficult | Group size: Max 10 | Season: Mar–Apr, Oct–Nov
+- From $1,650 USD | Accommodation: Teahouse
 
-## Safety & Standards
+### Manaslu Circuit
+- Duration: 15 days | Max altitude: 5,106m | Region: Nepal
+- Difficulty: Difficult | Group size: Max 12 | Season: Mar–Apr, Oct–Nov
+- From $1,250 USD | Accommodation: Teahouse
 
-- All lead guides hold MOI or equivalent certification
-- Twice-daily SpO2 (blood oxygen) and pulse monitoring above 3,000m
-- Emergency oxygen carried on all high-altitude treks
-- Full evacuation protocols active throughout; helicopter evacuation arranged if needed
-- Acclimatisation days built into every itinerary above 4,000m
-- Diamox (altitude medication) carried on all trips
+### Annapurna Base Camp
+- Duration: 10 days | Max altitude: 4,130m | Region: Annapurna, Nepal
+- Difficulty: Moderate | Group size: Max 12 | Season: Mar–May, Oct–Nov
+- From $690 USD | Accommodation: Teahouse
 
-## Sustainability Initiatives
+### Annapurna Circuit with Tilicho Lake
+- Duration: 12 days | Max altitude: 4,949m | Region: Annapurna, Nepal
+- Difficulty: Difficult | Group size: Max 10 | Season: Mar–Apr, Oct–Nov
+- Accommodation: Teahouse
 
-- **Schools Above the Clouds**: Funds educational infrastructure in remote Himalayan communities
-- **Zero Trace Initiative**: Pack-in/pack-out policy; trail restoration work with local teams
-- **Sherpa Legacy Fund**: Fair wage guarantees and professional development for Sherpa guides and porters
+### Khopra Danda (Ridge)
+- Duration: 10 days | Max altitude: 4,500m | Region: Nepal
+- Difficulty: Moderate | Group size: Max 12 | Season: Mar–Apr, Oct–Nov
+- Accommodation: Teahouse
 
-## Frequently Asked Questions
+### Sandakphu Singalila Ridge
+- Duration: 6 days | Max altitude: 3,650m | Region: West Bengal, India
+- Difficulty: Moderate | Group size: Max 12 | Season: Mar–Apr, Oct–Dec
+- From $260 USD | Accommodation: Teahouse
 
-**What fitness level is needed for Everest Base Camp?**
-You should be able to hike 6–8 hours daily carrying a 5–8kg daypack. Strong aerobic fitness is essential. Prior high-altitude experience is helpful but not required.
+### Deoraital Chandrashila
+- Duration: 6 days | Max altitude: 3,653m | Region: Uttarakhand, India
+- Difficulty: Easy | Group size: Max 10 | Season: Mar–Jun, Sep–Dec
+- Accommodation: Tent & guesthouse
 
-**Is altitude sickness a risk?**
-Yes. Acute Mountain Sickness (AMS) is a real risk above 3,000m. Our itineraries include scheduled acclimatisation days. Guides monitor oxygen saturation twice daily and carry Diamox and emergency oxygen.
+Custom and private departures are available on all routes for groups that want their own dates, pace or itinerary — not only the fixed departures listed above.
 
-**What is the minimum age?**
-16 years with parental consent. No upper age limit — trekkers in their 70s have completed our programmes.
+## Safety Standards
 
-**Can solo travellers join a group?**
-Yes. Most participants join as individuals. Groups are capped at 12 to ensure quality and personal attention.
+- Lead guides are WFR / NOLS or MOI mountaineering certified
+- Blood oxygen (SpO2) and pulse monitoring for acclimatisation
+- Itineraries are designed with appropriate altitude gain and built-in acclimatisation, not compressed for speed
 
-**What is the cancellation policy?**
-Full refund up to 60 days before departure. 50% refund between 30–60 days. No refund within 30 days of departure.
+## Community & Rescue Work
+
+Yeti Expeditions' team is active in mountain safety training beyond guided treks:
+- Trained 11 rescuers of the State Disaster Relief Force (SDRF), in association with the Kinnaur Mountaineering, Skiing & Rescue Association, on a summit expedition to Sangla Kanda Peak (16,469 ft), Kinnaur, Himachal Pradesh
+- Ran joint rescue-readiness training with Kinnaur Police and Himachal Home Guard (40 personnel) at Escape Camp, Rakchham Village, Kinnaur
+
+## Cancellation Policy
+
+**India treks:**
+- More than 45 days before departure: 10% cancellation charge
+- 30–45 days before: 60% refund
+- 16–29 days before: 45% refund
+- 0–15 days before: no refund
+
+**Nepal treks:**
+- More than 45 days before departure: 10% cancellation charge
+- 20–45 days before: 45% refund
+- 0–19 days before: no refund
+
+Cancellations must be submitted by email or WhatsApp (not verbal). Refunds are typically processed within 6–7 working days. For fixed departures with fewer than 5 confirmed trekkers, Yeti Expeditions does not cancel the trek — a small additional cost may apply instead.
 
 ## Contact
 
 - Website: https://www.yetiexpeditions.com
 - Email: info@yetiexpeditions.com
-- Kathmandu office: Thamel, Kathmandu, Nepal
-- Leh office: Main Bazaar, Leh, Ladakh 194101, India
+- WhatsApp / Phone: +91 8699488862
+- Office: Space Jam, Third Floor, Sector 34, Chandigarh 160022, India

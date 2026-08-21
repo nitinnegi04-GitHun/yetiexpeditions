@@ -180,8 +180,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // Sanity SEO overrides take priority; fall back to auto-generated values
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const seo = (raw as any).seo ?? {}
+  const priceClause = trek.priceUSD
+    ? `From $${trek.priceUSD.toLocaleString('en-US')}. `
+    : trek.priceINR
+      ? `From ₹${trek.priceINR.toLocaleString('en-IN')}. `
+      : ''
   const title = seo.metaTitle ?? `${trek.name} Trek — ${trek.duration}, ${trek.altitude} | Yeti Expeditions`
-  const description = seo.metaDescription ?? `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. From $${trek.priceUSD?.toLocaleString('en-US') ?? '—'}. ${trek.groupSize} trekkers. MOI or equivalent certified guides. All permits, meals & accommodation included.`
+  const description = seo.metaDescription ?? `Guided ${trek.name} trek: ${trek.duration}, reaching ${trek.altitude}. ${priceClause}${trek.groupSize} trekkers. MOI or equivalent certified guides. All permits, meals & accommodation included.`
   const ogImage = seo.ogImageUrl ?? trek.bannerImage
 
   return {

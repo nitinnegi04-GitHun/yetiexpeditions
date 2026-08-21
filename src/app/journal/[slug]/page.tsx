@@ -206,16 +206,24 @@ export default async function ArticlePage({ params }: PageProps) {
             width: 1200,
             height: 630,
         } : undefined,
-        author: {
-            '@type': 'Person',
-            name: article.author,
-            jobTitle: article.authorTitle ?? '',
-            worksFor: {
+        // "Guest Post" is a byline label, not a real person — attribute those to the
+        // Organization instead of claiming a nonexistent Person in structured data.
+        author: article.author && article.author !== 'Guest Post'
+            ? {
+                '@type': 'Person',
+                name: article.author,
+                jobTitle: article.authorTitle ?? '',
+                worksFor: {
+                    '@type': 'Organization',
+                    name: 'Yeti Expeditions',
+                    url: BASE_URL,
+                },
+            }
+            : {
                 '@type': 'Organization',
                 name: 'Yeti Expeditions',
                 url: BASE_URL,
             },
-        },
         publisher: {
             '@type': 'Organization',
             name: 'Yeti Expeditions',

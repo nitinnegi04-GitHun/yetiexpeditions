@@ -10,7 +10,7 @@ const BASE_URL = 'https://www.yetiexpeditions.com'
 export const metadata: Metadata = {
   title: 'All Treks & Expeditions | Yeti Expeditions',
   description:
-    'Browse all Himalayan treks offered by Yeti Expeditions — Everest Base Camp, Annapurna Circuit, Markha Valley and more. MOI or equivalent certified guides, small groups, all permits included.',
+    'Browse all Himalayan treks offered by Yeti Expeditions — Everest Base Camp, Annapurna, Manaslu, Khopra Danda and more, across Nepal and the Indian Himalaya. MOI or equivalent certified guides, small groups, all permits included.',
   alternates: { canonical: `${BASE_URL}/treks` },
   openGraph: {
     type: 'website',

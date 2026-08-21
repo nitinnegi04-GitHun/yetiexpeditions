@@ -16,15 +16,15 @@ const BASE_URL = "https://www.yetiexpeditions.com";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Yeti Expeditions | Expert-Guided Himalayan Treks — EBC, Annapurna, Ladakh",
+    default: "Yeti Expeditions | Expert-Guided Himalayan Treks — EBC, Annapurna, Manaslu",
     template: "%s | Yeti Expeditions",
   },
   description:
-    "Expert-guided treks to Everest Base Camp (14 days, $3,400), Annapurna Circuit (18 days, $3,100) and Markha Valley, Ladakh (12 days, $2,850). MOI or equivalent certified guides, max 12 trekkers, 1:4 guide ratio. Small-group Himalayan expeditions with Swiss-standard safety.",
+    "Expert-guided Himalayan treks across Nepal and the Indian Himalaya — Everest Base Camp, Annapurna, Manaslu Circuit and more. MOI or equivalent certified guides, small groups, all permits included.",
   keywords: [
     "Everest Base Camp trek",
-    "Annapurna Circuit trek",
-    "Markha Valley trek Ladakh",
+    "Annapurna trek",
+    "Manaslu Circuit trek",
     "guided Himalayan treks",
     "Nepal trekking company",
     "small group Himalayan expeditions",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "Yeti Expeditions",
     title: "Yeti Expeditions | Expert-Guided Himalayan Treks",
     description:
-      "MOI or equivalent certified guides. Max 12 trekkers. Everest Base Camp, Annapurna Circuit & Markha Valley Ladakh. From $2,850.",
+      "MOI or equivalent certified guides. Small groups. Everest Base Camp, Annapurna & Manaslu Circuit, across Nepal and the Indian Himalaya.",
     images: [
       {
         url: "/og-image.jpg",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Yeti Expeditions | Expert-Guided Himalayan Treks",
     description:
-      "MOI or equivalent certified guides. Max 12 trekkers. Everest Base Camp, Annapurna Circuit & Markha Valley. From $2,850.",
+      "MOI or equivalent certified guides. Small groups. Everest Base Camp, Annapurna & Manaslu Circuit, across Nepal and the Indian Himalaya.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -101,13 +101,14 @@ export default async function RootLayout({
       "Premium guided trekking operator specialising in Himalayan expeditions. MOI or equivalent certified guides, maximum 12 trekkers per group, 1:4 guide-to-trekker ratio.",
     foundingLocation: {
       "@type": "Place",
-      name: "Kathmandu, Nepal",
+      name: "Kinnaur, Himachal Pradesh, India",
     },
     areaServed: ["Nepal", "India", "Himalayas"],
     knowsAbout: [
       "Himalayan trekking",
       "Everest Base Camp trek",
-      "Annapurna Circuit trek",
+      "Annapurna trek",
+      "Manaslu Circuit trek",
       "High altitude safety",
       "MOI or equivalent high-altitude certification",
     ],
@@ -120,27 +121,19 @@ export default async function RootLayout({
         availableLanguage: ["English"],
       },
     ],
-    location: [
-      {
-        "@type": "Place",
-        name: "Kathmandu Office",
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Thamel, Kathmandu",
-          addressCountry: "NP",
-        },
-      },
-      {
-        "@type": "Place",
-        name: "Leh Office",
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: "Leh",
-          addressRegion: "Ladakh",
-          addressCountry: "IN",
-        },
-      },
-    ],
+    location: settings?.officeAddress
+      ? [
+          {
+            "@type": "Place",
+            name: "Yeti Expeditions Office",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: settings.officeAddress,
+              addressCountry: "IN",
+            },
+          },
+        ]
+      : undefined,
     sameAs,
   };
 
