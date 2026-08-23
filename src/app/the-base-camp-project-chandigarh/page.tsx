@@ -2,6 +2,8 @@ import { ArrowRight, MessageCircle, Instagram, Quote } from "lucide-react";
 import FAQAccordion from "@/components/FAQAccordion";
 import TrackedLink from "@/components/TrackedLink";
 import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
+import BaseCampSubNav from "@/components/BaseCampSubNav";
+import BaseCampBottomNav from "@/components/BaseCampBottomNav";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
@@ -63,6 +65,7 @@ const faqs = [
   { question: "How do I choose between EBC and ABC?", answer: "Everest Base Camp is the 15-day flagship journey. Annapurna Base Camp is a 10-day option for a shorter time and lower investment commitment. Both are covered in detail at the 29 August Q&A." },
   { question: "What does the ₹1,11,900 / ₹69,500 cover?", answer: "Both prices are all-inclusive. Full cost breakdowns for both journeys will be walked through at the Shrug Life Q&A on 29 August." },
   { question: "How is the free spot in each cohort decided?", answer: "One participant in the EBC cohort and one in the ABC cohort will trek for free. A lucky draw will be held from the final 12 confirmed participants in each batch." },
+  { question: "What exactly does the free spot cover?", answer: "For EBC, it covers the trek cost from Lukla to Lukla — it does not include the Kathmandu–Lukla–Kathmandu flights, the Ramechhap stay, or reaching Kathmandu. For ABC, it covers the trek cost from Ghandruk to Jhinu — it does not include the Kathmandu stay or the Kathmandu–Pokhara flights." },
   { question: "What about fitness prep, altitude and acclimatisation?", answer: "Shrug Life leads fitness and preparation training through September; Yeti Expeditions handles altitude, acclimatisation planning, safety and on-ground logistics. Both are covered at the Q&A." },
 ];
 
@@ -114,6 +117,8 @@ export default async function BaseCampProjectPage() {
   return (
     <div className="bg-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
+      <BaseCampSubNav />
+      <BaseCampBottomNav whatsappNumber={whatsappNumber} />
 
       {/* ── Hero — same 50/50 split structure as home & trek pages ── */}
       <section className="w-full border-b border-zinc-border">
@@ -222,7 +227,7 @@ export default async function BaseCampProjectPage() {
       </section>
 
       {/* ── The Idea ── */}
-      <section className="w-full border-b border-zinc-border bg-white">
+      <section id="idea" className="w-full border-b border-zinc-border bg-white">
         <div className="max-w-[1440px] mx-auto px-6 md:px-16 py-16 md:py-24 flex flex-col md:flex-row gap-10 md:gap-16">
           <div className="md:w-2/5">
             <div className="md:sticky md:top-24">
@@ -299,7 +304,7 @@ export default async function BaseCampProjectPage() {
       </section>
 
       {/* ── Timeline / The Journey ── */}
-      <section className="w-full border-b border-zinc-border bg-slate-50">
+      <section id="timeline" className="w-full border-b border-zinc-border bg-slate-50">
         <div className="max-w-[1440px] mx-auto px-6 md:px-16 py-16 md:py-24 flex flex-col md:flex-row gap-10 md:gap-16">
           <div className="md:w-2/5">
             <div className="md:sticky md:top-24">
@@ -347,7 +352,7 @@ export default async function BaseCampProjectPage() {
       </section>
 
       {/* ── The Cohort — why this exists, from Gurdit ── */}
-      <section className="w-full border-b border-zinc-border bg-slate-900">
+      <section id="cohort" className="w-full border-b border-zinc-border bg-slate-900">
         <div className="max-w-[1440px] mx-auto px-6 md:px-12 py-16 md:py-24 flex flex-col md:flex-row gap-10 md:gap-16">
           <div className="md:w-2/5">
             <div className="md:sticky md:top-24">
@@ -391,7 +396,7 @@ export default async function BaseCampProjectPage() {
       </section>
 
       {/* ── Choose Your Journey ── */}
-      <section className="border-b border-zinc-border bg-slate-50">
+      <section id="journeys" className="border-b border-zinc-border bg-slate-50">
         {/* Intro — full screen on desktop, incentive highlighted here */}
         <div className="px-8 md:px-16 py-20 md:py-28 border-b border-zinc-border">
           <div className="max-w-[1440px] mx-auto w-full">
@@ -406,12 +411,15 @@ export default async function BaseCampProjectPage() {
             </p>
             <div className="inline-flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 bg-primary text-white px-6 py-5">
               <span className="text-xl md:text-2xl font-black uppercase tracking-tight leading-none whitespace-nowrap">
-                1 In 12 Treks Free
+                1 In 12 Treks Free*
               </span>
               <span className="text-xs md:text-sm font-medium leading-snug border-t sm:border-t-0 sm:border-l border-white/30 pt-3 sm:pt-0 sm:pl-6 max-w-sm">
                 One fully sponsored spot in the EBC cohort, one in the ABC cohort. A lucky draw will be held from the final 12 confirmed participants in each batch.
               </span>
             </div>
+            <p className="text-xs  leading-relaxed mt-4 max-w-2xl">
+              *Covers trek cost only — EBC: Lukla to Lukla (excludes Kathmandu–Lukla–Kathmandu flights, Ramechhap stay, and reaching Kathmandu). ABC: Ghandruk to Jhinu (excludes Kathmandu stay and Kathmandu–Pokhara flights). Full details in the FAQ below.
+            </p>
           </div>
         </div>
 
@@ -526,7 +534,7 @@ export default async function BaseCampProjectPage() {
       </section>
 
       {/* ── Two Homegrown Chandigarh Brands ── */}
-      <section className="border-b border-zinc-border">
+      <section id="brands" className="border-b border-zinc-border">
         <div className="max-w-[1440px] mx-auto px-8 md:px-16 py-16 md:py-24">
           <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-6">
             Born In Chandigarh
@@ -616,7 +624,7 @@ export default async function BaseCampProjectPage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="border-b border-zinc-border bg-slate-50">
+      <section id="faqs" className="border-b border-zinc-border bg-slate-50">
         <div className="max-w-[1440px] mx-auto px-8 md:px-16 py-16 md:py-24">
           <span className="text-primary font-black uppercase tracking-[0.3em] text-[10px] block mb-6">
             Questions
