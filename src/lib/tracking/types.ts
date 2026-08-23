@@ -41,6 +41,9 @@ export type EventLocation =
   | 'quote_section'
   | 'find_your_trek_grid'
   | 'footer'
+  | 'base_camp_project_hero'
+  | 'base_camp_project_journey_options'
+  | 'base_camp_project_cta'
 
 export type Channel = 'whatsapp' | 'instagram'
 
