@@ -165,11 +165,11 @@ export default async function BaseCampProjectPage() {
               <ul className="space-y-2.5">
                 <li className="flex items-start gap-2.5 text-base md:text-lg text-slate-700 leading-snug">
                   <span className="text-primary font-black shrink-0">—</span>
-                  Everest Base Camp <span className="text-slate-400">or</span> Annapurna Base Camp
+                  <span>Everest Base Camp <span className="text-slate-400">or</span> Annapurna Base Camp</span>
                 </li>
                 <li className="flex items-start gap-2.5 text-base md:text-lg text-slate-700 leading-snug">
                   <span className="text-primary font-black shrink-0">—</span>
-                  Kathmandu, 1 Oct 2026 · 12 people, one journey
+                  <span>Kathmandu, 1 Oct 2026 &nbsp;•&nbsp; 12 people, one journey</span>
                 </li>
                 <li className="flex items-start gap-2.5 text-base md:text-lg leading-snug">
                   <span className="text-primary font-black shrink-0">—</span>
