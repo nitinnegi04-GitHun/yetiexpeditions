@@ -12,6 +12,9 @@ export const revalidate = 86400;
 const BASE_URL = "https://www.yetiexpeditions.com";
 const PAGE_PATH = "/the-base-camp-project-chandigarh";
 
+const YETI_INSTAGRAM_URL = "https://www.instagram.com/yeti.expeditions/";
+const SHRUG_LIFE_INSTAGRAM_URL = "https://www.instagram.com/shruglifecf/";
+
 // Same hero video used on the homepage (src/app/page.tsx via HOMEPAGE_QUERY hero.heroVideo)
 const HERO_VIDEO_URL =
   "https://cdn.sanity.io/files/qmj04x7n/production/49e3da202222332034b651d78323ae302eb8cee2.mp4";
@@ -51,16 +54,15 @@ function waLink(number: string | null, text: string) {
 const timeline: { date: string; label: string; body: string }[] = [
   { date: "29 AUG", label: "Q&A at Shrug Life", body: "In-person session at Shrug Life, Chandigarh — EBC vs ABC, fitness, altitude, logistics, equipment and cost." },
   { date: "SEP", label: "Preparation Sessions", body: "Structured training sessions in Chandigarh to get every cohort trek-ready." },
-  { date: "1 OCT", label: "Departure", body: "Both cohorts begin their journey from Kathmandu." },
-  { date: "BASE CAMP", label: "The Climb", body: "Everest Base Camp and Annapurna Base Camp — together." },
+  { date: "1 OCT", label: "Journey Starts", body: "Both cohorts begin their journey from Kathmandu." },
 ];
 
 const faqs = [
   { question: "Do I need to be a Shrug Life member to join?", answer: "No. The Base Camp Project is open to anyone from Chandigarh — Shrug Life membership is not required." },
   { question: "Is this a fitness competition?", answer: "No. It is not a selection of the \"12 fittest people.\" The cohorts are small, close-knit groups training and travelling together — not a competition." },
   { question: "How do I choose between EBC and ABC?", answer: "Everest Base Camp is the 15-day flagship journey. Annapurna Base Camp is a 10-day option for a shorter time and lower investment commitment. Both are covered in detail at the 29 August Q&A." },
-  { question: "What does the ₹1.15 lakh / ₹65,000 cover?", answer: "Full cost breakdowns for both journeys will be walked through at the Shrug Life Q&A on 29 August." },
-  { question: "How is the free spot in each cohort decided?", answer: "One participant in the EBC cohort and one in the ABC cohort will trek for free. The exact mechanism for deciding who will be communicated separately once finalised." },
+  { question: "What does the ₹1,11,900 / ₹69,500 cover?", answer: "Both prices are all-inclusive. Full cost breakdowns for both journeys will be walked through at the Shrug Life Q&A on 29 August." },
+  { question: "How is the free spot in each cohort decided?", answer: "One participant in the EBC cohort and one in the ABC cohort will trek for free. A lucky draw will be held from the final 12 confirmed participants in each batch." },
   { question: "What about fitness prep, altitude and acclimatisation?", answer: "Shrug Life leads fitness and preparation training through September; Yeti Expeditions handles altitude, acclimatisation planning, safety and on-ground logistics. Both are covered at the Q&A." },
 ];
 
@@ -95,14 +97,14 @@ export default async function BaseCampProjectPage() {
       {
         "@type": "Offer",
         name: "Everest Base Camp — 15 Days",
-        price: "115000",
+        price: "111900",
         priceCurrency: "INR",
         url: `${BASE_URL}${PAGE_PATH}`,
       },
       {
         "@type": "Offer",
         name: "Annapurna Base Camp — 10 Days",
-        price: "65000",
+        price: "69500",
         priceCurrency: "INR",
         url: `${BASE_URL}${PAGE_PATH}`,
       },
@@ -131,9 +133,13 @@ export default async function BaseCampProjectPage() {
             <p className="text-white/80 text-[10px] uppercase">Chandigarh Cohort</p>
           </div>
           <div className="absolute z-10 flex items-center gap-3" style={{ top: "40px", right: "24px" }}>
-            <img src="/ShrugLife%20Transparent%20Logo.png" alt="Shrug Life" style={{ height: "26px", width: "auto", objectFit: "contain" }} />
+            <TrackedLink href={SHRUG_LIFE_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram">
+              <img src="/ShrugLife%20Transparent%20Logo.png" alt="Shrug Life" style={{ height: "26px", width: "auto", objectFit: "contain" }} />
+            </TrackedLink>
             {yetiLogoUrl && (
-              <img src={yetiLogoUrl} alt="Yeti Expeditions" style={{ height: "24px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+              <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram">
+                <img src={yetiLogoUrl} alt="Yeti Expeditions" style={{ height: "24px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+              </TrackedLink>
             )}
           </div>
         </div>
@@ -142,8 +148,14 @@ export default async function BaseCampProjectPage() {
           {/* Left: Text */}
           <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 pt-12 pb-8 md:pt-12 md:px-24 md:pb-24 border-b md:border-b-0 md:border-r border-zinc-border">
             <div className="space-y-5 md:space-y-8">
-              <span className="inline-block bg-primary text-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] w-fit">
-                Shrug Life × Yeti Expeditions
+              <span className="inline-flex items-center gap-1.5 bg-primary text-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] w-fit">
+                <TrackedLink href={SHRUG_LIFE_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="hover:underline">
+                  Shrug Life
+                </TrackedLink>
+                ×
+                <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="hover:underline">
+                  Yeti Expeditions
+                </TrackedLink>
               </span>
               <h1 className="text-[15vw] md:text-8xl font-black md:leading-[.88] leading-[1.1] tracking-tighter text-slate-900 uppercase">
                 The Base
@@ -196,9 +208,13 @@ export default async function BaseCampProjectPage() {
               <p className="text-white/80 text-[10px] uppercase">Chandigarh Cohort</p>
             </div>
             <div className="absolute z-10 flex items-center gap-4" style={{ top: "64px", right: "40px" }}>
-              <img src="/ShrugLife%20Transparent%20Logo.png" alt="Shrug Life" style={{ height: "36px", width: "auto", objectFit: "contain" }} />
+              <TrackedLink href={SHRUG_LIFE_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram">
+                <img src="/ShrugLife%20Transparent%20Logo.png" alt="Shrug Life" style={{ height: "36px", width: "auto", objectFit: "contain" }} />
+              </TrackedLink>
               {yetiLogoUrl && (
-                <img src={yetiLogoUrl} alt="Yeti Expeditions" style={{ height: "34px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+                <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram">
+                  <img src={yetiLogoUrl} alt="Yeti Expeditions" style={{ height: "34px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)" }} />
+                </TrackedLink>
               )}
             </div>
           </div>
@@ -230,7 +246,7 @@ export default async function BaseCampProjectPage() {
 
           <div className="md:w-3/5 md:border-l md:border-zinc-border md:pl-16">
             <p className="text-lg md:text-xl text-slate-700 leading-relaxed mb-10">
-              The Base Camp Project isn&rsquo;t a trek listing — it&rsquo;s a Chandigarh community property, built by two homegrown brands, that happens to end at Base Camp.
+              The Base Camp Project isn&rsquo;t a talent hunt for the 12 fittest athletes — it&rsquo;s an idea born out of pure passion. Twelve everyday people, sharing one dream: to stand at the foot of the world&rsquo;s great peaks, Everest Base Camp or Annapurna Base Camp, and finally make it real. Born right here in Chandigarh, brought to life by two homegrown brands — Shrug Life and Yeti Expeditions.
             </p>
 
             <h3 className="text-slate-900 font-black uppercase tracking-tight text-2xl md:text-3xl leading-tight border-t border-zinc-border pt-8 mb-8">
@@ -268,7 +284,15 @@ export default async function BaseCampProjectPage() {
             </div>
 
             <p className="text-slate-900 font-bold text-lg leading-relaxed border-l-4 border-primary pl-4 my-8">
-              &ldquo;A Chandigarh community coming together for a Himalayan adventure — created by Shrug Life and Yeti Expeditions.&rdquo;
+              &ldquo;A Chandigarh community coming together for a Himalayan adventure — created by{" "}
+              <TrackedLink href={SHRUG_LIFE_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="underline decoration-primary/40 hover:decoration-primary">
+                Shrug Life
+              </TrackedLink>{" "}
+              and{" "}
+              <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="underline decoration-primary/40 hover:decoration-primary">
+                Yeti Expeditions
+              </TrackedLink>
+              .&rdquo;
             </p>
           </div>
         </div>
@@ -352,7 +376,12 @@ export default async function BaseCampProjectPage() {
             </h5>
             <div className="mt-8">
               <p className="text-primary font-black uppercase tracking-[0.3em] text-sm">Gurdit Singh</p>
-              <p className="text-slate-500 text-[10px] uppercase mt-1">Co-Founder, Yeti Expeditions</p>
+              <p className="text-slate-500 text-[10px] uppercase mt-1">
+                Co-Founder,{" "}
+                <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="hover:text-primary transition-colors">
+                  Yeti Expeditions
+                </TrackedLink>
+              </p>
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mt-8 max-w-xl">
               12 represents travelling as a small, close-knit cohort — not a selection of the strongest or fittest. Every group trains, prepares and climbs together.
@@ -380,7 +409,7 @@ export default async function BaseCampProjectPage() {
                 1 In 12 Treks Free
               </span>
               <span className="text-xs md:text-sm font-medium leading-snug border-t sm:border-t-0 sm:border-l border-white/30 pt-3 sm:pt-0 sm:pl-6 max-w-sm">
-                One fully sponsored spot in the EBC cohort, one in the ABC cohort. Mechanism to be announced.
+                One fully sponsored spot in the EBC cohort, one in the ABC cohort. A lucky draw will be held from the final 12 confirmed participants in each batch.
               </span>
             </div>
           </div>
@@ -418,8 +447,8 @@ export default async function BaseCampProjectPage() {
 
               <div className="flex items-end justify-between gap-4 border-t border-zinc-border pt-6">
                 <div>
-                  <p className="text-3xl font-black text-slate-900 tracking-tighter">&#8377;1.15L</p>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Per Person</p>
+                  <p className="text-3xl font-black text-slate-900 tracking-tighter">&#8377;1,11,900</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Per Person · All Inclusive</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-primary">1 Fully Sponsored</p>
@@ -470,8 +499,8 @@ export default async function BaseCampProjectPage() {
 
               <div className="flex items-end justify-between gap-4 border-t border-zinc-border pt-6">
                 <div>
-                  <p className="text-3xl font-black text-slate-900 tracking-tighter">&#8377;65K</p>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Per Person</p>
+                  <p className="text-3xl font-black text-slate-900 tracking-tighter">&#8377;69,500</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Per Person · All Inclusive</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold text-primary">1 Fully Sponsored</p>
@@ -507,8 +536,14 @@ export default async function BaseCampProjectPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-border border border-zinc-border">
             <div className="bg-slate-50 p-8 md:p-12 flex flex-col gap-6">
-              <img src="/ShrugLife%20Transparent%20Logo.png" alt="Shrug Life" style={{ height: "56px", width: "auto", objectFit: "contain" }} />
-              <h3 className="font-black uppercase text-lg tracking-tight text-slate-900">Shrug Life</h3>
+              <TrackedLink href={SHRUG_LIFE_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="w-fit">
+                <img src="/ShrugLife%20Transparent%20Logo.png" alt="Shrug Life" style={{ height: "56px", width: "auto", objectFit: "contain" }} />
+              </TrackedLink>
+              <h3 className="font-black uppercase text-lg tracking-tight text-slate-900">
+                <TrackedLink href={SHRUG_LIFE_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="hover:text-primary transition-colors">
+                  Shrug Life
+                </TrackedLink>
+              </h3>
               <p className="text-sm md:text-base text-slate-600 leading-relaxed">
                 A CrossFit box in Chandigarh — functional fitness, strength training and a community that shows up every single day. For The Base Camp Project, it&rsquo;s the training ground.
               </p>
@@ -537,12 +572,18 @@ export default async function BaseCampProjectPage() {
               </div>
             </div>
             <div className="bg-slate-50 p-8 md:p-12 flex flex-col gap-6">
-              {yetiLogoUrl ? (
-                <img src={yetiLogoUrl} alt="Yeti Expeditions" style={{ height: "56px", width: "auto", objectFit: "contain" }} />
-              ) : (
-                <span className="font-black uppercase text-2xl tracking-tighter text-slate-900">Yeti Expeditions</span>
-              )}
-              <h3 className="font-black uppercase text-lg tracking-tight text-slate-900">Yeti Expeditions</h3>
+              <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="w-fit">
+                {yetiLogoUrl ? (
+                  <img src={yetiLogoUrl} alt="Yeti Expeditions" style={{ height: "56px", width: "auto", objectFit: "contain" }} />
+                ) : (
+                  <span className="font-black uppercase text-2xl tracking-tighter text-slate-900">Yeti Expeditions</span>
+                )}
+              </TrackedLink>
+              <h3 className="font-black uppercase text-lg tracking-tight text-slate-900">
+                <TrackedLink href={YETI_INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" ctaName="follow_instagram" location="base_camp_project_brand_mention" channel="instagram" className="hover:text-primary transition-colors">
+                  Yeti Expeditions
+                </TrackedLink>
+              </h3>
               <p className="text-sm md:text-base text-slate-600 leading-relaxed">
                 A Himalayan trekking operator rooted in Kinnaur, active across Nepal and the Indian Himalaya — the team that turns training into an actual expedition.
               </p>
@@ -565,7 +606,7 @@ export default async function BaseCampProjectPage() {
                   <span className="text-2xl font-black text-primary leading-none shrink-0 tabular-nums">03</span>
                   <div>
                     <p className="text-slate-900 font-black text-sm uppercase tracking-tight mb-1">Track Record</p>
-                    <p className="text-slate-600 text-sm leading-relaxed">16 years active, 800+ expeditions led, zero fatalities — the same standards this cohort trains under apply here.</p>
+                    <p className="text-slate-600 text-sm leading-relaxed">16 years active, 200+ expeditions led, zero fatalities — the same standards this cohort trains under apply here.</p>
                   </div>
                 </div>
               </div>

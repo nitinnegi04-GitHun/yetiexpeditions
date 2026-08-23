@@ -44,6 +44,7 @@ export type EventLocation =
   | 'base_camp_project_hero'
   | 'base_camp_project_journey_options'
   | 'base_camp_project_cta'
+  | 'base_camp_project_brand_mention'
 
 export type Channel = 'whatsapp' | 'instagram'
 
