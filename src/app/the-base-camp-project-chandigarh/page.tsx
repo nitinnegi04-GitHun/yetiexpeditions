@@ -4,6 +4,7 @@ import TrackedLink from "@/components/TrackedLink";
 import ScrollGrayscaleImage from "@/components/ScrollGrayscaleImage";
 import BaseCampSubNav from "@/components/BaseCampSubNav";
 import BaseCampBottomNav from "@/components/BaseCampBottomNav";
+import BaseCampFloatingWhatsApp from "@/components/BaseCampFloatingWhatsApp";
 import { client } from "@/sanity/client";
 import { urlFor } from "@/sanity/image";
 import { SITE_SETTINGS_QUERY } from "@/sanity/queries/siteSettings";
@@ -53,8 +54,8 @@ function waLink(number: string | null, text: string) {
   return `https://wa.me/${digits}?text=${encodeURIComponent(text)}`;
 }
 
-const timeline: { date: string; label: string; body: string }[] = [
-  { date: "29 AUG", label: "Q&A at Shrug Life", body: "In-person session at Shrug Life, Chandigarh — EBC vs ABC, fitness, altitude, logistics, equipment and cost." },
+const timeline: { date: string; label: string; body: string; cta?: boolean }[] = [
+  { date: "29 AUG", label: "Q&A at Shrug Life", body: "In-person session at Shrug Life, Chandigarh — EBC vs ABC, fitness, altitude, logistics, equipment and cost.", cta: true },
   { date: "SEP", label: "Preparation Sessions", body: "Structured training sessions in Chandigarh to get every cohort trek-ready." },
   { date: "1 OCT", label: "Journey Starts", body: "Both cohorts begin their journey from Kathmandu." },
 ];
@@ -77,7 +78,8 @@ export default async function BaseCampProjectPage() {
   const whatsappNumber: string | null = settings?.whatsappNumber ?? null;
   const instagramUrl: string | null = settings?.instagram ?? null;
 
-  const heroWaText = "Hi! I'd like to know more about The Base Camp Project.";
+  const heroWaText = "Hi, I saw the Base Camp Project and would like to attend the Q&A at Shrug Life on 29 Aug.";
+  const qnaWaText = "Hi, I saw the Base Camp Project and would like to attend the Q&A at Shrug Life on 29 Aug.";
   const ebcWaText = "Hi! I'm interested in the Everest Base Camp journey — The Base Camp Project.";
   const abcWaText = "Hi! I'm interested in the Annapurna Base Camp journey — The Base Camp Project.";
   const ctaWaText = "Hi! I'd like to join The Base Camp Project.";
@@ -119,11 +121,12 @@ export default async function BaseCampProjectPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
       <BaseCampSubNav />
       <BaseCampBottomNav whatsappNumber={whatsappNumber} />
+      <BaseCampFloatingWhatsApp whatsappNumber={whatsappNumber} />
 
       {/* ── Hero — same 50/50 split structure as home & trek pages ── */}
-      <section className="w-full border-b border-zinc-border">
-        {/* Mobile: banner stacked above text */}
-        <div className="md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: "160vw", minHeight: "350px" }}>
+      <section className="w-full border-b border-zinc-border flex flex-col md:block">
+        {/* Mobile: banner stacked below text */}
+        <div className="order-2 md:hidden relative w-full bg-slate-100 overflow-hidden border-b border-zinc-border" style={{ height: "160vw", minHeight: "350px" }}>
           <video
             src={HERO_VIDEO_URL}
             autoPlay
@@ -149,7 +152,7 @@ export default async function BaseCampProjectPage() {
           </div>
         </div>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row md:min-h-[80vh]">
+        <div className="order-1 max-w-[1440px] mx-auto flex flex-col md:flex-row md:min-h-[80vh]">
           {/* Left: Text */}
           <div className="w-full md:w-1/2 flex flex-col justify-between md:justify-center px-6 pt-12 pb-8 md:pt-12 md:px-24 md:pb-24 border-b md:border-b-0 md:border-r border-zinc-border">
             <div className="space-y-5 md:space-y-8">
@@ -180,6 +183,10 @@ export default async function BaseCampProjectPage() {
                   <span className="text-primary font-black shrink-0">—</span>
                   <span className="font-black text-primary">1 seat in every cohort of 12 goes free</span>
                 </li>
+                <li className="flex items-start gap-2.5 text-base md:text-lg text-slate-700 leading-snug">
+                  <span className="text-primary font-black shrink-0">—</span>
+                  <span>QnA, at Shrug Life Gym &nbsp;•&nbsp; 29 Aug, 10:00 AM  </span>
+                </li>
               </ul>
               <TrackedLink
                 href={waLink(whatsappNumber, heroWaText)}
@@ -191,7 +198,8 @@ export default async function BaseCampProjectPage() {
                 className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 md:px-10 md:py-4 text-xs md:text-sm font-bold uppercase tracking-[0.2em] hover:bg-primary transition-colors"
               >
                 <MessageCircle className="w-4 h-4 shrink-0 text-green-500" />
-                Join on WhatsApp
+                RSVP for the 29 Aug Q&amp;A
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </TrackedLink>
             </div>
             <div />
@@ -343,6 +351,21 @@ export default async function BaseCampProjectPage() {
                       {t.label} <span className="text-primary">— {t.date}</span>
                     </p>
                     <p className="text-slate-600 leading-relaxed text-sm md:text-base">{t.body}</p>
+                    {t.cta && (
+                      <TrackedLink
+                        href={waLink(whatsappNumber, qnaWaText)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        ctaName="chat"
+                        location="base_camp_project_timeline"
+                        channel="whatsapp"
+                        className="mt-4 inline-flex items-center gap-3 bg-slate-900 text-white px-6 py-3 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] hover:bg-primary transition-colors"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 shrink-0 text-green-500" />
+                        RSVP for the 29 Aug Q&amp;A
+                        <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                      </TrackedLink>
+                    )}
                   </div>
                 </div>
               ))}
